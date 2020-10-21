@@ -1,10 +1,8 @@
 \chapter{Fine-mapping Genome-wide Association Study Summary Statistics Using Functional Annotations}
 
-\section*{Introduction}
-\label{sec:org59556ac}
+\section{Introduction}\label{sec:org59556ac}
 
-\subsection*{Importance of assigning SNP to gene, the logic of genetics as a means of understanding biology}
-\label{sec:org1481578}
+\subsection{Importance of assigning SNP to gene, the logic of genetics as a means of understanding biology}\label{sec:org1481578}
 
 For any particular trait, variation at the vast majority of genetic loci is of infinitesimal consequence to that trait.  The causal
 effect that a variant has on a trait induces a statistical association bewteen the presence of the variant and the trait of interest.
@@ -51,23 +49,14 @@ structure contribute to changes in protein function is a sub-discipline of biolo
 This second category consists of all other mechanisms of causality, perhaps the best understood of which are the "regulatory variants". 
 
 
-\subsection*{Something about closest gene}
-\label{sec:org76964d1}
+% \subsection{Something about closest gene}\label{sec:org76964d1}
 
 
 
 
-\subsection*{Something about other work with this pipeline}
-\label{sec:orge66998a}
+% \subsection{Something about other work with this pipeline}\label{sec:orge66998a}
 
 
-
-
-\subsection*{Why do we do fine mapping?}
-\label{sec:org5f4032d}
-
-\subsection*{Why do we do GWAS?}
-\label{sec:orgaf8c4b4}
 
 When constructing an estimator for a continuous trait of interest, statistical theory tells us that ordinary least square (OLS),
  also known as multiple linear regression, will provide us with estimator that minimizes the sum of squares of the residuals.
@@ -78,39 +67,26 @@ spatially structured, with physically proximal variants being more likely to be 
 the GWAS algorithm identifies regions of high association
 
 
-\subsection*{Much of GWAS signal is non-coding}
-\label{sec:org3ac0b01}
+\subsection{Much of GWAS signal is non-coding}\label{sec:org3ac0b01}
 
 Surveys of GWAS association have found that a majority of GWAS signal comes from non-coding regions of the genome.  It is believed that the majority 
 of this functional variation is regulatory in nature.  Rather than modifying the function of a gene product directly, the activity of the product is modified
 by modulating the abundance of the product through regulatory mechanisms: increasing or decreasing the baseline rate of transcription or degradation.  
-
 Fine mapping can be considered on several levels.
-
-On a statistical level, we reintroduce the multivariate regression concept.  In a Bayesian approach,
-we model the observed univariate effect sizes as coming from some unobserved distribution of true effects,
-that are then obscured by noise and LD.
-
-On a biological level, a locus has been fine mapped if the mechanism underlying the statistical association at the locus can be explained.
-
-
-
-\subsection*{Partitioning the heritability of gestational duration}
-\label{sec:org0c751ad}
+On a statistical level, we reintroduce the multivariate regression concept.  In a Bayesian approach, we model the observed univariate effect sizes as coming from some
+unobserved distribution of true effects, that are then obscured by noise and LD. On a biological level,
+a locus has been fine mapped if the mechanism underlying the statistical association at the locus can be explained.
 
 
 
 
-\section*{Materials and Methods}
-\label{sec:org39326e2}
+\section{Materials and Methods}\label{sec:org39326e2}
 
-\subsection*{Data}
-\label{sec:org702e301}
-\subsubsection*{Samples}
-\label{sec:orgbbced86}
+\subsection{Data}\label{sec:org702e301}
+\subsubsection{Samples}\label{sec:orgbbced86}
 \begin{itemize}
-\item Term vs Preterm
-\label{sec:org84e798f}
+\item Term vs Preterm  \label{sec:org84e798f}
+  
 Placentas were collected from six African American women (\(\geq 18\) years old) following spontaneous labor.
 Three of the women delivered at term (\(\geq 37\) weeks), and three delievered preterm.
 ; all were vaginal deliveries of singleton pregnancies. 
@@ -118,11 +94,9 @@ Within 1 hour of delivery, 5 x 5 cm pieces of the membranes were sampled from a 
 Pieces were placed in DMEM-HAMS F12 media containing 10\% FBS and 1\% pen/strep.
  Samples were kept at 4°C and processed within 24 hours of tissue collection. 
 
-\item Tissue
-\label{sec:org5ff2260}
+\item Tissue\label{sec:org5ff2260}
 \end{itemize}
-\subsubsection*{Functional Genomic Assays}
-\label{sec:org6fc5644}
+\subsubsection{Functional Genomic Assays}\label{sec:org6fc5644}
 \begin{itemize}
 \item ATAC-seq
 \item promoter capture HI-C
@@ -136,25 +110,20 @@ Pieces were placed in DMEM-HAMS F12 media containing 10\% FBS and 1\% pen/strep.
 \end{itemize}
 
 
-\subsubsection*{Other annotations}
-\label{sec:org4f58a59}
+\subsubsection{Other annotations}\label{sec:org4f58a59}
 
 
 \begin{itemize}
-\item LD score regression baseline
-\label{sec:org97696e5}
+\item LD score regression baseline\label{sec:org97696e5}
 \end{itemize}
 
-\subsection*{Methods}
-\label{sec:org53944c4}
+\subsection{Methods}\label{sec:org53944c4}
 
 
-\subsubsection*{Data Processing}
-\label{sec:orgc908098}
+\subsubsection{Data Processing}\label{sec:orgc908098}
 
 \begin{itemize}
-\item Gene Expression
-\label{sec:orgbe0b3e5}
+\item Gene Expression\label{sec:orgbe0b3e5}
 The gene expression data consist of 54 \texttt{.fastq} files.  27 of these files correspond to samples from term pregnancies (\texttt{pltl=TL}), and 27 correspond to preterm (\texttt{pltl=PL}).  For each term and preterm there are three 
 individuals \texttt{id=1,2,3}, for a total of 6 individuals.  Cell lines underwent one three treatments:
 
@@ -206,8 +175,7 @@ To test the significance of the \texttt{treatmentctr} parameter, we compared the
 
 
 \begin{itemize}
-\item Data preproccessing and Null Hypothesis Significance Testing
-\label{sec:org653e6dd}
+\item Data preproccessing and Null Hypothesis Significance Testing\label{sec:org653e6dd}
 
 We used the R packace \texttt{DESeq2} \cite{DESeq2} to identifiy a set of genes considered "differentially expressed" between two conditions (e.g between term and preterm, or between TCM treated cells and controls).
 After using the pseudo-alignment tool \texttt{salmon} \cite{salmon} to obtain transcript-level abundance estimates (using gencode 19 as a source of transcripts).  The abundance estimates were loaded into R 
@@ -224,8 +192,7 @@ that \(\beta =  0\), one can test against the hypothesis that \(\lvert \beta \rv
 
 
 
-\subsubsection*{A pipeline for fine-mapping GWAS summary statistics using functional annotations}
-\label{sec:org24e3fbe}
+\subsubsection{A pipeline for fine-mapping GWAS summary statistics using functional annotations}\label{sec:org24e3fbe}
 
 
 
@@ -245,8 +212,7 @@ the reference panel and the GWAS samples. In fact, when L = 1, the PIP of a SNP 
 but not LD structure.  
 
 
-\subsubsection*{Stratified LD score regression}
-\label{sec:org3173e32}
+\subsubsection{Stratified LD score regression}\label{sec:org3173e32}
 
 We use a subset of the LD score regression feature set, excluding the "flanking"
 We assessed how much of the heritability of  gestational duration is contained within ATAC-seq, H3K4me1, H3K4me3, H3K27ac and pcHi-C peaks using stratified LD score regression (S-LDSC).
@@ -260,8 +226,7 @@ duration GWAS using the endometrial-tissue derived LD scores and the “baseline
 except those “flanking” annotations. This resulted in a total of 64 baseline annotations used in our S-LDSC analysis.  
 
 
-\subsubsection*{Gene-level summary of fine-mapping results}
-\label{sec:org3f48450}
+\subsubsection{Gene-level summary of fine-mapping results}\label{sec:org3f48450}
 
 SNPs were assigned to genes according to the following criteria:  a SNP that is in the \(5'\) UTR (or 2kb upstream of the \(5'\) UTR), \(3'\) UTR, or exon for a gene is assigned to that gene.
 A SNP that is within a promoter-capture HiC contact, (as called by CHiCAGO \cite{chicago}) is assigned the gene corresponding to the promoter of the promoter-target pair.  If the target, i.e
@@ -269,11 +234,9 @@ the non-promoter region in the promoter-capture HiC contact, lies within the gen
 as well as the gene corresponding to the promoter of the promoter-capture HiC contact.  
 
 
-\section*{Results}
-\label{sec:orgb8d6bf0}
+\section{Results}\label{sec:orgb8d6bf0}
 
-\subsubsection*{Differential Gene Expression}
-\label{sec:org098c284}
+\subsubsection{Differential Gene Expression}\label{sec:org098c284}
 
 The 10 most significantly differentially expressed genes (with log foldchange greater than 0.1) between decidualized and control treated cells are listed below.  Overall, \(5,556\) genes were differentially expressed 
 with an FDR-adjusted \$p\$-value \(\let 0.05\) 
@@ -384,8 +347,7 @@ ENSG00000151849 & 171.858131269951 & -0.546358050652862 & 0.114573454756351 & -4
 
 
 
-\subsubsection*{Candidate Loci}
-\label{sec:org91a5cf4}
+\subsubsection{Candidate Loci}\label{sec:org91a5cf4}
 
 
 After running torus with the \texttt{utme3treatedhic} model, the 
@@ -415,8 +377,7 @@ chr20:62190180\textsubscript{62965163} & 0.23811\\
 
 
 
-\subsubsection*{Top genes by PIP}
-\label{sec:org28d8484}
+\subsubsection{Top genes by PIP}\label{sec:org28d8484}
 
 The top 10 genes by the sum of their pip, along with the differential expression results of those genes.
 
@@ -462,8 +423,7 @@ RHCE & 0.484421560647987 & 1786 & -1.92058744387539 & 4.52498144328815e-06 & -2.
 
 
 
-\subsubsection*{Enrichment of GWAS genes with DE gene}
-\label{sec:org087a07a}
+\subsubsection{Enrichment of GWAS genes with DE gene}\label{sec:org087a07a}
 
 The enrichment of differentially expressed genes for high PIP genes is as follows (\$p\$-value by one-way fisher's exact test):
 
@@ -479,6 +439,5 @@ pltl & 2.80981825887617 & 0.33784551828311\\
 \end{center}
 
 
-\section*{Discussion}
-\label{sec:org53f1196}
+\section{Discussion}\label{sec:org53f1196}
 
