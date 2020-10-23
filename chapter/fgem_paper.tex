@@ -39,12 +39,11 @@ We define the vector \(\boldsymbol{\beta}\) and the function \(\pi(\boldsymbol{\
 
 $$\pi(\boldsymbol{\beta},\textbf{a}_g) =  \frac{1}{1+e^{-(\beta_{0}+\sum_{f=1}^F{A_{f,g}\beta_f})}} =  P(z_g=1|\textbf{a}_g,\boldsymbol{\beta})$$
 
-The likelihood of a particular value of \(\boldsymbol{\beta}\) is computed by treating the data from each gene as coming from a two component mixture model (where \(z_g=1\) and where \(z_g=0\)) and marginalizing over the two components
+The likelihood of \(\boldsymbol{\beta}\) is computed by treating the data from each gene as coming from a two component mixture model (where \(z_g=1\) and where \(z_g=0\)) and marginalizing over the two components:
 
 $$ P(\textbf{x}|\boldsymbol{\beta},\textbf{A})=\prod_{g=1}^{G}P(x_g|\boldsymbol{\beta})=\prod_{g=1}^{G}[\pi(\boldsymbol{\beta},\textbf{a}_g) P(x_g|z_g=1)+(1-\pi(\boldsymbol{\beta},\textbf{a}_g))P(x_g|z_g=0)]$$
 
-Factorizing out the term \(\prod_{g=1}^{G} P(x_g|z_g=0)\) (which does not depend on $\boldsymbol{\beta}$, the likelihood for \(\boldsymbol{\beta}\) can be expressed in terms of \(\textbf{B}\):
-
+Factorizing out the term \(\prod_{g=1}^{G} P(x_g|z_g=0)\) (which does not depend on $\boldsymbol{\beta}$), the likelihood for \(\boldsymbol{\beta}\) (up to a constant of proportionality) can be expressed in terms of \(\textbf{B}\):
 
 $$P(\textbf{x}|\boldsymbol{\beta},\textbf{A}) \propto \prod_{g=1}^{G}[\pi(\boldsymbol{\beta},\textbf{a}_g)B_g+(1-\pi(\boldsymbol{\beta},\textbf{a}_g))]$$
 
@@ -53,12 +52,12 @@ Given a particular value of \(\boldsymbol{\beta}\), and a bayes factor \(B_g\), 
 $$P(z_g=1 | B_g, \boldsymbol{\beta},\textbf{a}_g) = \frac{\pi(\boldsymbol{\beta},\textbf{a}_g) B_g}{\pi(\boldsymbol{\beta} , \textbf{a}_g) B_g + 1 - \pi(\boldsymbol{\beta},\textbf{a}_g)}$$
 
 
-The goal of the FGEM method is to simultaneously estimate the enrichment $\boldsymbol{\beta}$ for a relevant set of features and the gene-level posterior probability \(P(Z_g=1|\textbf{a}_g,\boldsymbol{\beta},x_g)\) that each gene is causally related to the trait of interest.  FGEM uses a penalized maximum-likelihood approach to estimate $\boldsymbol{\beta}$.  Given an estimate of $\boldsymbol{\beta}$  from which we then \(P(Z_g=1|\textbf{a}_g,\boldsymbol{\beta},x_g)\). The number of gene-level features one might include in such a model is very large.
-It is impossible, from both a computability and interpretability standpoint, to include all conceivable features in the model. A related but distinct issue is that of collinearity.
-As the number of features in the model increases, the probability that some subset of features will be collinear with one-another increases,
-which can complicate model-fitting, as \(\beta\) becomes unidentifiable. This is especially important when a binary, hierarchical feature set
-like the Gene Ontology.To avoid this issue,  a multi-stage model fitting procedure was employed. In the first step, all
-single-feature-plus-intercept models are fit, and a \$p\$-value is obtained for each model byt comparing to the intercept-only model via the
+The goal of the FGEM method is to simultaneously estimate the enrichment $\boldsymbol{\beta}$ for a relevant set of features and the gene-level posterior probability \(P(Z_g=1|\textbf{a}_g,\boldsymbol{\beta},x_g)\) that each gene is causally related to the trait of interest.  FGEM uses a penalized maximum-likelihood approach to estimate $\boldsymbol{\beta}$.  Given an estimate of $\boldsymbol{\beta}$ it is straightforward to compute \(P(Z_g=1|\textbf{a}_g,\boldsymbol{\beta},x_g)\).
+It is impossible, from both a computability and interpretability standpoint, to include all conceivable features in the model.
+Furthermore, as the number of features in the model increases, the probability that some subset of features will be collinear with one-another increases,
+which can complicate model-fitting, as \(\boldsymbol{\beta}\) becomes unidentifiable. This is especially important when a binary, hierarchical feature set
+like the Gene Ontology.  To avoid these issues, a multi-stage feature-selection and model fitting procedure was employed. In the first step, all
+single-feature-plus-intercept models are fit, and a \$p\$-value is obtained for each model by comparing the single-feature-plus-intercept model to the intercept-only model via the
 likelihood ratio test.  From this set of single-feature models, all of the nonsignificant (i.e features with Benjamini-Hochberg adjusted
 \$p\$-values greater than 0.05) univariate features for each cancer type were removed from the analysis.
 
@@ -83,24 +82,22 @@ procedure comes from the "relaxed" lasso \cite{hastie17_exten_compar_best_subset
 
 \subsubsection{Removal of highly enriched features}\label{sec:org02cff25}
 
-    A subset of features were remvoed after the univariate feature-selection stage as they exhibited enrichment estimates in excess of credulity, and when incorporated in multivariate models, these features tended to have high multivariate enrichment estimatesdominate . Features which corresponded to posterior probabilities in excess of 0.3 were 
-recorded and excluded from consideration for inclusion in the joint model (these features were included when calculating the FDR-adjusted p-values for the univariate tests).  
+    A subset of features were removed after the univariate feature-selection stage as they exhibited enrichment estimates in excess of credulity, and when incorporated in multivariate models, these features tended to have high multivariate enrichment estimates. Features which corresponded to posterior probabilities in excess of 0.3 were recorded and excluded from consideration for inclusion in the joint model (these features were included when calculating the FDR-adjusted p-values for the univariate tests).  
 
 \subsubsection{Comparison with Fisher's Exact test}\label{sec:orge6f1632}
 
 In the case of a single binary feature, one can apply a Bayes Factor cutoff to obtain a contingency table and assess the enrichment of the feature using Fisher's Exact test.
-We compared FGEM with Fisher's exact test, using an FDR cutoff of 0.1, and compared the \$p\$-values to those obtained from the single-feature, FGEM the likelihood ratio test \$p\$-values.
+We compared FGEM with Fisher's exact test, using an FDR cutoff of 0.1, and compared the \$p\$-values to those obtained from the single-feature, likelihood ratio test FGEM \$p\$-values.
 
 \subsection{Validation against intOGen}\label{sec:orgd8b4e10}
 
 IntOGen is a database of cancer driver genes \cite{gonzalez-perez13_intog_mutat_ident_cancer_driver}.  It is populated by an ensemble method that incorporates seven different methods for identifying cancer driver genes.  
 It weights each of the 7 methods according to their ability to predict membership in the The Catalogue of Somatic Mutations in Cancer (COSMIC) Cancer Gene Census (CGC) \cite{COSMIC}.
-To validate the FGEM models, we compared the posterior under the functional model to the functional posterior under the uniform model.  In every cancer type, validated cancer genes had a higher functional posterior than 
-uniform posterior, while genes that were not previously identified as cancer genes had on average lower functional posterior compared to uniform (see table). 
+To validate the FGEM models, we compared the posterior under the functional model to the functional posterior under the uniform model.
 
-\subsection{Data}\label{sec:org31ff9f1}
+\subsection{Data}
 
-\subsection{The Cancer Genome Atlas}
+\subsubsection{The Cancer Genome Atlas}\label{sec:org31ff9f1}
 
 We will apply the FGEM model to the problem of identifying driver genes.  Driver genes are genes that are capabable of contributing to unregulated cell division upon mutation, whether through driving cell division directly (oncogenes), or by failing to act as a checkpoint on cell growth (tumor suppressor).  While there are well-characterized instances of genes that drive cancer by virtue of inherited, germline variation, we will focus on genes that become driver genes
 by accumulating one or several somatic mutations.
@@ -110,22 +107,16 @@ The Cancer Genome Atlas (TCGA) is a resource consisting of data on over 20 cance
 While \texttt{driverMAPS} incorporates base-pair level functional annotation, functional annotation at the gene level is ignored.  There is an extremely rich body of gene-level functional annotation.  Among the most extensive corpora of gene-level annotation is the Gene Ontology \cite{GO}.  The Gene Ontology uses a controlled vocabulary for describing the properties of genes (specifically gene products).  The three domains of the Gene Ontology are cellular component, which correspond to the various parts of the cell(e.g the ribosome), molecular function, which correspond to the biochemical activities of a gene product (e.g protein kinase activity), and biological process, also known as ``biological programs'', are higher-level, coordinated molecular activities (e.g DNA repair).
 
 
-
 In evaluating the hypothesis that a gene is a driver gene, in addition to considering the experimental evidence (i.e the likelihood of the somatic mutation data under this hypotheses as compared to the null hypothesis that it is not a driver gene), it can be very useful to consider the \emph{a priori} probability that the gene is a driver gene, condtional on the information that is known about that gene.  By combining \emph{a priori} information with the information from the statistical model,in the form of the likelihood (ratio), genes that have high statistical evidence of being driver genes but low prior probability of being driver genes can be down-weighted, while genes that have low or intermediate statistical evidence but high prior probability can be up-weighted.  Similarly, one can have higher certainty that genes with  both high statistical evidence and prior are driver genes and that genes with low statistical evidence and low prior probability are not driver genes.
 
 The task of assigning a prior probability directly from gene-level annotation is not straightforward.  The total number of driver genes is not known (though it is believed to be in the hundreds \cite{Bailey_2018}), nor is there a comprehensive set of properties that a driver gene must have (or not have).  To circumvent this problem, FGEM uses an empirical Bayes approach to construct the \emph{a priori} probability that a gene is causal; the method uses the data (summarized as gene-level Bayes factors or likelihood ratios) and the set of gene-level annotations to inform which annotations are relevant and to what extent.
 
-Under the Bayesian paradigm, \emph{a posteriori} knowledge is reflected as \emph{a prioi} probability for future experiment.  
-
-
-\subsubsection{Gene-Level Summary Statistics}\label{sec:orgb5696a3}
-
-A set of Bayes factors from a study of cancer driver genes identified using the \texttt{driverMAPS} method\cite{drivermaps}.  From 734,754 single nucleotide somatic mutations from 20 tumor types in TCGA, data from approximately 20,000 genes were analyzed with the goal of identifying driver genes. For each gene analyzed in each cancer type, \texttt{driverMAPs} outputs the evidence that it is a driver gene as a Bayes factor.  
+Under the Bayesian paradigm, \emph{a posteriori} knowledge is reflected as \emph{a prioi} probability for future experiment.  A set of Bayes factors from a study of cancer driver genes identified using the \texttt{driverMAPS} method\cite{drivermaps}.  From 734,754 single nucleotide somatic mutations from 20 tumor types in TCGA, data from approximately 20,000 genes were analyzed with the goal of identifying driver genes. For each gene analyzed in each cancer type, \texttt{driverMAPs} outputs the evidence that it is a driver gene as a Bayes factor.  
 
 \subsubsection{Gene-Level Annotations}\label{sec:orgd117550}
 
 The "Biological Process" gene sets from the Gene Ontology was obtained using the Bioconductor package \texttt{GO.db} \cite{godb}. Of the 10,930 possible biological process gene ontology terms, 2,198 terms that 
-include 10 or more genes were analyzed, so as to reduce the multiple testing burden, and to ensure that we were well powered to accurately estimate the enrichment of the term.  Each gene ontology term was encoded as a gene-level feature using an indicator variable to indicate a gene's association with the corresponding term. 
+include 10 or more genes were analyzed, so as to reduce the multiple testing burden, and to ensure that we were well powered to accurately estimate the enrichment of the term.  Each gene ontology term was encoded as a binary, gene-level feature using an indicator variable to indicate a gene's association with the corresponding term. 
 
 
 \subsection{Software}\label{sec:org56b3320}
@@ -164,7 +155,7 @@ For a particular value of $\boldsymbol{\beta}$ (and $\textbf{A}$), we can comput
 After removing Gene Ontology Biological Process features with a small number of annotated genes, there were 2,657 features.  Evaluating the enrichment of each of these features in a univariate fashion with the 18 TCGA cancer types resulted 47,826 univariate enrichment estimates.  With a false discovery rate (FDR) of $0.01$, all cancer types but KIRP and UCS had at least one (i.e 16 out of 18) significant association.  With a relaxed FDR of $0.15$, all 18 cancer types had at least one significantly associated feature \ref{tab:univariateFDR}. In all cancer types analyzed, all features with enrichments significantly different from 0 (at all tested FDR)  were positively enriched.  
 
 
-\begin{figure}
+\begin{table}
   \centering
   \begin{tabular}{l|r|r|r|r}
 \hline
@@ -208,10 +199,40 @@ UCS & 0 & 4 & 20 & 23\\
 
   \end{tabular}\label{tab:univariateFDR}
 \caption{Number of significantly enriched features in univariate enrichment test at four False Discovery Rates.}
-\end{figure}
+\end{table}
+
+
+\begin{table}[ht]
+\centering
+\begin{tabular}{rlrrl}
+  \hline
+  GO Term & Average $\beta$ & No. significant cancer types & Description \\ 
+  \hline
+GO:0007265 & 3.28 &  12 & Ras protein signal transduction \\ 
+GO:0008285 & 2.29 &  12 & negative regulation of cell population proliferation \\ 
+GO:0019221 & 2.63 &  11 & cytokine-mediated signaling pathway \\ 
+GO:0010628 & 2.34 &  11 & positive regulation of gene expression \\ 
+GO:0032228 & 5.60 &  10 & regulation of synaptic transmission, GABAergic \\ 
+GO:0010666 & 4.22 &  10 & positive regulation of cardiac muscle cell apoptotic process \\ 
+GO:0051402 & 3.17 &   9 & neuron apoptotic process \\ 
+GO:2000134 & 2.94 &   9 & negative regulation of G1/S transition of mitotic cell cycle \\ 
+GO:0007050 & 2.51 &   9 & cell cycle arrest \\ 
+GO:0045893 & 2.02 &   9 & positive regulation of transcription, DNA-templated \\ 
+GO:0043276 & 5.25 &   8 & anoikis \\ 
+GO:2000379 & 4.22 &   8 & positive regulation of reactive oxygen species metabolic process \\ 
+GO:0043491 & 3.57 &   8 & protein kinase B signaling \\ 
+GO:0043542 & 3.07 &   8 & endothelial cell migration \\ 
+GO:0000165 & 2.66 &   8 & MAPK cascade \\ 
+\end{tabular}
+\caption{Top features from single enrichment analysis.  Features are ranked by the number of cancer types in which the feature was significant at (FDR-adjusted) $p \leq 0.1$, and then by the average enrichment estimate among all cancer types.   }
+\end{table}
+
+
 
 
 The feature with the higest mean (and median) enrichment is GO:2000774, positive regulation of cellular senescence, with a median enrichment estimate of 5.458, and a mean enrichment estiamte of 7.91.  In a third of cancer types analyzed (6 of the 18), the univarite, FDR-adjusted $p$-value for GO:2000774 was less than 0.1.  The relevance of this feature to cancer is obvious and bordering on tautalogical: mutations in genes that prevent the cell from entering oncogene induced cellular senscence (especially those related to the ARF/TP53 pathway)  are thought to be all but essential for progression of almost all cancers\cite{chandeck10_oncog_induc_cellul_senes}.  It is difficult to overstate the importance of positive regulation of cellular senescence as a key guard against cancer.  TP53 had the highest average log Bayes Factor of all genes going in to the analysis, and had the highest average posterior probability of being a cancer gene as a result of the analysis.
+
+
 
 The feature with a significant enrichment estimate in the largest number of cancers was GO:0007265, Ras protein signal transduction which with a mean univariate estimate of 3.28 (and median of 0.96), had an FDR-adjusted $p$-value of less than 0.1 in three quarters of cancer types analyzed (12 out of 18).  Tied with the Ras signal transduction feature, as the feature which passed the significance threshold in the largest number of cancers was GO:0008285, negative regulation of cell population proliferation.  Negative regulation of cell population proliferation, like positive regulation of cellular senescence, is likewise key to (and almost synonymous with) preventing uncontrolled cell growth, which is the defining feature of cancer.
 
@@ -220,6 +241,8 @@ The feature with a significant enrichment estimate in the largest number of canc
 
 
 \subsection{FGEM integrates multiple gene-level annotations to reprioritize genes}\label{sec:orgf0225be}
+
+A perennial challenge in developing statistical methods for gene identification is deciding on criteria for validation, as the true status of each gene is often unknown\cite{Schaid_2018} \cite{drivermaps}.  IntOGen is a database of cancer driver genes that is populated by an ensemble method that incorporates seven different methods for identifying cancer genes. To check whether FGEM reprioritization improved prediction of mutational cancer driver gene status, we compared whether the posterior probability for IntOGen validated cancer genes was higher under the uniform model (intercept only) or the functional model. In every cancer type, validated cancer genes had a higher functional posterior than uniform posterior, while genes that were not previously identified as cancer genes had on average lower functional posterior compared to uniform.
 
 
 The gene with the largest average increase in posterior probability between the functional and uniform posterior  was the gene for  Transforming Growth Factor Beta 1, or TGFB1.  The posterior for TGFB1 increased by an average of 0.496, with a median increase of 0.417.  Based on the log Bayes factors alone, TGFB1's evidence is weak at best.  18 of the 20 cancers for which ~driverMAPS~ data is available, the log Bayes factor is negative, and in the 2 cases where it is positive (UCS and SARC), the log Bayes factors are 0.912 and 0.661, which is not very high.  TGFB1 is not characterized by intogen as a mutational cancer driver, but the role of TGF-$\beta$ signaling pathway is widely known \cite{TGF_Zhao_2018}. After TGFB1, the gene with the largest increase in posterior probability that is not a known mutational cancer driver is JUN.  JUN is the gene with the highest minimal increase in posterior probability.  JUN increased in posterior over the uniform model in every cancer in which it was tested, and by at least 0.01.  Only 3 genes increased in posterior probability over the uniform model in every cancer type (the aforementioned JUN, IGF1 and HRAS). While JUN is not a known mutational cancer driver gene according to intogen, a brief literature review reveals that not only is JUN a known mutational cancer driver gene, but that JUN was the first oncogenic transcription factor ever discovered, but was initially discovered as a viral oncogene \cite{Vogt_2002}.  
@@ -232,23 +255,19 @@ NOTCH1 had an average increase of 0.33 and median increase of 0.32
 
 
 
-Glutaredoxin domain-containing cysteine-rich protein 1, or GRXCR1, was the gene with the largest median decrease in posterior probability over the uniform model, with a median decrease of 0.08.
+% Glutaredoxin domain-containing cysteine-rich protein 1, or GRXCR1, was the gene with the largest median decrease in posterior probability over the uniform model, with a median decrease of 0.08.
 
 
 Across all analyses, the gene with the single largest increase in posterior probability was in SKCM, where cyclin-dependent kinase inhibitor 1, or CDKN1A, which having log Bayes factor of -0.10, had a posterior probability under the uniform of 0.005, and a posterior under the functional model of 0.979.  CDKN1A,which is also known as p21 is a regulator of cell cycle at G1, and the expression of CDKN1A is known to be tightly controlled by the tumor suppressor p53, but it is also hypothesized to have p53 independent tumor suppressor activites \cite{abbas09_p21_cancer}.  It has not been previously identified as an intogen driver gene in the context of melanoma. The prior probability of CDKN1A being a driver gene according to the multivariate model in SKCM was 0.98.  The high prior for CDKN1A was driven by the 8 GO terms with non-zero enrichment estimates associated with CDKN1A (see table \ref{tab:CDKN1A_features}).
 
 
 
-When reprioritizing genes it is equally important to take note the genes that have a decreased posterior probability of being driver genes.  The gene with the largest decrease in posterior probability across all analyses was Thrombospondin Type 1 Domain Containing 7A *THSD7A)  in HNSC.  THSD7A had a posterior under the uniform of 0.732, and a posterior under the functional prior of only 0.37.    THSD7A had a high log Bayes factor in HNSC of 5.65,  the highest log Bayes factor observed for that gene in any of the 18 cancer types for which data was available (the mean uniform posterior probability of THSD7A being a driver gene was 0.049).  THSD7A is not listed as a cancer gene in the intogen database, and 
+% When reprioritizing genes it is equally important to take note the genes that have a decreased posterior probability of being driver genes.  The gene with the largest decrease in posterior probability across all analyses was Thrombospondin Type 1 Domain Containing 7A *THSD7A)  in HNSC.  THSD7A had a posterior under the uniform of 0.732, and a posterior under the functional prior of only 0.37.    THSD7A had a high log Bayes factor in HNSC of 5.65,  the highest log Bayes factor observed for that gene in any of the 18 cancer types for which data was available (the mean uniform posterior probability of THSD7A being a driver gene was 0.049).
+% % THSD7A is not listed as a cancer gene in the intogen database, and 
 
 
 The gene with the lowest prior in all analyses is BIN1 in LUAD, with a prior probability of \num{1.79e-4}.  BIN1 is annotated with two GO terms with non-zero effect sizes in the LUAD multivariate model.  Both of these terms negative estimates: GO:0016032, ``viral process'', has an estimate of -1.72, and ``positive regulation of apoptotic process'', GO:0043065, has an estimate of -0.33.
 
-
-
-
-
- % in KIRP, where PIK3CA, a gene that is not only a known cancer driver gene, but a gene for which there is an entire family of FDA-approved anti-cancer drugs, the PI3K inhibitors.  Even more strangely, the low posterior for PIK3CA seems to be most likely due to the extremely negative enrichment estimate of  -15.8 for GO:0051897, positive regulation of protein kinase B signaling.  KIRP had the smallest number of significanly enriched features, with only 4 features deemed significant after FDR-based multiple-testing correction, compared to the mean number of features across all cancer types, 57.4.  KIRP was also the only cancer type for which the highest cross-validation likelihood was the degenerate ``no shrinkage'' case at the elastic-net phase and at the l2-shrinkage phase.  
 
 \begin{figure}
     \centering
