@@ -2,3 +2,8 @@
 \label{introduction}
 
 This is the introduction for my dissertation
+
+
+In evaluating the hypothesis that a gene is a driver gene, in addition to considering the experimental evidence (i.e the likelihood of the somatic mutation data under this hypotheses as compared to the null hypothesis that it is not a driver gene), it can be very useful to consider the \emph{a priori} probability that the gene is a driver gene, condtional on the information that is known about that gene.  By combining \emph{a priori} information with the information from the statistical model,in the form of the likelihood (ratio), genes that have high statistical evidence of being driver genes but low prior probability of being driver genes can be down-weighted, while genes that have low or intermediate statistical evidence but high prior probability can be up-weighted.  Similarly, one can have higher certainty that genes with  both high statistical evidence and prior are driver genes and that genes with low statistical evidence and low prior probability are not driver genes.
+
+Under the Bayesian paradigm, \emph{a posteriori} knowledge is reflected as \emph{a prioi} probability for future experiment.  A set of Bayes factors from a study of cancer driver genes identified using the \texttt{driverMAPS} method\cite{drivermaps}.  From 734,754 single nucleotide somatic mutations from 20 tumor types in TCGA, data from approximately 20,000 genes were analyzed with the goal of identifying driver genes. For each gene analyzed in each cancer type, \texttt{driverMAPs} outputs the evidence that it is a driver gene as a Bayes factor.  
