@@ -38,7 +38,7 @@ The Cancer Genome Atlas (TCGA) is a resource consisting of data on over 20 cance
 \subsubsection{Gene Ontology Gene-Level Annotations}\label{sec:orgd117550}
 
 The "Biological Process" gene sets from the Gene Ontology were obtained using the Bioconductor package \texttt{GO.db} \cite{godb}. Of the 10,930 possible biological process gene ontology terms, the 2,198 terms that 
-include 10 or more genes were used, so as to reduce the multiple testing burden, and to ensure that we were well powered to accurately estimate the enrichment of each term included in the analysis.  Each gene ontology term was encoded as a binary, gene-level feature using an indicator variable to indicate a gene's association with the corresponding term. 
+include 10 or more genes were deemed elegible for incorporation in this analysis, so as to reduce the multiple testing burden, and to ensure that we were well powered to accurately estimate the enrichment of each term included in the analysis.  Each gene ontology term was encoded as a binary, gene-level feature using an indicator variable to indicate a gene's association with the corresponding term. 
 
 
 \subsection{FGEM Model}\label{sec:org4e93496}
@@ -114,9 +114,9 @@ It weights each of the 7 methods according to their ability to predict membershi
 To validate the FGEM models, we compared the posterior under the functional model to the functional posterior under the uniform model.
 
 
-\subsection{Software}\label{sec:org56b3320}
+\subsection{FGEM Software Package}\label{sec:org56b3320}
 
-Our method is distributed as a freely available R package \cite{Rlang} \texttt{FGEM}, which is available at the GitHub repository \texttt{https://github.com/CreRecombinase/FGEM}.FGEM relies on both the \texttt{RcppEigen} \cite{RcppEigen} and  \texttt{StanHeaders} R packages for efficient computation of the marginalized likelihood its gradients, which are passed to the optimizer routine.  
+Our method is distributed as a freely available R package \cite{Rlang} \texttt{FGEM}, which is available at the GitHub repository \texttt{https://github.com/CreRecombinase/FGEM}.  In addition to the implementing an optimized version of the FGEM likelihood itself, the package also has afforadances for both univariate (single-annotation) and multivariate (multiple annotation) model fitting.  FGEM relies on both the \texttt{RcppEigen} \cite{RcppEigen} and  \texttt{StanHeaders} R packages for efficient computation of the marginalized likelihood its gradients, which are passed to the optimizer routine.  
 
 
 \section{Results}\label{sec:org6fb4837}
