@@ -26,7 +26,7 @@ The most common method for relating genotype to phenotype through  an additive m
 
 $$ \textbf{y}= \textbf{X} \boldsymbol{\beta} + \boldsymbol{\epsilon}$$
 
-where $\textbf{y}$ is the length $n$ vector of phenotypes, \(X\) is an (\(n\) by \(p\)) matrix representing genotype, (which we will assume is centered for mathematical convenience, and without loss of generality), \(\boldsymbol{\beta}\) is a vector (length \(p\)) of variant-level effects and \(\epsilon\) is noise/error. In this model, the narrow sense heritability is defined as $h^2=\frac{\text{Var}(\textbf{X}\boldsymbol{\beta})}{\text{Var}(\boldsymbol{\epsilon})}$. Under a bayesian paradigm, $\boldsymbol{\beta}$ is treated as a random variable, leading to  $\boldsymbol{\epsilon} = \textbf{y}-\textbf{X}\boldsymbol{\beta} \rightarrow \text{Var}(\boldsymbol{\epsilon})= \text{Var}(\textbf{y})-\text{Var}(\textbf{X}\boldsymbol{\beta})$.  In a GWAS context $\textbf{X}$ and $\textbf{y]$ are fixed, which means that estimating $h^2$, \emph{for population from which the sample is drawn} can be reduced to estimating $\text{Var}(\boldsymbol{\beta})$.
+where $\textbf{y}$ is the length $n$ vector of phenotypes, \(X\) is an (\(n\) by \(p\)) matrix representing genotype, (which we will assume is centered for mathematical convenience, and without loss of generality), \(\boldsymbol{\beta}\) is a vector (length \(p\)) of variant-level effects and \(\epsilon\) is noise/error. In this model, the narrow sense heritability is defined as $h^2=\frac{\text{Var}(\textbf{X}\boldsymbol{\beta})}{\text{Var}(\boldsymbol{\epsilon})}$. Under a bayesian paradigm, $\boldsymbol{\beta}$ is treated as a random variable, leading to  $\boldsymbol{\epsilon} = \textbf{y}-\textbf{X}\boldsymbol{\beta} \rightarrow \text{Var}(\boldsymbol{\epsilon})= \text{Var}(\textbf{y})-\text{Var}(\textbf{X}\boldsymbol{\beta})$.  In a GWAS context $\textbf{X}$ and $\textbf{y}$ are fixed, which means that estimating $h^2$, \emph{for population from which the sample is drawn} can be reduced to estimating $\text{Var}(\boldsymbol{\beta})$.
 
 With current GWAS sample sizes the number of variants is much larger than the number of samples \(i.e p >>n\).  Under such a regime we can't directly estimate the distribution of \(\beta_i\). The most common means of summarizing the results of a GWAS is to use GWAS summary statistics.  GWAS summary statistics describe the relationship between 
 The summary statistics we will be interested in are the marginal effect size at a particlular variant (\(j\)), which we will denote as
@@ -115,9 +115,11 @@ $$\hat{\textbf{u}} | \textbf{u} \sim \mathcal{N}(\textbf{R} \textbf{u},\textbf{R
 \[ \hat{\textbf{u}}|\sigma_u^2 \sim N(0,\sigma_u^2\textbf{R}^2+\textbf{R})\]
 
 Unlike the marginalized likelihood without the normalized-genotype assumption, this form lends itself to efficient computation and parameter estimation. By
-taking the eigenvalue decomposition of $\textbf{R}$ $\textbf{R}=\textbf{Q}\textbf{D}\textbf{Q}^T$, with $\textbf{Q}$ being the $p$ by $p$ matrix of
+taking the eigenvalue decomposition of $\textbf{R}$ $\textbf{R}=\textbf{Q}\textbf{D}\textbf{Q}^T$, with $\textbf{Q}$ 
+being the $p$ by $p$ matrix of
 eigenvectors, and $\textbf{D}$ being the diagonal matrix of eigenvalues, we can rewrite the marginalized likelihood as
-$\hat{\textbf{\beta}} \sim N(0,\sigma_u^2\textbf{QD^2Q}+\textbf{QDQ})$.  Letting $\hat{\textbf{v}} = Q^{T}\hat{u}$, and exploiting the property of
+$\hat{\boldsymbol{\beta}} \sim N(0,\sigma_u^2\textbf{QD}^2\textbf{Q}+\textbf{QDQ})$ .  Letting
+$\hat{\textbf{v}} = Q^{T}\hat{u}$, and exploiting the property of
 the multivariate normal distribution that an affine transformation of a multivariate normal random variable has a multivariate normal distribution, the
 likelihood for $\hat{\textbf{v}}$ is $\hat{\textbf{v}}|\sigma_u^2 \sim \mathcal{N}(0,\sigma_u^2\textbf{D}^{2}+\textbf{D})$.  As all the off-diagonal terms of
 the covariance matrix for ${\textbf{v}}$ are $0$, we can equivalently write the likelihood for ${\textbf{v}}$ as the joint probability of $p$ independent
