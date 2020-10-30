@@ -57,8 +57,6 @@ $$ \beta_j \sim \pi N(0,\sigma^2_B)+(1-\pi) \delta_0 $$
 
 The posterior for the BVSR model can be efficiently approximated using variational inference. 
 
-\subsubsection{Polygenic RSS}\label{sec:org040cb73}
-
 If instead of assuming that \(\sigma^2_P=0\), one instead assumes that \(\sigma_B=0\) (or equivalently that \(\pi=0\)) we arrive at the following model: 
 $$ \beta_j \sim N(0,\sigma^2_P)$$
 
@@ -105,7 +103,10 @@ Computing the marginalized likelihood in this case, though involving only a sing
 the recomputation of the determinant and inverse of \(\sigma_\beta^2\hat{\textbf{S}}\hat{\textbf{R}}\hat{\textbf{S}}^{-2}\hat{\textbf{R}}\hat{\textbf{S}}+\hat{\textbf{S}}\hat{\textbf{R}}\hat{\textbf{S}}\) for each value of 
 \(\sigma_\beta^2\).  A common computational trick for recomputing a multivariate normal density is to precompute a cholesky decomposition of the covariance matrix, as the computationally expenensive aspects of computing the multivariate normal density (in particular computing the determinant and inverse of the covariance matrix) have efficient implementations when the covariance matrix has been cholesky-decomposed.  This trick is unforunately not applicable in this situation.  Even if both $\hat{\textbf{S}}\hat{\textbf{R}}\hat{\textbf{S}}^{-2}\hat{\textbf{R}}\hat{\textbf{S}}$ and $\hat{\textbf{S}}\hat{\textbf{R}}\hat{\textbf{S}}^{-2}\hat{\textbf{R}}\hat{\textbf{S}}$ were factored separately, there is no way to add the two matrices to maintain the cholesky form.
 
-However, if instead of modeling \(\hat{\boldsymbol{\beta}}\) and \(\boldsymbol{\beta}\), we can instead model $\hat{\textbf{u}}$ and $\textbf{u}$, where $\hat{u}_j=\frac{\hat{\beta_j}}{\hat{\sigma_j^2}}$, and  \(u_j=\frac{\beta_j}{\hat{\sigma_j^2}}\).  This is effectively the same as effect-size in terms of standardized genotypes, and leads to the same (implicit) prior as LD score regression \cite{ldsc} and GCTA \cite{GCTA}.  With the prior $\textbf{u} \sim \mathcal{N}(0,\sigma_u^2)$, the likelihood in terms of $\textbf{u}$ becomes:
+
+\subsubsection{Polygenic RSS (\texttt{RSSp})}\label{sec:org040cb73}
+
+If instead of modeling \(\hat{\boldsymbol{\beta}}\) and \(\boldsymbol{\beta}\), we can instead model $\hat{\textbf{u}}$ and $\textbf{u}$, where $\hat{u}_j=\frac{\hat{\beta_j}}{\hat{\sigma_j^2}}$, and  \(u_j=\frac{\beta_j}{\hat{\sigma_j^2}}\).  This is effectively the same as effect-size in terms of standardized genotypes, and leads to the same (implicit) prior as LD score regression \cite{ldsc} and GCTA \cite{GCTA}.  With the prior $\textbf{u} \sim \mathcal{N}(0,\sigma_u^2)$, the likelihood in terms of $\textbf{u}$ becomes:
 
 $$\hat{\textbf{u}} | \textbf{u} \sim \mathcal{N}(\textbf{R} \textbf{u},\textbf{R})$$
 
@@ -113,11 +114,18 @@ $$\hat{\textbf{u}} | \textbf{u} \sim \mathcal{N}(\textbf{R} \textbf{u},\textbf{R
 
 \[ \hat{\textbf{u}}|\sigma_u^2 \sim N(0,\sigma_u^2\textbf{R}^2+\textbf{R})\]
 
-Unlike our original marginalized likelihood, this form lends itself to efficient computation and parameter estimation. By taking the eigenvalue decomposition of $\textbf{R}$ $\textbf{R}=\textbf{Q}\textbf{D}\textbf{Q}^T$, with $\textbf{Q}$ being the $p$ by $p$ matrix of eigenvectors, and $\textbf{D}$ being the diagonal matrix of eigenvalues, we can rewrite the marginalized likelihood as $\hat{\textbf{\beta}} \sim N(0,\sigma_u^2\textbf{QD^2Q}+\textbf{QDQ})$.  Letting $\hat{\textbf{v}} = Q^{T}\hat{u}$, and exploiting the property of the multivariate normal distribution that an affine transformation of a multivariate normal random variable has a multivariate normal distribution, the likelihood for $\hat{\textbf{v}}$ is $\hat{\textbf{v}}|\sigma_u^2 \sim \mathcal{N}(0,\sigma_u^2\textbf{D}^{2}+\textbf{D})$.  As all the off-diagonal terms of the covariance matrix for ${\textbf{v}}$ are $0$, we can equivalently write the likelihood for ${\textbf{v}}$ as the joint probability of $p$ independent univariate normal variables where
-
+Unlike the marginalized likelihood without the normalized-genotype assumption, this form lends itself to efficient computation and parameter estimation. By
+taking the eigenvalue decomposition of $\textbf{R}$ $\textbf{R}=\textbf{Q}\textbf{D}\textbf{Q}^T$, with $\textbf{Q}$ being the $p$ by $p$ matrix of
+eigenvectors, and $\textbf{D}$ being the diagonal matrix of eigenvalues, we can rewrite the marginalized likelihood as
+$\hat{\textbf{\beta}} \sim N(0,\sigma_u^2\textbf{QD^2Q}+\textbf{QDQ})$.  Letting $\hat{\textbf{v}} = Q^{T}\hat{u}$, and exploiting the property of
+the multivariate normal distribution that an affine transformation of a multivariate normal random variable has a multivariate normal distribution, the
+likelihood for $\hat{\textbf{v}}$ is $\hat{\textbf{v}}|\sigma_u^2 \sim \mathcal{N}(0,\sigma_u^2\textbf{D}^{2}+\textbf{D})$.  As all the off-diagonal terms of
+the covariance matrix for ${\textbf{v}}$ are $0$, we can equivalently write the likelihood for ${\textbf{v}}$ as the joint probability of $p$ independent
+univariate normal variables where:
 
 \[ v_j \sim N(0,\sigma^2_u\lambda_j^2+\lambda_j) \]
 
+Finding the maximum marginalized-likelihood estimate of $\sigma^2_u$
 
 eigenvalues  Let the eigenvalue decomposition (EVD) of the symmetric matrix $\textbf{R}$
 
