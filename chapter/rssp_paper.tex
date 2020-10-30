@@ -115,7 +115,9 @@ $$\hat{\textbf{u}} | \textbf{u} \sim \mathcal{N}(\textbf{R} \textbf{u},\textbf{R
 
 Unlike our original marginalized likelihood, this form lends itself to efficient computation and parameter estimation. By taking the eigenvalue decomposition of $\textbf{R}$ $\textbf{R}=\textbf{Q}\textbf{D}\textbf{Q}^T$, with $\textbf{Q}$ being the $p$ by $p$ matrix of eigenvectors, and $\textbf{D}$ being the diagonal matrix of eigenvalues, we can rewrite the marginalized likelihood as $\hat{\textbf{\beta}} \sim N(0,\sigma_u^2\textbf{QD^2Q}+\textbf{QDQ})$.  Letting $\hat{\textbf{v}} = Q^{T}\hat{u}$, and exploiting the property of the multivariate normal distribution that an affine transformation of a multivariate normal random variable has a multivariate normal distribution, the likelihood for $\hat{\textbf{v}}$ is $\hat{\textbf{v}}|\sigma_u^2 \sim \mathcal{N}(0,\sigma_u^2\textbf{D}^{2}+\textbf{D})$.  As all the off-diagonal terms of the covariance matrix for ${\textbf{v}}$ are $0$, we can equivalently write the likelihood for ${\textbf{v}}$ as the joint probability of $p$ independent univariate normal variables where
 
+
 \[ v_j \sim N(0,\sigma^2_u\lambda_j^2+\lambda_j) \]
+
 
 eigenvalues  Let the eigenvalue decomposition (EVD) of the symmetric matrix $\textbf{R}$
 
