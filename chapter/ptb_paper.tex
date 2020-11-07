@@ -6,56 +6,10 @@
 
 For any particular trait, variation at the vast majority of genetic loci is of infinitesimal consequence to that trait.  The causal
 effect that a variant has on a trait induces a statistical association bewteen the presence of the variant and the trait of interest.
-For a variant to have a causal effect on an organism-level trait, there must be a chain of causal events starting with the DNA-sequence,
- level change, proceeding through one (or more often many) molecular intermediates, before it is observable at the organismal level.  
-
-The job of the biologist is to characterize the diversity of living organisms, the physical, chemical and the molecular basis of that activity, and the ways
- those parts relate to one-another.
-
-
- The goal of a genome-wide association study (GWAS) is to identify a subset of variants with high statistical association with a trait of interest.
-One of the major obstacles in any GWAS (or any association based statistical inference) is that the causality is but one   When
-performing an association study to identify loci at which variation is consequential, many observed associations are 
-
-It is commonly understood in human genetics that for the vast majority of trait-variant associations, 
- between between any traita trait exceed the number of variants with a 
-
-The pathways through which causal variants influence a trait is a subset of all pathways involved in the trait.  
-
-
-I think it is useful at this point to make a brief digression to discuss the distinction between a "variant" and a "gene". The gene
-is a key player in the paradigm of causality in biological systems. To have a meaningful "causal variant"
-
-The classical definition of a gene is a "unit of heredity" cite\textsubscript{gene}\textsubscript{book} .  Inherent then to the idea of the gene is that it is functionional.  Historically,
-the gene was defined as that which gave rise to (i.e caused) that which was heritable.
-According to the classical definition, the notion of a "functional gene" is purely redundant.  
-
-If the definition of a genetic variant is physical, while the concept of a "causal", genetic factor, that of a gene, is conceptual, 
-it is not clear whether one can arrive at a meaningful definition of a "causal variant".  
-
-To sidestep this philosophical issue, I will use a definition of a causal variant based on a hypothetical experiment.  Imagine two organisms that are
-genetically identical everywhere but the locus of interest.  If there is a consistent, detectable difference between pairs of individuals in regards to our trait
- of interest, despite being raised in identical environments, we will deem this variant to have a causal relationship on our trait of interest.
-
-Unfortunately in the case of humans such experiments are impossible, and so we must rely on another operational definition of causality.
-
-Rather than a single link between variant and trait, we can construct a chain of causality from variant to molecular intermediate, and then from molecular intermediate to trait
-of interest.  In the case of molecular intermediates, there are two broad categories of variant to molecular-intermediate causal relationships that are especially tractable for 
-validation.  By virtue of the mapping of the human genome and our knowledge of the central dogma of molecular biology cite\textsubscript{crick1958protein} , by knowing the position and sequence
-of a variant one can immediately know with the variant lies within an exon (or splice-site boudary) of a characterized gene.  If so, it is a simple bioinformatic exercise to 
-ascertain the consequence of the change in DNA sequence on primary (and increasingly secondary and tertiary) amino acid structure.  Characterizing how changes in protein
-structure contribute to changes in protein function is a sub-discipline of biology all its own; but this is a question of "how" a variant-gene pair interact, and not a question of 
-"if" they interact.  The functional consequence of the majority of human genetic variation falls into the second category of variant to molecular-intermediate causal relationships.  
-This second category consists of all other mechanisms of causality, perhaps the best understood of which are the "regulatory variants". 
-
-
-% \subsection{Something about closest gene}\label{sec:org76964d1}
-
-
-
-
-% \subsection{Something about other work with this pipeline}\label{sec:orge66998a}
-
+For a variant to have a causal effect on an organism-level trait, there must be a chain of causal events starting with the DNA-sequence,level change, proceeding through one
+(or more often many) molecular intermediates, before it is observable at the organismal level.   The goal of a genome-wide association study (GWAS) is to identify a subset of variants with high statistical association with a trait of interest, with the implicit assumption that the high degree of statistical association is the consequence of a causal relationship.
+One of the major obstacles in any GWAS (or any association based statistical inference) is that the causality is
+but one of
 
 
 When constructing an estimator for a continuous trait of interest, statistical theory tells us that ordinary least square (OLS),
@@ -67,11 +21,21 @@ spatially structured, with physically proximal variants being more likely to be 
 the GWAS algorithm identifies regions of high association
 
 
+Natural questions one might want to ask of this data:
+
+\begin{enumerate}
+\item What differences in gene expression between individuals who had term labors as opposed to preterm labors do we observe after accounting for other known sources of variation?
+\item What genes are differentially expressed between \texttt{ctr} and \texttt{dec} treated cell lines? What genes are differentially expressed between \texttt{dec} and \texttt{TCM} cell lines?
+\item How does the \textbf{response to treatment} (\texttt{ctr} vs \texttt{dec} and \texttt{dec} vs \texttt{TCM}) \textbf{differ} between individuals who had \textbf{term labors} and individuals who had \textbf{preterm labors}?
+\end{enumerate}
+
+The key question we are asking in this project is to what extent does the genetic signal for gestational duration overlap with the observed molecular differences between placentas gathered from women who gave birth at term and preterm.
+
 \subsection{Much of GWAS signal is non-coding}\label{sec:org3ac0b01}
 
 Surveys of GWAS association have found that a majority of GWAS signal comes from non-coding regions of the genome.  It is believed that the majority 
 of this functional variation is regulatory in nature.  Rather than modifying the function of a gene product directly, the activity of the product is modified
-by modulating the abundance of the product through regulatory mechanisms: increasing or decreasing the baseline rate of transcription or degradation.  
+by modulating the abundance of the product through regulatory mechanisms: increasing or decreasing the baseline rate of transcription of DNA to RNA or degradation of mRNA back into individual nucleotides.  
 Fine mapping can be considered on several levels.
 On a statistical level, we reintroduce the multivariate regression concept.  In a Bayesian approach, we model the observed univariate effect sizes as coming from some
 unobserved distribution of true effects, that are then obscured by noise and LD. On a biological level,
@@ -90,8 +54,7 @@ a locus has been fine mapped if the mechanism underlying the statistical associa
 Placentas were collected from six African American women (\(\geq 18\) years old) following spontaneous labor.
 Three of the women delivered at term (\(\geq 37\) weeks), and three delievered preterm.
 ; all were vaginal deliveries of singleton pregnancies. 
-Within 1 hour of delivery, 5 x 5 cm pieces of the membranes were sampled from a distant location of the rupture site. 
-Pieces were placed in DMEM-HAMS F12 media containing 10\% FBS and 1\% pen/strep.
+Within 1 hour of delivery, 5 x 5 cm pieces of the membranes were sampled from a distant location of the rupture site. Pieces were placed in DMEM-HAMS F12 media containing 10\% FBS and 1\% pen/strep.
  Samples were kept at 4°C and processed within 24 hours of tissue collection. 
 
 \item Tissue\label{sec:org5ff2260}
@@ -114,7 +77,7 @@ Pieces were placed in DMEM-HAMS F12 media containing 10\% FBS and 1\% pen/strep.
 
 
 \begin{itemize}
-\item LD score regression baseline\label{sec:org97696e5}
+\item LD score regression baseline annotations\label{sec:org97696e5}
 \end{itemize}
 
 \subsection{Methods}\label{sec:org53944c4}
@@ -136,13 +99,7 @@ individuals \texttt{id=1,2,3}, for a total of 6 individuals.  Cell lines underwe
 For each of these three term and three preterm individuals, and for each of the three treatment conditions, RNA seq was gathered in triplicate (\texttt{rep=1,2,3}), bringing to total sample size to 54 
 $$ \left((3 \text{replicates}) \times (3 \text{conditions})  \times (3 \text{individuals})\right) \times (2 \text{gestational durations})=54$$
 
-Natural questions one might want to ask of this data:
 
-\begin{enumerate}
-\item What differences in gene expression between individuals who had term labors as opposed to preterm labors do we observe after accounting for other known sources of variation?
-\item What genes are differentially expressed between \texttt{ctr} and \texttt{dec} treated cell lines? What genes are differentially expressed between \texttt{dec} and \texttt{TCM} cell lines?
-\item How does the \textbf{response to treatment} (\texttt{ctr} vs \texttt{dec} and \texttt{dec} vs \texttt{TCM}) \textbf{differ} between individuals who had \textbf{term labors} and individuals who had \textbf{preterm labors}?
-\end{enumerate}
 
 There are other factors which we are not directly interested in, but which we would like to account for in performing our analysis:
 
@@ -169,13 +126,11 @@ exactly corresponds to the hypothesis we wish to test.  To capture the individua
 incorporate in the model, but effect-size estimates are not of direct relevance.
 
 Hypothesis 2 is actually two hypotheses, and requires two tests. The \texttt{TCM} vs \texttt{dec} test (\texttt{treatmentTCM}) and the \texttt{ctrl} vs \texttt{dec} test (\texttt{treatmentctr}).
-We are currently ignoring the \texttt{TCM} vs \texttt{ctrl} test, though differences between \texttt{TCM} and \texttt{control} are captured implicitly.  To test the significance of the \texttt{treatmentTCM} paramter we compare the fit of
-a model with passage number ( 1 parameter), cell-line (4 parameters), term/pretern status (1 parameter) and both treatment parameters, to one with passage number, cell-line, term/preterm status and only the \texttt{ctrlvsdec} paramter.
+We are currently ignoring the \texttt{TCM} vs \texttt{ctrl} test, though differences between \texttt{TCM} and \texttt{control} are captured implicitly.  To test the significance of the \texttt{treatmentTCM} paramter we compare the fit of a model with passage number ( 1 parameter), cell-line (4 parameters), term/pretern status (1 parameter) and both treatment parameters, to one with passage number, cell-line, term/preterm status and only the \texttt{ctrlvsdec} paramter.
 To test the significance of the \texttt{treatmentctr} parameter, we compared the same full model to a reduced model without the \texttt{treatmentctr} parameter.
 
 
-\begin{itemize}
-\item Data preproccessing and Null Hypothesis Significance Testing\label{sec:org653e6dd}
+\subsubsection{Data preproccessing and Null Hypothesis Significance Testing}\label{sec:org653e6dd}
 
 We used the R packace \texttt{DESeq2} \cite{DESeq2} to identifiy a set of genes considered "differentially expressed" between two conditions (e.g between term and preterm, or between TCM treated cells and controls).
 After using the pseudo-alignment tool \texttt{salmon} \cite{salmon} to obtain transcript-level abundance estimates (using gencode 19 as a source of transcripts).  The abundance estimates were loaded into R 
@@ -189,9 +144,6 @@ that \(\beta =  0\), one can test against the hypothesis that \(\lvert \beta \rv
 
 
 
-
-
-
 \subsubsection{A pipeline for fine-mapping GWAS summary statistics using functional annotations}\label{sec:org24e3fbe}
 
 
@@ -201,8 +153,7 @@ Fine mapping proceeded in three stages. In the first stage we partitioned the ge
 To estimate the functionally informed SNP-level prior, We employed a Bayesian hierarchical model (TORUS(42)).  
 TORUS uses SNP-level annotations and GWAS summary statistics to estimate the extent to which SNPs with functional genomic annotations are likely to be causal for a trait of interest.  
 TORUS takes as input GWAS summary statistics and genomic annotations, and for each annotation outputs multivariate enrichment estimates that corresponding to estimates from a logistic regression: 
-the additive change in log odds for a variant being causal, conditioned on all other annotations being held constant.  
-We ran TORUS with the gestational age GWAS summary statistics and the reproducible H3K27ac and H3K4me1 peaks from the treated samples along with the pcHi-C contact regions to obtain enrichment estimates, 
+the additive change in log odds for a variant being causal, conditioned on all other annotations being held constant.We ran TORUS with the gestational age GWAS summary statistics and the reproducible H3K27ac and H3K4me1 peaks from the treated samples along with the pcHi-C contact regions to obtain enrichment estimates, 
 and from those enrichment estimates constructed a SNP-level prior. Lastly, fine mapping was performed using a summary statistics-based version of the “Sum of Single Effects” model (SuSiE(43)).  
 In the summary statistics-based version of SuSiE, the inputs are the GWAS summary statistics in a region, the SNP-level prior for every GWAS variant, and an estimate of the LD between variants. 
 As an estimate of LD, we used the unrelated European individuals from the 1000 Genomes project as a reference panel. SuSiE (as implemented in the R package “susieR”) was run on the 10 regions 
@@ -226,13 +177,18 @@ duration GWAS using the endometrial-tissue derived LD scores and the “baseline
 except those “flanking” annotations. This resulted in a total of 64 baseline annotations used in our S-LDSC analysis.  
 
 
+
+
+
 \subsubsection{Gene-level summary of fine-mapping results}\label{sec:org3f48450}
 
-SNPs were assigned to genes according to the following criteria:  a SNP that is in the \(5'\) UTR (or 2kb upstream of the \(5'\) UTR), \(3'\) UTR, or exon for a gene is assigned to that gene.
-A SNP that is within a promoter-capture HiC contact, (as called by CHiCAGO \cite{chicago}) is assigned the gene corresponding to the promoter of the promoter-target pair.  If the target, i.e
-the non-promoter region in the promoter-capture HiC contact, lies within the gene body (the \(5'\) UTR, the \(3'\) UTR, or an exon) of a gene, that SNP is assigned to both the gene containing the variant
-as well as the gene corresponding to the promoter of the promoter-capture HiC contact.  
+To assess the enrichment of the gestational duration GWAS signal the differential expression gene signal we developed a method for summarizing our fine-mapping results at the gene level.  SNP-level PIPs were summarized as gene-level PIPs according to the following criteria:  a SNP that is in the \(5'\) UTR (or 2kb upstream of the \(5'\) UTR), \(3'\) UTR, or exon for a gene is assigned to that gene, and the entire PIP for that variant is added to the total for that gene.
+A SNP that is within a promoter-capture HiC contact, (as called by CHiCAGO \cite{chicago}) is assigned the gene corresponding to the promoter of the promoter-target pair and the entire PIP for that variant is added to the total for that gene.  If the target, i.e the non-promoter region in the promoter-capture HiC contact, lies within the gene body (the \(5'\) UTR, the \(3'\) UTR, or an exon) of a gene, that SNP is assigned to both the gene containing the variant
+as well as the gene corresponding to the promoter of the promoter-capture HiC contact, and the full PIP for that variant is added to the gene-level total for both genes.
+For variants that lay outside genes or HiC contacts, the a portion of the PIP for that variant was assigned to each gene within the fine-mapping region, with the proportion decaying exponentially with distance to the gene according
+to the following function:
 
+$$\text{P}_{g} = \sum_{i \in H_g}  p_i + \sum_{j \in B_g} p_j + \sum_{k \not\in H_g \cup B_g} p_ke^{\frac{-d_{k,g}}{50000}} $$
 
 \section{Results}\label{sec:orgb8d6bf0}
 

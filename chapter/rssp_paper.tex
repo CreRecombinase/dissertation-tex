@@ -4,21 +4,18 @@
 
 \section{Introduction}\label{sec:org3c6cf58}
 
+There is no concept more central to the study of genetics than that of heritability.  Large-scale Genome-wide association studies have identified tens of thousands of loci where variation at the locus correlates with a particular trait.  In the case of most complex traits, the most strongly associated genetic variants collectively explain a relatively small fraction of the total trait variation that is thought to be attributable to genetics.    A consistent frustration of the human geneticist is the inability  the total explanatory power of these variants is often small compared to  geneticists have widely available the Genome-wide association study (GWAS), GWAS summary statistics have become the most common method for summarizing estimated relationships between genotype and phenotype.  As such, they have become an invaluable resource for a large number of biomedical research applications\cite{Lyon_2020}.  GWAS summary statistics enable the comparison of genetic-association signal across traits at a locus\cite{phewas}, across loci for a trait\cite{firstGWAS}, and the comparison of patterns of genotype-phenotype associations across populations\cite{Rosenberg_2010}.
+A common component of  applications of GWAS summary statistics is a statistical model relating the marginal,variant-level associations between genotype and phenotype to the distribution of true effect sizes.  In the Bayesian setting this stat and among the most important.  Among the most important applications of GWAS sumamry statistics is in the estimation of heritability. LD score regression is the most widely used method for estimating heritability from GWAS data without individual level data.  LD score regression uses GWAS summary statistics and an estimate of the linkage disequilibrium (LD) between those variants to estimate the heritability of the trait as well as the extent of confounding in the GWAS\cite{ldsc}.
+
+An important recent development in modeling the relationship between multiple regression coefficients estimates to their univariate counterparts, by means of a reference LD matrix is known as Regression with Summary Statistics (RSS)\cite{Zhu_2017}.
+
 The question of how heritable a trait is a foundational one in the field of genetics. In the simplest definition, a trait is heritable if offspring are more similar to their parents (in regards to the trait) than they are to random members of the same population.  
 
-Among the state of the art methods for the estimation of heritability from unrelated individuals is the method based on Genome-based restricted maximum likelihood (GREML)\cite{GCTA}.  While GREML and methods based on GREML have been used to great effect to explain a large proportion of heritability found by more precise methods (e.g twin studies) \cite{GCTA}, GCTA requires individual-level data, as well as the construction of an $n \times n$ relatedness matrix (with $n$ being the number of individuals for which genotype and phenotype data is available).
-
-
-With the advent of the Genome-wide association study (GWAS), GWAS summary statistics have become the most common method for summarizing estimated relationships between genotype and phenotype.  As such, they have become an invaluable resource for a large number of biomedical research applications \cite{Lyon_2020}.
-
-LD score regression is the most widely used method for estimating heritability from GWAS data without individual level data.  LD score regression uses GWAS summary statistics and an estimate of the linkage disequilibrium (LD) between those variants to estimate the heritability of the trait as well as the extent of confounding in the GWAS \cite{ldsc}.
-
-An important recent development in modeling the relationship between multiple regression coefficients estimates to their univariate counterparts, by means of a reference LD matrix is known as Regression with Summary Statistics (RSS)
-\cite{Zhu_2017}.
+Among the state of the art methods for the estimation of heritability from unrelated individuals is the method based on Genome-based restricted maximum likelihood (GREML)\cite{GCTA}.  While GREML and methods based on GREML have been used to great effect to explain a large proportion of heritability found by more precise methods (e.g twin studies)\cite{GCTA}, GCTA requires individual-level data, as well as the construction of an $n \times n$ relatedness matrix (with $n$ being the number of individuals for which genotype and phenotype data is available).  The size of this matrix increases quadratically as sample size increases.
 
 Here we present a simple modification of the RSS method called polygenic RSS, or RSSp.  Using simulation, we show how under truly polygenic genetic architectures, RSSp is better able to estimate heritability than LD score regression.
 
-In addition, we demonstrate the importance of accurate estimation of linkage disequilibrium, and explore how shrinkage estimators of LD can improve estimates of heritability, especially when relying on an external reference panel for LD information.
+In addition, we explore the consequences of the demonstrate the importance of accurate estimation of linkage disequilibrium, and explore how shrinkage estimators of LD can improve estimates of heritability, especially when relying on an external reference panel for LD information.  
 
 \section{Background}
 
@@ -44,7 +41,7 @@ $$ \hat{\boldsymbol{\beta}} | \boldsymbol{\beta} \sim N(\hat{S}\hat{R}\hat{S}^{-
 
 where \(\hat{\boldsymbol{\beta}}\) is the length $p$ vector of GWAS effect size estimates, and $\hat{\textbf{S}}$ is a diagonal matrix where $\hat{S_{j,j}}=\hat{\sigma_j^2}$.
 
-In the original RSS paper there were two priors on \(\beta\) that were discussed.  The first is based on the Bayesian Sparse Linear Mixed Model (BSLMM) \cite{bslmm} where true effects ($\boldsymbol{\beta}$)
+In the original RSS paper there were two priors on \(\beta\) that were discussed.  The first is based on the Bayesian Sparse Linear Mixed Model (BSLMM)\cite{bslmm} where true effects ($\boldsymbol{\beta}$)
 come from a mixture of sparse and polygenic components:
 
 $$ \beta_j \sim \pi N(0,\sigma^2_B+\sigma^2_P)+(1-\pi) N(0,\sigma^2_P) $$
@@ -106,7 +103,7 @@ the recomputation of the determinant and inverse of \(\sigma_\beta^2\hat{\textbf
 
 \subsubsection{Polygenic RSS (\texttt{RSSp})}\label{sec:org040cb73}
 
-If instead of modeling \(\hat{\boldsymbol{\beta}}\) and \(\boldsymbol{\beta}\), we can instead model $\hat{\textbf{u}}$ and $\textbf{u}$, where $\hat{u}_j=\frac{\hat{\beta_j}}{\hat{\sigma_j^2}}$, and  \(u_j=\frac{\beta_j}{\hat{\sigma_j^2}}\).  This is effectively the same as effect-size in terms of standardized genotypes, and leads to the same (implicit) prior as LD score regression \cite{ldsc} and GCTA \cite{GCTA}.  With the prior $\textbf{u} \sim \mathcal{N}(0,\sigma_u^2)$, the likelihood in terms of $\textbf{u}$ becomes:
+If instead of modeling \(\hat{\boldsymbol{\beta}}\) and \(\boldsymbol{\beta}\), we can instead model $\hat{\textbf{u}}$ and $\textbf{u}$, where $\hat{u}_j=\frac{\hat{\beta_j}}{\hat{\sigma_j^2}}$, and  \(u_j=\frac{\beta_j}{\hat{\sigma_j^2}}\).  This is effectively the same as effect-size in terms of standardized genotypes, and leads to the same (implicit) prior as LD score regression\cite{ldsc} and GCTA\cite{GCTA}.  With the prior $\textbf{u} \sim \mathcal{N}(0,\sigma_u^2)$, the likelihood in terms of $\textbf{u}$ becomes:
 
 $$\hat{\textbf{u}} | \textbf{u} \sim \mathcal{N}(\textbf{R} \textbf{u},\textbf{R})$$
 
@@ -114,11 +111,12 @@ $$\hat{\textbf{u}} | \textbf{u} \sim \mathcal{N}(\textbf{R} \textbf{u},\textbf{R
 
 \[ \hat{\textbf{u}}|\sigma_u^2 \sim N(0,\sigma_u^2\textbf{R}^2+\textbf{R})\]
 
-Unlike the marginalized likelihood without the normalized-genotype assumption, this form lends itself to efficient computation and parameter estimation. By
-taking the eigenvalue decomposition of $\textbf{R}$ $\textbf{R}=\textbf{Q}\textbf{D}\textbf{Q}^T$, with $\textbf{Q}$ 
+Unlike the marginalized likelihood without the normalized-genotype assumption, precomputing a matrix decomposition for the covariance matrix will greatly accelerate efficient computation of the likelihood
+and as a consequence, parameter estimation.
+If we take the eigenvalue decomposition of $\textbf{R}$ $\textbf{R}=\textbf{Q}\textbf{D}\textbf{Q}^T$, with $\textbf{Q}$ 
 being the $p$ by $p$ matrix of
 eigenvectors, and $\textbf{D}$ being the diagonal matrix of eigenvalues, we can rewrite the marginalized likelihood as
-$\hat{\boldsymbol{\beta}} \sim N(0,\sigma_u^2\textbf{QD}^2\textbf{Q}+\textbf{QDQ})$ .  Letting
+$\hat{\boldsymbol{\beta}} \sim N(0,\sigma_u^2\textbf{QD}^2\textbf{Q}+\textbf{QDQ})$.  Letting
 $\hat{\textbf{v}} = Q^{T}\hat{u}$, and exploiting the property of
 the multivariate normal distribution that an affine transformation of a multivariate normal random variable has a multivariate normal distribution, the
 likelihood for $\hat{\textbf{v}}$ is $\hat{\textbf{v}}|\sigma_u^2 \sim \mathcal{N}(0,\sigma_u^2\textbf{D}^{2}+\textbf{D})$.  As all the off-diagonal terms of
@@ -127,273 +125,96 @@ univariate normal variables where:
 
 \[ v_j \sim N(0,\sigma^2_u\lambda_j^2+\lambda_j) \]
 
-Finding the maximum marginalized-likelihood estimate of $\sigma^2_u$
-
-eigenvalues  Let the eigenvalue decomposition (EVD) of the symmetric matrix $\textbf{R}$
-
-,and that the posterior is :
-
-\[ \textbf{u}|\hat{\textbf{u}} \sim N(\Sigma \hat{\textbf{u}},\Sigma)\]
-
-Where $\Sigma = {\left(\frac{1}{\sigma^2_u} I_p +R\right)}^{-1}$
-
-
-Given the EVD of $\textbf{R}$, \(\textbf{R}=\textbf{Q}\textbf{D}_{R}\textbf{Q}^{T}=\textbf{Q} \text{diag}\left(\lambda_j\right)\textbf{Q}^{T}\), we can rewrite the matrix 
-$$L^{-1}=(\textbf{Q}\textbf{D}_RQ^{T}+cI_p)^{-1}=(\textbf{Q}\textbf{D}_{L^{-1}}Q)^{-1}$$ where \(D_{L^{-1}}^{-1}=\text{diag}\left( \lambda_j+c \right)^{-1}\) and \(D_L=D_{L^{-1}}^{-1}=\text{diag}\left(\frac{1}{\lambda_j+c} \right)\)
-
-Plugging that in to the equation for \(\Sigma\): 
-
-$$\Sigma= \left(\frac{1}{\sigma^2_u} I_p+(\textbf{Q}\textbf{D}_RQ^{T})(\textbf{Q}\textbf{D}_LQ^{T})(\textbf{Q}\textbf{D}_RQ^{T})\right)^{-1}$$
-$$=(\frac{1}{\sigma^2_u} I_p+\textbf{Q}\textbf{D}D_LDQ^{T})^{-1}= \left( \text{diag}\left(\frac{1}{\sigma_u^2}\right) + Q\text{diag}\left(\frac{\lambda_j^2}{\lambda_j+c}\right)Q^{T} \right)^{-1} = \left(Q \text{diag}\left( \frac{1}{\sigma_u^2}+\frac{\lambda_j^2}{\lambda_j+c}\right)Q^{T}\right)^{-1}$$
-$$=\left(Q \text{diag}\left( \frac{(\lambda_j+c)}{(\lambda_j+c)\sigma_u^2}+\frac{\lambda_j^2\sigma_u^2}{(\lambda_j+c)\sigma_u^2}\right)Q^{T}\right)^{-1}=Q \text{diag}\left(\frac{(\lambda_j+c)\sigma_u^2}{(\lambda_j+c)+\lambda_j^2\sigma_u^2} \right)Q^{T}$$
-
-
-We'll call the diagonal matrix \(D_\Sigma\)
-
-Simplifying further:
-
-$$\textbf{u}|\hat{\textbf{u}} \sim N(\underbrace{Q D_\Sigma Q^{T}}_\Sigma \underbrace{\textbf{Q}\textbf{D}_{R}Q^{T}}_R \underbrace{\textbf{Q}\textbf{D}_LQ^{T}}_{(R+cI_p)^{-1}}\hat{\textbf{u}},\underbrace{\textbf{Q}\textbf{D}_\Sigma Q^{T}}_\Sigma)$$
-
-$$= N(\textbf{Q}\textbf{D}_\Sigma D_R D_LQ^{T},\textbf{Q}\textbf{D}_\Sigma Q^{T})$$
-
-$$= N\left( Q \text{diag}\left( \frac{(\lambda_j+c)\sigma_u^2}{(\lambda_j+c)+\lambda_j^2\sigma_u^2} \times \frac{\lambda_j}{1} \times \frac{1}{\lambda_j+c} \right)Q^{T}\hat{\textbf{u}},Q \text{diag}\left(\frac{(\lambda_j+c)\sigma_u^2}{(\lambda_j+c)+\lambda_j^2\sigma_u^2} \right)Q^{T} \right)$$
-
-$$= N\left( Q \text{diag}\left( \frac{\sigma_u^2 \lambda_j}{(\lambda_j+c)+\lambda_j^2\sigma_u^2}  \right)Q^{T}\hat{\textbf{u}},Q \text{diag}\left(\frac{(\lambda_j+c)\sigma_u^2}{(\lambda_j+c)+\lambda_j^2\sigma_u^2} \right)Q^{T} \right)$$
-For brevity, we'll simply write:
-
-$$\textbf{u}|\hat{\textbf{u}} \sim N \left(Q D_{\textbf{u}}Q^{T}\hat{\textbf{u}},\textbf{Q}\textbf{D}_{\Sigma}Q^{T}\right)$$
-
-
-
-
-\subsubsection{Prediction}\label{sec:org8cfb0b1}
-
-Remember that \(\boldsymbol{\beta}=S\textbf{u}\) This means that 
-$$\boldsymbol{\beta} \sim N( S\textbf{Q}\textbf{D}_{\textbf{u}}Q^{T}\hat{\textbf{u}},S\textbf{Q}\textbf{D}_\Sigma Q^{T}S^{T})$$
-
-It also means that given a new vector of genotypes \(\tilde{\textbf{x}}\),
-
-$$E[\tilde{\textbf{x}}\boldsymbol{\beta}]=\tilde{\textbf{x}}S\textbf{Q}\textbf{D}_\textbf{u}Q^{T}\hat{\textbf{u}}$$
-
-And that 
-
-$$\text{Var}(\tilde{\textbf{x}}\boldsymbol{\beta})=\tilde{\textbf{x}}S\textbf{Q}\textbf{D}_\Sigma Q^{T}S^{T}\tilde{\textbf{x}}^{T}$$
-
-
-
-
-
-
-
-
-\subsection{Simulating from genotype}\label{sec:orgaeeeb37}
-
-The main idea is that we have two parameters we want to estimate (\(PVE,c\)) from data \(\hat{u}=\frac{\hat{\beta}}{\text{se}(\hat{\beta})}\)
-
-The path from \(PVE\) and \(c\)  to \(\hat{u}\) looks like this:
-
-Start with an \$n\$x\(p\) matrix of column-centered genotypes (\(X\)).
-
-For a chosen value of \(PVE\), define \(\sigma_u\) as:
-
-$$\sigma_u=\sqrt{\frac{n}{p}PVE}$$
-
-$$u_i \sim N(0,\sigma_u)$$
-
-\(\beta\) is a transformation of \(u\) based on \(\sigma_y\) and \(\sigma_{x_j}\) (\(\sigma_y\) is chosen to be 1 for all simulations)
-
-
-$$\beta_i=\frac{\sigma_y}{\sqrt{n}\sigma_{x_i}} u_i$$
-From there we can construct \(V(X\beta)\) which we can combine with our chosen PVE value to obtain the scale(\(\tau^{-1}\)) of the residuals(\(\epsilon\)):
-
-$$ PVE= \frac{V(X\beta)}{\tau^{-1} + V(X\beta)} \implies \tau^{-1} = V(X\beta) \left(\frac{1}{PVE}-1\right)  $$
-$$\epsilon \sim N(0,\tau^{-1}I_n)$$
-
-
-$$ y= X \beta + \epsilon $$
-\(y\) is centered to have a mean of \(0\). \(\hat{\beta_i}\) and \(\text{se}(\hat{\beta_i})\) Are obtained by univariate ordinary least squares (fit without an intercept term). If there is confounding in the simulation, it's added to \(\hat{\beta}\) as \(\hat{u}_{\text{confound}}=\hat{u}+N(0,c I_p)\)
-
-
-\subsection{Simulating "directly" from LD}\label{sec:org40b8379}
-
-A simpler simulation strategy is to simply sample \(\hat{u}\) directly from a multivariate normal distribution, specified by \(R\) \(\sigma_u\), and \(c\).
-
-
-$$\hat{u}_{\text{confound}} \sim N(0,\sigma_u^2R^2+R+c I_p)$$
-
-To (greatly) accelerate the generation of samples from the multivariate normal distribution, we can use the eigenvalue decomposition of \(R\):
-
-First remember that we can write the variance of \(\hat{u}_{\text{confound}}\) as 
-
-$$V(\sigma_u,c)=Q(\sigma^2_uD^2+D+c I_p)Q^{T}$$
-
-for convenience, let's define \(D^\star\) to be 
-
-$$D^{\star}=(\sigma_uD^2+D+c I_p)$$
-Let's also define \(R^\star\) to be 
-$$R^\star=Q D^{\star}Q^{T}$$
-
-A useful trick when trying to draw samples from a multivariate normal distribution
-is to use the matrix \(A=\textbf{Q}\textbf{D}^{1/2}\) and  draw \(p\) samples from a standard normal distribution, (i.e \(z_i \sim N(0,1)\)).  \(\hat{u}_{\text{confound}}=Az\) now has the desired distrubtion.
+Computing the marginalized-likelihood estimate of $\sigma^2_u$ in terms of $\textbf{v}$ and $\textbf{D}$ can be done without the costly covariance inverse or determinant calculations required in the original multivariate probability density function.
 
 
 
 
 \subsection{Background}\label{sec:org13cff0e}
 
-\subsubsection{Fisher's information for multivariate normal}\label{sec:orgc6a5fb9}
-
-If we have \(n\) independent data points, each with the distribution \(f(x|\theta)\), for large \(n\), the MLE \(\hat{\theta}\) as approximately normal, with mean \(\theta\), and variance \(\frac{\tau^2(\theta)}{n}\), where 
-
-$$ \frac{1}{\tau^2(\theta)}=E \left( \frac{d}{d \theta} \log f(X_1|\theta) \right)^2 = -E \left[ \frac{d^2}{d\theta^2} \log f(X_1|\theta) \right]$$
-$$\mathcal{I}(\sigma_\textbf{u}^2)=\frac{1}{2}\text{tr}\left( \Sigma^{-1} \frac{\partial  \Sigma}{\partial \sigma_{\textbf{u}^2}}  \Sigma^{-1} \frac{\partial  \Sigma}{\partial \sigma_{\textbf{u}^2}} \right) \\ 
-=\frac{1}{2}\sum_{i=1}^p \frac{\lambda_i^4}{(\sigma_\textbf{u}^2 \lambda_i^2+\lambda_i)^2} $$
-
-In this case, \(\sqrt{n}(\hat{\theta}-\theta)\) is approximately normal with an expectation of \(0\)  and a variance given by $$\frac{1}{\sum_{i=1}^n \sigma_i^2(\theta)}$$.  (This result comes from equation 5.77 of the text of Stigler's STAT 244 class)
-
-
-
-\subsection{RSSp without confounding}\label{sec:org68d2164}
-
-Remember the marginalized form of \(\hat{u}\) (or check out the \texttt{RSSp\_Posterior} post)
-
-$$ \hat{\textbf{u}}|\sigma_u^2 \sim N(0,\sigma_u^2R^2+R)$$
-Also remember that we have diagonalized the LD matrix:
-
-$$\sigma^2_uR^2+R \\ = \sigma_u^2\textbf{Q}\textbf{D}_R^2Q^{T} + Q D_{R} Q^{T} \\ =Q(D_\textbf{u})Q^{T}$$
-
-Where \(D_R=\text{diag}\left(\lambda_i\right)\) and \(D_\textbf{u}=\text{diag}\left(\sigma_u^2\lambda_i^2+\lambda_i\right)\)
-
-If we transform \(\hat{\textbf{u}}\), multiplying it by \(Q^{T}\), then instead of having a multivariate  \(\hat{\textbf{u}}|\sigma_u^2\) , we now have \(p\) univariate normals, with densities given by 
-
-$$(Q^{T}\hat{\textbf{u}})_i|\sigma_u^2  \sim N(0,\sigma_u^2\lambda_i^2+\lambda_i)$$
-
-If we call \((Q^{T}\hat{\textbf{u}})_i\) \(\hat{q}_i\) then we can write the log-likelihood as:
-
-
-The first derivative wrt. \(\sigma_u^2\) is
-
-$$\sum_{i=1}^p -\frac{(\lambda_i^2 \sigma_u^2 + \lambda_i - \hat{q}_i^2)}{2 (\lambda^2 \sigma_u^2 + \lambda_i)^2}$$
-
-The second derivative wrt. \(\sigma_u^2\) is :
-
-$$\sum_{i=1}^p  \frac{\lambda_i (\lambda_i^2 \sigma_u^2 + \lambda_i - 2 \hat{q}_i^2)}{2 (\lambda_i^2 \sigma_u^2 + \lambda_i)^3}$$
-
-\subsection{RSSp with confounding}\label{sec:org33ff459}
-
-
-$$ \hat{\textbf{u}}|\sigma_u^2,c \sim N(0,\sigma_u^2R^2+R+cI_p)$$
-
-$$\sigma^2_uR^2+R+cI_p \\ = \sigma_u^2\textbf{Q}\textbf{D}_R^2Q^{T} + Q D_{R} Q^{T} + cI_p \\ =\sigma_u^2\textbf{Q}\textbf{D}_R^2Q^{T}+\textbf{Q}\textbf{D}_LQ^{T} \\ =Q(\sigma_u^2D^2_R + D_L)Q^{T} \\ =Q(D_\textbf{u})Q^{T}$$
-Where \(D_R=\text{diag}\left(\lambda_i\right)\) ,\(D_L=\text{diag}\left(\lambda_i+c\right)\) and \(D_\textbf{u}=\text{diag}\left(\sigma_u^2\lambda_i^2+\lambda_i+c\right)\)
-
-If we transform \(\hat{\textbf{u}}\), multiplying it by \(Q^{T}\), then instead of having a multivariate  \(\hat{\textbf{u}}|\sigma_u^2,c\) , we now have \(p\) univariate normals, with densities given by 
-
-$$(Q^{T}\hat{\textbf{u}})_i|\sigma_u^2,c  \sim N(0,\sigma_u^2\lambda_i^2+\lambda_i+c)$$
-
-If we call \((Q^{T}\hat{\textbf{u}})_i\) \(\hat{q}_i\) then we can write the log-likelihood as:
-
-Finally, the cross term is:
- $$\frac{\lambda_i^2 (c + \lambda_i^2 \sigma_u^2 + \lambda_i - 2 \hat{q}_i^2)}{2 (c + \lambda_i^2 \sigma_u^2 + \lambda_i)^3}$$
-If  we define \(\theta = \left\{ \sigma_u^2 , c \right\}\), and \(H_{.,.,i}\) to be the symmetric 2x2 Hessian matrix:
-
-$$H_{.,.,i}=\begin{bmatrix}\frac{\lambda_i^4 (c + \lambda_i^2 \sigma_u^2 + \lambda_i - 2 \hat{q}_i^2)}{2 (c + \lambda_i^2 \sigma_u^2 + \lambda_i)^3} & \frac{\lambda_i^2 (c + \lambda_i^2 \sigma_u^2 + \lambda_i - 2 \hat{q}_i^2)}{2 (c + \lambda_i^2 \sigma_u^2 + \lambda_i)^3}\\\frac{\lambda_i^2 (c + \lambda_i^2 \sigma_u^2 + \lambda_i - 2 \hat{q}_i^2)}{2 (c + \lambda_i^2 \sigma_u^2 + \lambda_i)^3} & \frac{c + \lambda_i^2 \sigma_u^2+ \lambda_i - 2 \hat{q}_i^2 }{2 (c  + \lambda_i^2 \sigma_u^2+ \lambda_i)^3}\end{bmatrix} =H_{.,.,i}=\frac{c + \lambda_i^2 \sigma_u^2 + \lambda_i - 2 \hat{q}_i^2}{2 (c + \lambda_i^2 \sigma_u^2 + \lambda_i)^3}   
-\begin{bmatrix} \lambda_i^4 & \lambda_i^2\\ \lambda_i^2 & 1\end{bmatrix}
-=\frac{c + \lambda_i^2 \sigma_u^2 + \lambda_i - 2 \hat{q}_i^2}{2 (c + \lambda_i^2 \sigma_u^2 + \lambda_i)^3} \begin{bmatrix}\lambda_i^2 \\ 1 \end{bmatrix} \begin{bmatrix}\lambda_i^2 & 1 \end{bmatrix}$$
-Then
-
-$$\sigma^2_i(\theta_j) = E \left( \frac{d}{d\theta_j} \log f_i(X_i|\theta) \right)^2 = H^{-1}_{j,j,i}$$
-
-
-
-This means that 
-In this case, \(\sqrt{p}(\hat{\theta}-\theta)\) is approximately normal with an expectation of \(0\)  and a variance given by  $$\left(\sum_{i=1}^p \sigma_i^2(\theta)\right)^{-1}=\left(\sum_{i=1}^p - \frac{c + \lambda_i^2 \sigma_u^2 + \lambda_i - 2 \hat{q}_i^2}{2 (c + \lambda_i^2 \sigma_u^2 + \lambda_i)^3}   
-\begin{bmatrix} \lambda_i^4 & \lambda_i^2\\ \lambda_i^2 & 1\end{bmatrix}\right)^{-1}$$
-
-
-
-Note that the case of mutually independent SNPs (i.e \(R=I_p\)). 
-
-$$H^{-1}=\left(\sum_{i=1}^p - \frac{c +  \sigma_u^2 + 1 - 2 \hat{q}_i^2}{2 (c + \sigma_u^2 + 1)^3}   
-\begin{bmatrix} 1 & 1\\ 1 & 1\end{bmatrix}\right)^{-1}=\sum_{i=1}^p - \frac{2 (c + \sigma_u^2 + 1)^3}{c +  \sigma_u^2 + 1 - 2 \hat{q}_i^2}
-\left(\begin{bmatrix} 1 & 1\\ 1 & 1\end{bmatrix}\right)^{-1}$$
-
-The matrix \(\begin{bmatrix} 1 & 1\\ 1 & 1\end{bmatrix}\) is singular, as are all constant multiples of this matrix.  This is perhaps not surprising given that in the case that all SNPs are unlinked, variance arising from \(\sigma_u^2\) and \(c\) are entirely indistinguishable.  This is born out in simulation:
-
-
 \section{Materials and Methods}\label{sec:org762fc74}
 
 \subsection{Data}\label{sec:org079c51d}
 
 
-
-
-To estimate the effectiveness of RSSp at estimating heritability, in contrast to ldsc and GCTA, a large sample-size simulation was used.  To make the simulations as realistic as possible, real individual-level genotypes were used.  Although it incurred great additional
-computational expense, the sample-size of the simulation was as large as possible, at up to ten thousand individuals.
-
 \subsubsection{UK Biobank Data}\label{sec:org642e65e}
-
-Individuals from the UK biobank were used to simulate a GWAS.  A random subset of 12,000 individauls were randomly drawn from the 487,409 total individuals in the UK biobank dataset.  Using GCTA, a relatedness matrix was obtained from the 12,000 individuals.
-If two individuals had an estimated relatedness in excess of 0.05, one of the two individuals was removed.  (GCTA removes individuals to maximize the total sample size, as opposed to random selection of one of the two individuals).  After removing closely related 
-individuals, 10,000 individuals were randomly selected to be the samples for which phenotypes would be simulated
 
 
 
 \subsubsection{Welcome Trust Case Control consortium}\label{sec:orgec3f022}
 
-
-
-
-\subsection{GWAS simulation}\label{sec:orgad711ec}
-
-Traits were simulated using a modified version the \texttt{simu} software. For the polygenic simulation setting, 80 traits were simulated at heritabilities between 0.1 and 0.8 in increments of 0.1, with 10 traits
-being simulated at each heritability.  After simulating the phenotype, GWAS summary statistics using GCTA's implementation of the \texttt{fastGWA} mixed linear model-based GWAS.  Following standard procedure in a GWAS,
-10 principle components were used as covariates. 
-
-
 \subsection{Linkage disequilibrium}\label{sec:org828aaeb}
 
-For a reference LD panel, we used either the same sample that was used for the simulation, or a separate, equal sized, 
-non-overlapping subset of the UK biobank individuals were used as a reference panel.  
+Two genome-wide Linkage Disequilibrium estimates were generated.  The first, which I will refer to as ``in-sample'', was generated from same samples used to simulate phenotypes and subsequently generated GWAS summary statistics.  The second set I will refer to as ``reference-panel'', which is the equally sized set of individuals not used in generating GWAS summary statistics.  
 
 
-\subsubsection{LDshrink, a shrinkage estimator for Linkage Disequilibrium}\label{sec:orgae044da}
 
-To improve the estimate of LD, I used the method LDshrink, developed by Wen and Stephens \cite{Wen_2010}, which uses an estimate of 
-the recombination rate, as well an estiamte of the effective population size to improve the estimate of correlation between variants.
+To improve the estimate of LD, I used the LD shrinkage estimator developed by Wen and Stephens\cite{Wen_2010}, which uses an estimate of 
+the recombination rate, as well an estiamte of the effective population size to improve the estimate of correlation between variants.  I implemented a standalone version of this shrinkage estimator in as R package called \texttt{LDshrink}.
 
 If \(\boldsymbol{X}\) is a \(n \times p\) matrix of genotype dosages, such that \(X_{i,j}\) represents the number of effect alleles at the \$j\$th variant in the \$i\$th individual, and \(\hat{\boldsymbol{\Sigma}}\) is the \(p \times p\)  the estimate of covariance between
 variants, where:
 
-$$\boldsymbol{\hat{\Sigma}} = (1-\theta)^2 \textbf{S}+\frac{\theta}{2} \left(1-\frac{\theta}{2}\right)\textbf{I}$$, where 
+\[\boldsymbol{\hat{\Sigma}} = (1-\theta)^2 \textbf{S}+\frac{\theta}{2} \left(1-\frac{\theta}{2}\right)\textbf{I}\], where 
+
 $$ S_{jk} = \begin{cases}
 \text{Cov}(\boldsymbol{X}_{.j},\boldsymbol{X}_{.k}), \text{if } j=k \\
 e^{-\frac{\rho_{jk}}{2n}}\text{Cov}(\boldsymbol{X}_{.j},\boldsymbol{X}_{.k}), \text{otherwise}\\
 \end{cases} $$
-and \(\rho_{jk}\) is an estimate of the population-scaled recombination rate between variants \(j\) and \(k\). Populating the \(\rho\) parameter requires an estimate
-of the population-scaled recombination rate at the the sites in the simulation.  The method pyrho is a fast, demography-aware method for inferance of fine-scale recombination rates, and is based on
-fused-LASSO \cite{Spence_2019}. The British in England and Scotland (GBR) invdividuals from the 1000 genomes project \cite{1kg} were used in the estimation of the local recombination rate.
+and \(\rho_{jk}\) is an estimate of the population-scaled recombination rate between variants \(j\) and \(k\). After shrinkage, the covariance matrix is converted to a correlation matrix, and values below a given threshold (by default 0.001), are rounded down to 0 to induce sparsity in the resulting LD matrix.
+
+Populating the \(\rho\) parameter requires an estimate of the population-scaled recombination rate at the the sites in the simulation.  The method \texttt{pyrho} is a fast, demography-aware method for inferance of fine-scale recombination rates, and is based on
+the fused-LASSO\cite{Spence_2019}. The \texttt{pyrho} method applied to the British in England and Scotland (GBR) invdividuals from the 1000 genomes project\cite{1kg} were used in the estimation of the local recombination rate for the UK biobank simulations.
 
 
-\subsection{Method}\label{sec:org259b807}
-
-
+Considering only singlue nucleotide polymorphisms, the human genome likely has hundreds of millions single nucleotide loci at which there is standing variation in the extant human population\cite{humgenref}.  Indeed, the
+number of distinct single nucleotide polymorphisms cataloged to date is in the hundreds of millions\cite{humgenref}.  While the number of known variants is only set to increase, it is hihgly unlikely to exceed 400 million by an order
+of magnitude (The 3 billion odd base pairs in the human genome provides a hard upper bound).  If one were to try to store the pairwise LD between the 400 million most common variants using a simple double-precision floating point
+representation, the storage requirement would be approximately 1.28 exabytes.  Storing the pairwise LD estimate among the only the 6,065,189 variants with a sample allele frequency above 0.05 in the sample of 10,000 UK biobank
+individuals would require approximately 295 terabytes.  While not technically impossible, it would not be practical to store, and even more impractical to use as for downstream computation.  If one assumes that LD is only between
+variants on the samne chromosome, one can bring down the storage requirements rather dramatically.  In the UK biobank subset Chromosome 2 contains 501,035 variants, the most of any chromosome.  While
+$500,000^2 \times 8 \text{bytes} \approx 2\text{terabytes}$ per chromosomeis a much more manageable size, it is still quite impractical.  The \texttt{LDshrink} approximation, along with an appropriate sparse matrix storage (or data
+compression) brings down the hypothetical storage requirements significantly: beyond moderate genetic distances all LD estimates are shrunk to 0.   As a final means of reducing the storage and computational burden, the LD between
+variants was only estimated for variants within previously identified LD blocks, identified using the method ldetect\cite{ldetect}.
 
 \section{Results}\label{sec:org26555b8}
 
+To estimate the effectiveness of RSSp at estimating heritability, in contrast to ldsc and GCTA, a large sample-size simulation was used.  To make the simulations as realistic as possible, real individual-level genotypes were used.
+Individuals from the UK biobank were used to simulate a GWAS. Two random non-overlapping subsets of 10,000 unlrelated individauls were randomly drawn (without replacement) from the 487,409 total individuals in the UK biobank dataset.  Both datasets were subset to include only the variants above 1 percent allele frequency in both subsets, resulting in 8,446,407 variants.
 
-\subsection{Simulation results}\label{sec:orgdb752e7}
+Traits were simulated using a modified version the \texttt{simu} software\cite{simu}, a tool for simulating GWAS phenotypes based on real genotype data.  \texttt{simu} simulates causal effects from a normal distribution at the according to the GCTA model of scaled genotypes For the polygenic simulation setting, 80 traits were simulated at heritabilities between 0.1 and 0.8 in increments of 0.1, with 10 trait replicates
+being simulated at each level of  heritability.  After simulating the phenotype, GWAS summary statistics were generated using GCTA's implementation of the \texttt{fastGWA} mixed linear model-based GWAS method, with the first 10 principle components used as covariates.  These GWAS summary statistics were then passed to \texttt{ldsc} or \texttt{RSSp}.
 
-\subsubsection{WTCCC simulations}\label{sec:org75a6a66}
 
-\begin{itemize}
-\item RSSp vs LDSC\label{sec:org48df19d}
 
-\item RSSp vs GCTA\label{sec:org43d585c}
-\end{itemize}
+\subsection{RSSp outperforms LD score regression for in-sample and Simulation result}s\label{sec:orgdb752e7}
+
+\begin{figure}
+  \centering
+  \begin{subfigure}[t]{0.45\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{img/rssp_01.png}
+    \caption{Simulated GWAS on 10,000 for a trait with infinitesimal genetic architecture and $h^2=0.1$}\label{fig:gwas_01}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[t]{0.45\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{img/rssp_08.png}
+    \caption{Simulated GWAS on 10,000 for a trait with infinitesimal genetic architecture and $h^2=0.8$}\label{fig:gwas_08}
+  \end{subfigure}
+  \vspace{1cm}
+  \begin{subfigure}[t]{\textwidth}
+    \centering
+    \includegraphics[width=.9\linewidth]{img/rssp_v_ldsc_v_gcta.png}
+    \caption{$\hat{h^2}$ across 10 replicates across 8 values of $h^2$ for 5 methods of heritability estimation. The black line along the diagional represents a perfect 1 to 1 relationship between $\hat{h^2}$ and $h^2$.    The heritability estimation methods are as follows: \texttt{GCTA} is the individual-level data single-component GREML, with 10 principal components used as continuous covariates.   ``In-sample LD'' refers to ,   the GRM was     within-sample and  }\label{fig:rssp_method_comparison}
+  \end{subfigure}
+\end{figure}
+
 
 
 \subsubsection{UK biobank simulations}\label{sec:org0fa2c7f}
+
+
 
 \section{Discussion}\label{sec:orge95691e}
 
@@ -406,35 +227,30 @@ fused-LASSO \cite{Spence_2019}. The British in England and Scotland (GBR) invdiv
 \subsubsection{Reference LD panel}\label{sec:org73e10c3}
 
 I am currently unaware of any method for assessing suitability of a reference LD panel for use with a particular set of GWAS summary statistics.  This is extremely unfortunate, as every 
-method both for fine-mapping and for heritability estimation from summary statistics condition on the LD information being "correct", which is to say that that it is both observed without error, and that the LD information provided,
-be it LD scores or LD matrix, were estimated from the sample on which the GWAS was performed.  
+method both for fine-mapping and for heritability estimation from summary statistics condition on the LD information being ``correct'',
+which is to say that that it is both observed without error, and that the LD information provided, be it LD scores or LD matrix, were estimated from the sample on which the GWAS was performed.
+An interesting future direction would be to develop a method that explicitly modeled uncertainty in the LD estimate.  There are patterns in the GWAS summary statistics that can point to mismatch between
+the LD panel and the GWAS sample.  Consider the case of two variants that are perfectly linked in the reference LD panel.  If the variants are perfectly linked in the GWAS sample as well, the association of each variant
+with the trait will be identical.  
+Allele frequency is commonly reported with GWAS summary statistics, and when not reported it is also possible to estimate the allele frequency using the standard-errors of the effect-size estimates,
+which in most cases will be dominated by the sample variance of the predictor.  If a reference LD panel indicates that a particular region of the genome is at very high LD, but two variants are very tightly linked, but the two variants have very different
+allele frequencies 
+At the very least, it is possible to detect In particularIt as well as  It also seems 
 
 
 \subsection{Practical considerations when working with the LD matrix}\label{sec:org5745037}
 
-Considering only singlue nucleotide polymorphisms, the human genome likely has hundreds of millions single nucleotide loci at which there is standing variation in the extant human population \cite{humgenref}.  Indeed, the number of distinct single nucleotide
-polymorphisms cataloged to date is in the hundreds of millions \cite{humgenref}.  While the number of known variants is only set to increase, it is hihgly unlikely to exceed 400 million by an order of magnitude (The 3 billion odd base pairs in the human genome provides
-a hard upper bound).  If one were to try to store the pairwise LD between the 400 million most common variants using a simple double-precision floating point representation, the storage requirement would be approximately 1.28 exabytes.  While by no means impossible to store
-all 1.28 exabytes, doing so would not be practical.  
+
 
 \subsubsection{Linkage Disequilibrium and Genetic Linkage}\label{sec:orgd025d4b}
 
 Genetic linkage is the source of a great deal of linkage disequilibrium, and can be discounted as a source of linkage disequilibrium for most pairs of variants, as a random pair of variants are unlikely to lie on the same chromosome.  
-\begin{itemize}
-\item {\bfseries\sffamily TODO} check this out a little more.\label{sec:orgc90530a}
-In fact, a remarkable property of human population genetics is the extent to which the distribution of alleles in the population match expectation under HW equilibrium
 
-Most pairs of variants are not physically linked, and
-\end{itemize}
-
-% \subsection{{\bfseries\sffamily TODO} check out this claim}
-% \label{sec:org5dad7d9}
-% In a randomly mating population, Variants in HW equilibrium 
 \subsection{Rank Deficiency of the LD matrix}\label{sec:org48c0ea3}
 
-A practical issue that immediately arises with the infinitesimal assumption that every oberved variant contributes a non-zero effect to variance in the trait is that the observed genotype matrix is rank deficient.  Even with the modified assumption
-that only variants above a given allele frequency make a non-zero contribution to sample variance in the trait, in all but the very largest of datasets, the number of variants genotyped greatly exceeds the number of individuals genotyped.  For individual-level
-data methods, which operate on the GRM, this is generally not an issue, as the GRM (for distantly related individuals) is often full rank.  The LD matrix is not.
+A practical issue that immediately arises with the infinitesimal assumption that every oberved variant contributes a non-zero effect to variance in the trait is that the observed genotype matrix is rank deficient.
+Even with the modified assumption that only variants above a given allele frequency make a non-zero contribution to sample variance in the trait, in all but the very largest of datasets, the number of variants genotyped greatly
+exceeds the number of individuals genotyped.  For individual-level data methods, which operate on the GRM, this is generally not an issue, as the GRM (for distantly related individuals) is often full rank.  The LD matrix is not.
 
 
 

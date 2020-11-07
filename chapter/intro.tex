@@ -3,10 +3,50 @@
 
 This is the introduction for my dissertation
 
+\subsection{ptb}
+
+The job of the biologist is to characterize the diversity of living organisms, the physical, chemical and the molecular basis of that activity, and the ways
+those parts relate to one-another.
+
+I think it is useful at this point to make a brief digression to discuss the distinction between a "variant" and a "gene". The gene is a key player in the paradigm of causality in biological systems. To have a meaningful "causal variant"
+
+The classical definition of a gene is a "unit of heredity" cite\textsubscript{gene}\textsubscript{book} .  Inherent then to the idea of the gene is that it is functionional.  Historically,
+the gene was defined as that which gave rise to (i.e caused) that which was heritable.
+According to the classical definition, the notion of a "functional gene" is purely redundant.  
+
+If the definition of a genetic variant is physical, while the concept of a "causal", genetic factor, that of a gene, is conceptual, 
+it is not clear whether one can arrive at a meaningful definition of a "causal variant".  
+
+To sidestep this philosophical issue, I will use a definition of a causal variant based on a hypothetical experiment.  Imagine two organisms that are
+genetically identical everywhere but the locus of interest.  If there is a consistent, detectable difference between pairs of individuals in regards to our trait
+ of interest, despite being raised in identical environments, we will deem this variant to have a causal relationship on our trait of interest.
+
+Unfortunately in the case of humans such experiments are impossible, and so we must rely on another operational definition of causality.
+
+Rather than a single link between variant and trait, we can construct a chain of causality from variant to molecular intermediate, and then from molecular intermediate to trait
+of interest.  In the case of molecular intermediates, there are two broad categories of variant to molecular-intermediate causal relationships that are especially tractable for 
+validation.  By virtue of the mapping of the human genome and our knowledge of the central dogma of molecular biology cite\textsubscript{crick1958protein} , by knowing the position and sequence
+of a variant one can immediately know with the variant lies within an exon (or splice-site boudary) of a characterized gene.  If so, it is a simple bioinformatic exercise to 
+ascertain the consequence of the change in DNA sequence on primary (and increasingly secondary and tertiary) amino acid structure.  Characterizing how changes in protein
+structure contribute to changes in protein function is a sub-discipline of biology all its own; but this is a question of "how" a variant-gene pair interact, and not a question of 
+"if" they interact.  The functional consequence of the majority of human genetic variation falls into the second category of variant to molecular-intermediate causal relationships.  
+This second category consists of all other mechanisms of causality, perhaps the best understood of which are the "regulatory variants". 
+
+
+\subsection{FGEM}
+
 
 In evaluating the hypothesis that a gene is a driver gene, in addition to considering the experimental evidence (i.e the likelihood of the somatic mutation data under this hypotheses as compared to the null hypothesis that it is not a driver gene), it can be very useful to consider the \emph{a priori} probability that the gene is a driver gene, condtional on the information that is known about that gene.  By combining \emph{a priori} information with the information from the statistical model,in the form of the likelihood (ratio), genes that have high statistical evidence of being driver genes but low prior probability of being driver genes can be down-weighted, while genes that have low or intermediate statistical evidence but high prior probability can be up-weighted.  Similarly, one can have higher certainty that genes with  both high statistical evidence and prior are driver genes and that genes with low statistical evidence and low prior probability are not driver genes.
 
 Under the Bayesian paradigm, \emph{a posteriori} knowledge is reflected as \emph{a prioi} probability for future experiment.  A set of Bayes factors from a study of cancer driver genes identified using the \texttt{driverMAPS} method\cite{drivermaps}.  From 734,754 single nucleotide somatic mutations from 20 tumor types in TCGA, data from approximately 20,000 genes were analyzed with the goal of identifying driver genes. For each gene analyzed in each cancer type, \texttt{driverMAPs} outputs the evidence that it is a driver gene as a Bayes factor.
+
+The pathways through which causal variants influence a trait is a subset of all pathways involved in the trait.
+
+
+
+\subsubsection{TCGA}
+
+By comparing the whole-exome sequencing in the tumor vs adjacent normal tissue, it is possible to identify a subset of somatic mutations corresponding to that patient's cancer.
 
 \subsection{The unreasonable effectiveness of linear models}\label{sec:orgd56a398}
 
