@@ -19,11 +19,11 @@ In addition, we explore the consequences of the demonstrate the importance of ac
 
 \section{Background}
 
-The most common method for relating genotype to phenotype through  an additive model is with the following equation:
+The most common method for associating genotype with phenotype is through  an additive model:
 
 $$ \textbf{y}= \textbf{X} \boldsymbol{\beta} + \boldsymbol{\epsilon}$$
 
-where $\textbf{y}$ is the length $n$ vector of phenotypes, \(X\) is an (\(n\) by \(p\)) matrix representing genotype, (which we will assume is centered for mathematical convenience, and without loss of generality), \(\boldsymbol{\beta}\) is a vector (length \(p\)) of variant-level effects and \(\epsilon\) is noise/error. In this model, the narrow sense heritability is defined as $h^2=\frac{\text{Var}(\textbf{X}\boldsymbol{\beta})}{\text{Var}(\boldsymbol{\epsilon})}$. Under a bayesian paradigm, $\boldsymbol{\beta}$ is treated as a random variable, leading to  $\boldsymbol{\epsilon} = \textbf{y}-\textbf{X}\boldsymbol{\beta} \rightarrow \text{Var}(\boldsymbol{\epsilon})= \text{Var}(\textbf{y})-\text{Var}(\textbf{X}\boldsymbol{\beta})$.  In a GWAS context $\textbf{X}$ and $\textbf{y}$ are fixed, which means that estimating $h^2$, \emph{for population from which the sample is drawn} can be reduced to estimating $\text{Var}(\boldsymbol{\beta})$.
+where $\textbf{y}$ is the length $n$ vector of phenotypes, \(X\) is an (\(n\) by \(p\)) matrix representing genotype, (which we will assume is centered for mathematical convenience, and without loss of generality), \(\boldsymbol{\beta}\) is a vector (length \(p\)) of variant-level effects and \(\epsilon\) is noise/error. In this model, the narrow sense heritability is defined as $h^2=\frac{\text{Var}(\textbf{X}\boldsymbol{\beta})}{\text{Var}(\boldsymbol{\epsilon})}$. Under a bayesian paradigm, $\boldsymbol{\beta}$ is treated as a random variable, leading to  $\boldsymbol{\epsilon} = \textbf{y}-\textbf{X}\boldsymbol{\beta} \rightarrow \text{Var}(\boldsymbol{\epsilon})= \text{Var}(\textbf{y})-\text{Var}(\textbf{X}\boldsymbol{\beta})$.  In a GWAS context $\textbf{X}$ and $\textbf{y}$ are fixed, which means that estimating $h^2$, \emph{for the population from which the sample is drawn} can be reduced to estimating $\text{Var}(\boldsymbol{\beta})$.
 
 With current GWAS sample sizes the number of variants is much larger than the number of samples \(i.e p >>n\).  Under such a regime we can't directly estimate the distribution of \(\beta_i\). The most common means of summarizing the results of a GWAS is to use GWAS summary statistics.  GWAS summary statistics describe the relationship between 
 The summary statistics we will be interested in are the marginal effect size at a particlular variant (\(j\)), which we will denote as
@@ -179,7 +179,9 @@ variants was only estimated for variants within previously identified LD blocks,
 
 \section{Results}\label{sec:org26555b8}
 
-To estimate the effectiveness of RSSp at estimating heritability, in contrast to ldsc and GCTA, a large sample-size simulation was used.  To make the simulations as realistic as possible, real individual-level genotypes were used.
+
+\subsection{Performance of RSSp in simulations}
+To estimate the effectiveness of RSSp at estimating heritability we employed a large-scale GWAS simulation using real genotypes from the UK biobank.    relative to the state of the art summary-statistics-based methods and  other summary  in contrast to ldsc and GCTA, a large sample-size simulation was used.  To make the simulations as realistic as possible, real individual-level genotypes were used.
 Individuals from the UK biobank were used to simulate a GWAS. Two random non-overlapping subsets of 10,000 unlrelated individauls were randomly drawn (without replacement) from the 487,409 total individuals in the UK biobank dataset.  Both datasets were subset to include only the variants above 1 percent allele frequency in both subsets, resulting in 8,446,407 variants.
 
 Traits were simulated using a modified version the \texttt{simu} software\cite{simu}, a tool for simulating GWAS phenotypes based on real genotype data.  \texttt{simu} simulates causal effects from a normal distribution at the according to the GCTA model of scaled genotypes For the polygenic simulation setting, 80 traits were simulated at heritabilities between 0.1 and 0.8 in increments of 0.1, with 10 trait replicates
