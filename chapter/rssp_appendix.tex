@@ -1,0 +1,110 @@
+
+\subsubsection{Fisher's information for multivariate normal}\label{sec:orgc6a5fb9}
+
+If we have \(n\) independent data points, each with the distribution \(f(x|\theta)\), for large \(n\), the MLE \(\hat{\theta}\) as approximately normal, with mean \(\theta\), and variance \(\frac{\tau^2(\theta)}{n}\), where 
+
+$$ \frac{1}{\tau^2(\theta)}=E \left( \frac{d}{d \theta} \log f(X_1|\theta) \right)^2 = -E \left[ \frac{d^2}{d\theta^2} \log f(X_1|\theta) \right]$$
+$$\mathcal{I}(\sigma_\textbf{u}^2)=\frac{1}{2}\text{tr}\left( \Sigma^{-1} \frac{\partial  \Sigma}{\partial \sigma_{\textbf{u}^2}}  \Sigma^{-1} \frac{\partial  \Sigma}{\partial \sigma_{\textbf{u}^2}} \right) \\ 
+=\frac{1}{2}\sum_{i=1}^p \frac{\lambda_i^4}{(\sigma_\textbf{u}^2 \lambda_i^2+\lambda_i)^2} $$
+
+In this case, \(\sqrt{n}(\hat{\theta}-\theta)\) is approximately normal with an expectation of \(0\)  and a variance given by $$\frac{1}{\sum_{i=1}^n \sigma_i^2(\theta)}$$.  (This result comes from equation 5.77 of the text of Stigler's STAT 244 class)
+
+
+The first derivative wrt. \(\sigma_u^2\) is
+
+$$\sum_{i=1}^p -\frac{(\lambda_i^2 \sigma_u^2 + \lambda_i - \hat{q}_i^2)}{2 (\lambda^2 \sigma_u^2 + \lambda_i)^2}$$
+
+The second derivative wrt. \(\sigma_u^2\) is :
+
+$$\sum_{i=1}^p  \frac{\lambda_i (\lambda_i^2 \sigma_u^2 + \lambda_i - 2 \hat{q}_i^2)}{2 (\lambda_i^2 \sigma_u^2 + \lambda_i)^3}$$
+
+\subsection{RSSp with confounding}\label{sec:org33ff459}
+
+
+$$ \hat{\textbf{u}}|\sigma_u^2,c \sim N(0,\sigma_u^2R^2+R+cI_p)$$
+
+$$\sigma^2_uR^2+R+cI_p \\ = \sigma_u^2\textbf{Q}\textbf{D}_R^2Q^{T} + Q D_{R} Q^{T} + cI_p \\ =\sigma_u^2\textbf{Q}\textbf{D}_R^2Q^{T}+\textbf{Q}\textbf{D}_LQ^{T} \\ =Q(\sigma_u^2D^2_R + D_L)Q^{T} \\ =Q(D_\textbf{u})Q^{T}$$
+Where \(D_R=\text{diag}\left(\lambda_i\right)\) ,\(D_L=\text{diag}\left(\lambda_i+c\right)\) and \(D_\textbf{u}=\text{diag}\left(\sigma_u^2\lambda_i^2+\lambda_i+c\right)\)
+
+If we transform \(\hat{\textbf{u}}\), multiplying it by \(Q^{T}\), then instead of having a multivariate  \(\hat{\textbf{u}}|\sigma_u^2,c\) , we now have \(p\) univariate normals, with densities given by 
+
+$$(Q^{T}\hat{\textbf{u}})_i|\sigma_u^2,c  \sim N(0,\sigma_u^2\lambda_i^2+\lambda_i+c)$$
+
+If we call \((Q^{T}\hat{\textbf{u}})_i\) \(\hat{q}_i\) then we can write the log-likelihood as:
+
+Finally, the cross term is:
+ $$\frac{\lambda_i^2 (c + \lambda_i^2 \sigma_u^2 + \lambda_i - 2 \hat{q}_i^2)}{2 (c + \lambda_i^2 \sigma_u^2 + \lambda_i)^3}$$
+If  we define \(\theta = \left\{ \sigma_u^2 , c \right\}\), and \(H_{.,.,i}\) to be the symmetric 2x2 Hessian matrix:
+
+$$H_{.,.,i}=\begin{bmatrix}\frac{\lambda_i^4 (c + \lambda_i^2 \sigma_u^2 + \lambda_i - 2 \hat{q}_i^2)}{2 (c + \lambda_i^2 \sigma_u^2 + \lambda_i)^3} & \frac{\lambda_i^2 (c + \lambda_i^2 \sigma_u^2 + \lambda_i - 2 \hat{q}_i^2)}{2 (c + \lambda_i^2 \sigma_u^2 + \lambda_i)^3}\\\frac{\lambda_i^2 (c + \lambda_i^2 \sigma_u^2 + \lambda_i - 2 \hat{q}_i^2)}{2 (c + \lambda_i^2 \sigma_u^2 + \lambda_i)^3} & \frac{c + \lambda_i^2 \sigma_u^2+ \lambda_i - 2 \hat{q}_i^2 }{2 (c  + \lambda_i^2 \sigma_u^2+ \lambda_i)^3}\end{bmatrix} =H_{.,.,i}=\frac{c + \lambda_i^2 \sigma_u^2 + \lambda_i - 2 \hat{q}_i^2}{2 (c + \lambda_i^2 \sigma_u^2 + \lambda_i)^3}   
+\begin{bmatrix} \lambda_i^4 & \lambda_i^2\\ \lambda_i^2 & 1\end{bmatrix}
+=\frac{c + \lambda_i^2 \sigma_u^2 + \lambda_i - 2 \hat{q}_i^2}{2 (c + \lambda_i^2 \sigma_u^2 + \lambda_i)^3} \begin{bmatrix}\lambda_i^2 \\ 1 \end{bmatrix} \begin{bmatrix}\lambda_i^2 & 1 \end{bmatrix}$$
+Then
+
+$$\sigma^2_i(\theta_j) = E \left( \frac{d}{d\theta_j} \log f_i(X_i|\theta) \right)^2 = H^{-1}_{j,j,i}$$
+
+
+
+This means that 
+In this case, \(\sqrt{p}(\hat{\theta}-\theta)\) is approximately normal with an expectation of \(0\)  and a variance given by  $$\left(\sum_{i=1}^p \sigma_i^2(\theta)\right)^{-1}=\left(\sum_{i=1}^p - \frac{c + \lambda_i^2 \sigma_u^2 + \lambda_i - 2 \hat{q}_i^2}{2 (c + \lambda_i^2 \sigma_u^2 + \lambda_i)^3}   
+\begin{bmatrix} \lambda_i^4 & \lambda_i^2\\ \lambda_i^2 & 1\end{bmatrix}\right)^{-1}$$
+
+
+
+Note that the case of mutually independent SNPs (i.e \(R=I_p\)). 
+
+$$H^{-1}=\left(\sum_{i=1}^p - \frac{c +  \sigma_u^2 + 1 - 2 \hat{q}_i^2}{2 (c + \sigma_u^2 + 1)^3}   
+\begin{bmatrix} 1 & 1\\ 1 & 1\end{bmatrix}\right)^{-1}=\sum_{i=1}^p - \frac{2 (c + \sigma_u^2 + 1)^3}{c +  \sigma_u^2 + 1 - 2 \hat{q}_i^2}
+\left(\begin{bmatrix} 1 & 1\\ 1 & 1\end{bmatrix}\right)^{-1}$$
+
+The matrix \(\begin{bmatrix} 1 & 1\\ 1 & 1\end{bmatrix}\) is singular, as are all constant multiples of this matrix.  This is perhaps not surprising given that in the case that all SNPs are unlinked, variance arising from \(\sigma_u^2\) and \(c\) are entirely indistinguishable.  This is born out in simulation:
+
+
+
+
+
+\[ \textbf{u}|\hat{\textbf{u}} \sim N(\Sigma \hat{\textbf{u}},\Sigma)\]
+
+Where $\Sigma = {\left(\frac{1}{\sigma^2_u} I_p +R\right)}^{-1}$
+
+
+Given the EVD of $\textbf{R}$, \(\textbf{R}=\textbf{Q}\textbf{D}_{R}\textbf{Q}^{T}=\textbf{Q} \text{diag}\left(\lambda_j\right)\textbf{Q}^{T}\), we can rewrite the matrix 
+$$L^{-1}=(\textbf{Q}\textbf{D}_RQ^{T}+cI_p)^{-1}=(\textbf{Q}\textbf{D}_{L^{-1}}Q)^{-1}$$ where \(D_{L^{-1}}^{-1}=\text{diag}\left( \lambda_j+c \right)^{-1}\) and \(D_L=D_{L^{-1}}^{-1}=\text{diag}\left(\frac{1}{\lambda_j+c} \right)\)
+
+Plugging that in to the equation for \(\Sigma\): 
+
+$$\Sigma= \left(\frac{1}{\sigma^2_u} I_p+(\textbf{Q}\textbf{D}_RQ^{T})(\textbf{Q}\textbf{D}_LQ^{T})(\textbf{Q}\textbf{D}_RQ^{T})\right)^{-1}$$
+$$=(\frac{1}{\sigma^2_u} I_p+\textbf{Q}\textbf{D}D_LDQ^{T})^{-1}= \left( \text{diag}\left(\frac{1}{\sigma_u^2}\right) + Q\text{diag}\left(\frac{\lambda_j^2}{\lambda_j+c}\right)Q^{T} \right)^{-1} = \left(Q \text{diag}\left( \frac{1}{\sigma_u^2}+\frac{\lambda_j^2}{\lambda_j+c}\right)Q^{T}\right)^{-1}$$
+$$=\left(Q \text{diag}\left( \frac{(\lambda_j+c)}{(\lambda_j+c)\sigma_u^2}+\frac{\lambda_j^2\sigma_u^2}{(\lambda_j+c)\sigma_u^2}\right)Q^{T}\right)^{-1}=Q \text{diag}\left(\frac{(\lambda_j+c)\sigma_u^2}{(\lambda_j+c)+\lambda_j^2\sigma_u^2} \right)Q^{T}$$
+
+
+We'll call the diagonal matrix \(D_\Sigma\)
+
+Simplifying further:
+
+$$\textbf{u}|\hat{\textbf{u}} \sim N(\underbrace{Q D_\Sigma Q^{T}}_\Sigma \underbrace{\textbf{Q}\textbf{D}_{R}Q^{T}}_R \underbrace{\textbf{Q}\textbf{D}_LQ^{T}}_{(R+cI_p)^{-1}}\hat{\textbf{u}},\underbrace{\textbf{Q}\textbf{D}_\Sigma Q^{T}}_\Sigma)$$
+
+$$= N(\textbf{Q}\textbf{D}_\Sigma D_R D_LQ^{T},\textbf{Q}\textbf{D}_\Sigma Q^{T})$$
+
+$$= N\left( Q \text{diag}\left( \frac{(\lambda_j+c)\sigma_u^2}{(\lambda_j+c)+\lambda_j^2\sigma_u^2} \times \frac{\lambda_j}{1} \times \frac{1}{\lambda_j+c} \right)Q^{T}\hat{\textbf{u}},Q \text{diag}\left(\frac{(\lambda_j+c)\sigma_u^2}{(\lambda_j+c)+\lambda_j^2\sigma_u^2} \right)Q^{T} \right)$$
+
+$$= N\left( Q \text{diag}\left( \frac{\sigma_u^2 \lambda_j}{(\lambda_j+c)+\lambda_j^2\sigma_u^2}  \right)Q^{T}\hat{\textbf{u}},Q \text{diag}\left(\frac{(\lambda_j+c)\sigma_u^2}{(\lambda_j+c)+\lambda_j^2\sigma_u^2} \right)Q^{T} \right)$$
+For brevity, we'll simply write:
+
+$$\textbf{u}|\hat{\textbf{u}} \sim N \left(Q D_{\textbf{u}}Q^{T}\hat{\textbf{u}},\textbf{Q}\textbf{D}_{\Sigma}Q^{T}\right)$$
+
+
+
+
+\subsubsection{Prediction}\label{sec:org8cfb0b1}
+
+Remember that \(\boldsymbol{\beta}=S\textbf{u}\) This means that 
+$$\boldsymbol{\beta} \sim N( S\textbf{Q}\textbf{D}_{\textbf{u}}Q^{T}\hat{\textbf{u}},S\textbf{Q}\textbf{D}_\Sigma Q^{T}S^{T})$$
+
+It also means that given a new vector of genotypes \(\tilde{\textbf{x}}\),
+
+$$E[\tilde{\textbf{x}}\boldsymbol{\beta}]=\tilde{\textbf{x}}S\textbf{Q}\textbf{D}_\textbf{u}Q^{T}\hat{\textbf{u}}$$
+
+And that 
+
+$$\text{Var}(\tilde{\textbf{x}}\boldsymbol{\beta})=\tilde{\textbf{x}}S\textbf{Q}\textbf{D}_\Sigma Q^{T}S^{T}\tilde{\textbf{x}}^{T}$$
