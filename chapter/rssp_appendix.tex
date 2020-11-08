@@ -108,3 +108,38 @@ $$E[\tilde{\textbf{x}}\boldsymbol{\beta}]=\tilde{\textbf{x}}S\textbf{Q}\textbf{D
 And that 
 
 $$\text{Var}(\tilde{\textbf{x}}\boldsymbol{\beta})=\tilde{\textbf{x}}S\textbf{Q}\textbf{D}_\Sigma Q^{T}S^{T}\tilde{\textbf{x}}^{T}$$
+
+
+
+\subsection{Limitations}\label{sec:org2dc1c0d}
+
+\subsubsection{The assumption of polygenicity}\label{sec:orgefbe2e8}
+
+\subsubsection{The implicit relationship between effect-size and allele frequency}\label{sec:org3cb4dd7}
+
+\subsubsection{Reference LD panel}\label{sec:org73e10c3}
+
+I am currently unaware of any method for assessing suitability of a reference LD panel for use with a particular set of GWAS summary statistics.  This is extremely unfortunate, as every 
+method both for fine-mapping and for heritability estimation from summary statistics condition on the LD information being ``correct'',
+which is to say that that it is both observed without error, and that the LD information provided, be it LD scores or LD matrix, were estimated from the sample on which the GWAS was performed.
+An interesting future direction would be to develop a method that explicitly modeled uncertainty in the LD estimate.  There are patterns in the GWAS summary statistics that can point to mismatch between
+the LD panel and the GWAS sample.  Consider the case of two variants that are perfectly linked in the reference LD panel.  If the variants are perfectly linked in the GWAS sample as well, the association of each variant
+with the trait will be identical.  
+Allele frequency is commonly reported with GWAS summary statistics, and when not reported it is also possible to estimate the allele frequency using the standard-errors of the effect-size estimates,
+which in most cases will be dominated by the sample variance of the predictor.  If a reference LD panel indicates that a particular region of the genome is at very high LD, but two variants are very tightly linked, but the two variants have very different
+allele frequencies 
+At the very least, it is possible to detect In particularIt as well as  It also seems 
+
+
+\subsubsection{Linkage Disequilibrium and Genetic Linkage}\label{sec:orgd025d4b}
+
+Genetic linkage is the source of a great deal of linkage disequilibrium, and can be discounted as a source of linkage disequilibrium for most pairs of variants, as a random pair of variants are unlikely to lie on the same chromosome.  
+
+\subsection{Rank Deficiency of the LD matrix}\label{sec:org48c0ea3}
+
+A practical issue that immediately arises with the infinitesimal assumption that every oberved variant contributes a non-zero effect to variance in the trait is that the observed genotype matrix is rank deficient.
+Even with the modified assumption that only variants above a given allele frequency make a non-zero contribution to sample variance in the trait, in all but the very largest of datasets, the number of variants genotyped greatly
+exceeds the number of individuals genotyped.  For individual-level data methods, which operate on the GRM, this is generally not an issue, as the GRM (for distantly related individuals) is often full rank.  The LD matrix is not.
+
+
+

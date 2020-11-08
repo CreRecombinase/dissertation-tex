@@ -224,9 +224,6 @@ GO:0000165 & 2.66 &   8 & MAPK cascade \\
 \caption{Top features from single enrichment analysis.  Features are ranked by the number of cancer types in which the feature was significant at (FDR-adjusted) $p \leq 0.1$, and then by the average enrichment estimate among all cancer types.   }
 \end{table}
 
-
-
-
 The feature with the higest mean (and median) enrichment is GO:2000774, positive regulation of cellular senescence, with a median enrichment estimate of 5.458, and a mean enrichment estiamte of 7.91.  In a third of cancer types analyzed (6 of the 18), the univarite, FDR-adjusted $p$-value for GO:2000774 was less than 0.1.  The relevance of this feature to cancer is obvious and bordering on tautalogical: mutations in genes that prevent the cell from entering oncogene induced cellular senscence (especially those related to the ARF/TP53 pathway)  are thought to be all but essential for progression of almost all cancers\cite{chandeck10_oncog_induc_cellul_senes}.  It is difficult to overstate the importance of positive regulation of cellular senescence as a key guard against cancer.  TP53 had the highest average log Bayes Factor of all genes going in to the analysis, and had the highest average posterior probability of being a cancer gene as a result of the analysis.
 
 
@@ -244,26 +241,8 @@ A perennial challenge in developing statistical methods for gene identification 
 
 The gene with the largest average increase in posterior probability between the functional and uniform posterior  was the gene for  Transforming Growth Factor Beta 1, or TGFB1.  The posterior for TGFB1 increased by an average of 0.496, with a median increase of 0.417.  Based on the log Bayes factors alone, TGFB1's evidence is weak at best.  18 of the 20 cancers for which ~driverMAPS~ data is available, the log Bayes factor is negative, and in the 2 cases where it is positive (UCS and SARC), the log Bayes factors are 0.912 and 0.661, which is not very high.  TGFB1 is not characterized by intogen as a mutational cancer driver, but the role of TGF-$\beta$ signaling pathway is widely known \cite{TGF_Zhao_2018}. After TGFB1, the gene with the largest increase in posterior probability that is not a known mutational cancer driver is JUN.  JUN is the gene with the highest minimal increase in posterior probability.  JUN increased in posterior over the uniform model in every cancer in which it was tested, and by at least 0.01.  Only 3 genes increased in posterior probability over the uniform model in every cancer type (the aforementioned JUN, IGF1 and HRAS). While JUN is not a known mutational cancer driver gene according to intogen, a brief literature review reveals that not only is JUN a known mutational cancer driver gene, but that JUN was the first oncogenic transcription factor ever discovered, but was initially discovered as a viral oncogene \cite{Vogt_2002}.  
 
-SMAD3 has an average increase of 0.38, and median increase of 0.333
-
-NOTCH1 had an average increase of 0.33 and median increase of 0.32
-
-
-
-
-
-% Glutaredoxin domain-containing cysteine-rich protein 1, or GRXCR1, was the gene with the largest median decrease in posterior probability over the uniform model, with a median decrease of 0.08.
-
 
 Across all analyses, the gene with the single largest increase in posterior probability was in SKCM, where cyclin-dependent kinase inhibitor 1, or CDKN1A, which having log Bayes factor of -0.10, had a posterior probability under the uniform of 0.005, and a posterior under the functional model of 0.979.  CDKN1A,which is also known as p21 is a regulator of cell cycle at G1, and the expression of CDKN1A is known to be tightly controlled by the tumor suppressor p53, but it is also hypothesized to have p53 independent tumor suppressor activites \cite{abbas09_p21_cancer}.  It has not been previously identified as an intogen driver gene in the context of melanoma. The prior probability of CDKN1A being a driver gene according to the multivariate model in SKCM was 0.98.  The high prior for CDKN1A was driven by the 8 GO terms with non-zero enrichment estimates associated with CDKN1A (see table \ref{tab:CDKN1A_features}).
-
-
-
-% When reprioritizing genes it is equally important to take note the genes that have a decreased posterior probability of being driver genes.  The gene with the largest decrease in posterior probability across all analyses was Thrombospondin Type 1 Domain Containing 7A *THSD7A)  in HNSC.  THSD7A had a posterior under the uniform of 0.732, and a posterior under the functional prior of only 0.37.    THSD7A had a high log Bayes factor in HNSC of 5.65,  the highest log Bayes factor observed for that gene in any of the 18 cancer types for which data was available (the mean uniform posterior probability of THSD7A being a driver gene was 0.049).
-% % THSD7A is not listed as a cancer gene in the intogen database, and 
-
-
-The gene with the lowest prior in all analyses is BIN1 in LUAD, with a prior probability of \num{1.79e-4}.  BIN1 is annotated with two GO terms with non-zero effect sizes in the LUAD multivariate model.  Both of these terms negative estimates: GO:0016032, ``viral process'', has an estimate of -1.72, and ``positive regulation of apoptotic process'', GO:0043065, has an estimate of -0.33.
 
 
 \begin{figure}
