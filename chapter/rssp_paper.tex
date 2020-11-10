@@ -220,8 +220,7 @@ being simulated at each level of  heritability.  After simulating the phenotype,
 
 In this study we show how SNP-heritability can be estimated using GWAS summary statistics and an out-of-sample reference LD panel with accuracy comparable to individual-level data methods, even when the number of variants exceeds the number of samples by several orders of magnitude.
 
-Unlike previously described methods for estimation of LD from GWAS summary statistics, RSSp block-diagonal approximation to the genome-wide LD matrix can be 
-by partitioning the genome into approximately independent
+Unlike previously described methods for estimation of LD from GWAS summary statistics, RSSp performs well under the block-diagonal approximation to the genome-wide LD matrix which allows for scalable estimate of SNP heritability on large numbers of variants. We further demonstrated the by partitioning the genome into approximately independent
 
 
 While whe have shown that accurate estimation of SNP-heritability from GWAS summary statistics using an out-of-sample reference LD panel, there are some important caveats and future directions.  First, though there was no sample overlap between the GWAS cohort and the LD reference panel, both the cohort and the panel were randomly sampled from the same set of individuals.  The set of variants used to simulate the GWAS were selected so that they were above 1 percent frequency in both the GWAS sample and in the LD reference panel.  If, for example, the 503 individuals in the \textttt{EUR} subset of the 1000 genomes dataset were used as a reference LD panel, the match between the datasets would have likely been poorer.
