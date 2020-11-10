@@ -1,9 +1,11 @@
 \documentclass{ucetd}
-\usepackage{subfigure,epsfig,amsfonts}
+\usepackage{epsfig,amsfonts}
 \usepackage{natbib}
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage[T1]{fontenc}
+\usepackage{caption}
+\usepackage{subcaption}
 \usepackage{graphicx}
 \usepackage[normalem]{ulem}
 \usepackage{fourier} 
@@ -17,9 +19,6 @@
 \usepackage{etoolbox}
 
 \usepackage{unicode-math}
-\setmainfont{Latin Modern Roman}
-\setmathfont{Latin Modern Math}
-
 
 \AtBeginEnvironment{quote}{\singlespace\vspace{-\topsep}\small}
 \AtEndEnvironment{quote}{\vspace{-\topsep}\endsinglespace}
@@ -41,6 +40,11 @@
 
 
 \begin{document}
+
+
+\setmainfont{Latin Modern Roman}
+\setmathfont{Latin Modern Math}
+
 %% Basic setup commands
 % If you don't want a title page comment out the next line and uncomment the line after it:
 \maketitle
