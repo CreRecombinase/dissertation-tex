@@ -14,3 +14,6 @@
 
 
 %The gene with the lowest prior in all analyses is BIN1 in LUAD, with a prior probability of \num{1.79e-4}.  BIN1 is annotated with two GO terms with non-zero effect sizes in the LUAD multivariate model.  Both of these terms negative estimates: GO:0016032, ``viral process'', has an estimate of -1.72, and ``positive regulation of apoptotic process'', GO:0043065, has an estimate of -0.33.
+
+
+The \texttt{driverMAPs} method identifies mutational driver genes by testing genes for an excess of somatic point mutations as compared to background mutational processes. Somatic SNV are an important class of somatic variants, (they are the most frequently occuring source of somatic variation) but somatic insertion deletions, structural variants and retrotranspositions also represent significant sources of somatic variation\cite{PANCAN}.  If a mutational driver gene does not rely on coding somatic SNVs to unlock their oncogenic potential, (e.g the gene fusion of BCR and ABL1 created by reciprocal translocation of chromosomes 9 and 22\cite{philly}) it will be missed by methods relying on counting somatic SNVs.
