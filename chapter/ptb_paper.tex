@@ -94,19 +94,19 @@ TORUS posterior probability that the region contained at least one causal varian
 % but not LD structure.  
 
 
-\subsubsection{Stratified LD score regression}\label{sec:org3173e32}
+% \subsubsection{Stratified LD score regression}\label{sec:org3173e32}
 
-We assessed how much of the heritability of  gestational duration is contained within ATAC-seq, H3K4me1, H3K4me3, H3K27ac and pcHi-C peaks using stratified LD score regression (S-LDSC).
-Stratified LD score regression is a generalization of LD score regression, a method for estimating the heritability of a trait using SNP-level GWAS summary statistics and SNP-level estimates
-of the amount of genetic variation tagged at each variant, known as LD scores.  Under the LD-score regression model, the expected value of the GWAS summary statistic for a variant
-(specifically 
-the expected value of the \(\chi^2\) statistic) is a linear function of the LD score at that site, and h2, the per-SNP heritability, and a an intercept parameter.  Under the S-LDSC
-model, rather than estimating a single per-SNP heritability parameter, a parameter is estimated for each of several functional annotations.  In a standard S-LDSC analysis,
-user-provided annotations are combined with a ``baseline'' set of genomicannotations from publicly available datasets.  For this analysis, stratified LD scores were calculated using
-the peaks identified as reproducible across either treated or untreated samples as annotations and the  1000 Genomes Phase 3 European individuals (Price Lab website) as a reference
-LD panel, using only the HapMap3 SNP list (also from the Price Lab website). Stratified LD regression was performed on the gestational duration GWAS using the endometrial-tissue
-derived LD scores and the “baseline” LD scores contained in version 2.2 of the LD score regression baseline LD model. We include all annotations from the baseline LD model 
-except those “flanking” annotations. This resulted in a total of 64 baseline annotations used in our S-LDSC analysis.  
+% We assessed how much of the heritability of  gestational duration is contained within ATAC-seq, H3K4me1, H3K4me3, H3K27ac and pcHi-C peaks using stratified LD score regression (S-LDSC).
+% Stratified LD score regression is a generalization of LD score regression, a method for estimating the heritability of a trait using SNP-level GWAS summary statistics and SNP-level estimates
+% of the amount of genetic variation tagged at each variant, known as LD scores.  Under the LD-score regression model, the expected value of the GWAS summary statistic for a variant
+% (specifically 
+% the expected value of the \(\chi^2\) statistic) is a linear function of the LD score at that site, and h2, the per-SNP heritability, and a an intercept parameter.  Under the S-LDSC
+% model, rather than estimating a single per-SNP heritability parameter, a parameter is estimated for each of several functional annotations.  In a standard S-LDSC analysis,
+% user-provided annotations are combined with a ``baseline'' set of genomicannotations from publicly available datasets.  For this analysis, stratified LD scores were calculated using
+% the peaks identified as reproducible across either treated or untreated samples as annotations and the  1000 Genomes Phase 3 European individuals (Price Lab website) as a reference
+% LD panel, using only the HapMap3 SNP list (also from the Price Lab website). Stratified LD regression was performed on the gestational duration GWAS using the endometrial-tissue
+% derived LD scores and the “baseline” LD scores contained in version 2.2 of the LD score regression baseline LD model. We include all annotations from the baseline LD model 
+% except those “flanking” annotations. This resulted in a total of 64 baseline annotations used in our S-LDSC analysis.  
 
 
 
