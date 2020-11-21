@@ -111,7 +111,9 @@ $$\hat{\textbf{u}} | \textbf{u} \sim \mathcal{N}(\textbf{R} \textbf{u},\textbf{R
 
 \[ \hat{\textbf{u}}|\sigma_u^2 \sim N(0,\sigma_u^2\textbf{R}^2+\textbf{R})\]
 
-Unlike the marginalized likelihood without the normalized-genotype assumption, precomputing a matrix decomposition for the covariance matrix will greatly accelerate efficient computation of the likelihood
+Unlike the marginalized likelihood without the normalized-genotype assumption,
+precomputing a matrix decomposition for the covariance matrix will greatly
+accelerate efficient computation of the likelihood
 and as a consequence, parameter estimation.
 If we take the eigenvalue decomposition of $\textbf{R}$ $\textbf{R}=\textbf{Q}\textbf{D}\textbf{Q}^T$, with $\textbf{Q}$ 
 being the $p$ by $p$ matrix of
@@ -141,18 +143,17 @@ Computing the marginalized-likelihood estimate of $\sigma^2_u$ in terms of $\tex
 
 \subsection{Linkage disequilibrium}\label{sec:org828aaeb}
 
-Two genome-wide Linkage Disequilibrium estimates were generated.  The first, which I will refer to as ``in-sample'', was generated from same samples used to simulate phenotypes and subsequently generated GWAS summary statistics.  The second set I will refer to as ``reference-panel'', which is the equally sized set of individuals not used in generating GWAS summary statistics.  
-
-
+Two genome-wide Linkage Disequilibrium (LD) estimates were generated.  The first, which we will refer to as ``in-sample'', was generated from same samples used to simulate phenotypes and subsequently generated GWAS summary statistics.  The second set we will refer to as ``reference-panel'', which is the equally sized set of individuals not used in generating GWAS summary statistics.  Rather than computing and storing 8 million by 8 million genome-wide LD matrix, a blockwise diagonal approximation to the LD matrix was made.  LD between variants was only estimated for variants within 1,703 approximately independent LD blocks.  The boundaries of independent LD blocks were previously identified in the 1000 genomes EUR population using the method ldetect\cite{ldetect}.  
 
 To improve the estimate of LD, I used the LD shrinkage estimator developed by Wen and Stephens\cite{Wen_2010}, which uses an estimate of 
-the recombination rate, as well an estiamte of the effective population size to improve the estimate of correlation between variants.  I implemented a standalone version of this shrinkage estimator in as R package called \texttt{LDshrink}.
+the recombination rate, as well an estiamte of the effective population size to improve the estimate of correlation between variants.
+I implemented a standalone version of this shrinkage estimator in as R package called \texttt{LDshrink}.
 
 If \(\boldsymbol{X}\) is a \(n \times p\) matrix of genotype dosages, such that \(X_{i,j}\) represents the number of effect alleles at the \$j\$th variant in the \$i\$th individual, and \(\hat{\boldsymbol{\Sigma}}\) is the \(p \times p\)  the estimate of covariance between
 variants, where:
 
-\[\boldsymbol{\hat{\Sigma}} = (1-\theta)^2 \textbf{S}+\frac{\theta}{2} \left(1-\frac{\theta}{2}\right)\textbf{I}\], where 
-
+\[\boldsymbol{\hat{\Sigma}} = (1-\theta)^2 \textbf{S}+\frac{\theta}{2} \left(1-\frac{\theta}{2}\right)\textbf{I}\],
+where 
 $$ S_{jk} = \begin{cases}
 \text{Cov}(\boldsymbol{X}_{.j},\boldsymbol{X}_{.k}), \text{if } j=k \\
 e^{-\frac{\rho_{jk}}{2n}}\text{Cov}(\boldsymbol{X}_{.j},\boldsymbol{X}_{.k}), \text{otherwise}\\
@@ -170,22 +171,22 @@ representation, the storage requirement would be approximately 1.28 exabytes.  S
 individuals would require approximately 295 terabytes.  While not technically impossible, it would not be practical to store, and even more impractical to use as for downstream computation.  If one assumes that LD is only between
 variants on the samne chromosome, one can bring down the storage requirements rather dramatically.  In the UK biobank subset Chromosome 2 contains 501,035 variants, the most of any chromosome.  While
 $500,000^2 \times 8 \text{bytes} \approx 2\text{terabytes}$ per chromosomeis a much more manageable size, it is still quite impractical.  The \texttt{LDshrink} approximation, along with an appropriate sparse matrix storage (or data
-compression) brings down the hypothetical storage requirements significantly: beyond moderate genetic distances all LD estimates are shrunk to 0.   As a final means of reducing the storage and computational burden, the LD between
-variants was only estimated for variants within 1,703 approximately independent LD blocks (as previously identified in the 1000 genomes EUR population using the method ldetect\cite{ldetect}).
+compression) brings down the hypothetical storage requirements significantly: beyond moderate genetic distances all LD estimates are shrunk to 0.  
 
 \section{Results}\label{sec:org26555b8}
 
-
-\subsection{Performance of RSSp in simulations}
+\subsection{GWAS Simulations}
 To estimate the effectiveness of RSSp at estimating heritability we simulated phenotypes and estimated GWAS summary statistics using a large employed a large-scale simulation of polygenic traits and GWAS summary statistics using real genotypes from the UK biobank.  We then employed state of the art individual-level data-based (\texttt{GCTA}\cite{gcta}) and GWAS summary statistics-based (\texttt{ldsc}\cite{ldsc}) heritability estimation methods and measured  using   relative to the state of the art summary-statistics-based methods and  other summary  in contrast to ldsc and GCTA, a large sample-size simulation was used.  To make the simulations as realistic as possible, real individual-level genotypes were used.
+
 Individuals from the UK biobank were used to simulate a GWAS. Two random non-overlapping subsets of 10,000 unlrelated individauls were randomly drawn (without replacement) from the 487,409 total individuals in the UK biobank dataset.  Both datasets were subset to include only the variants above 1 percent allele frequency in both subsets, resulting in 8,446,407 variants.
 
 Traits were simulated using a modified version the \texttt{simu} software\cite{simu}, a tool for simulating GWAS phenotypes based on real genotype data.  \texttt{simu} simulates causal effects from a normal distribution at the according to the GCTA model of scaled genotypes For the polygenic simulation setting, 80 traits were simulated at heritabilities between 0.1 and 0.8 in increments of 0.1, with 10 trait replicates
 being simulated at each level of  heritability.  After simulating the phenotype, GWAS summary statistics were generated using GCTA's implementation of the \texttt{fastGWA} mixed linear model-based GWAS method, with the first 10 principle components used as covariates.  These GWAS summary statistics were then passed to \texttt{ldsc} or \texttt{RSSp}.
 
 
+Estimates of $h^2$ from the individual-level data method GCTA were on average the closest to the true value of $h^2$ across every simulated value of $h^2$. 
 
-\subsection{RSSp outperforms LD score regression for in-sample and Simulation result}s\label{sec:orgdb752e7}
+% \subsection{RSSp outperforms LD score regression for in-sample and Simulation result}s\label{sec:orgdb752e7}
 
 \begin{figure}
   \centering
@@ -209,10 +210,46 @@ being simulated at each level of  heritability.  After simulating the phenotype,
 
 
 
-\subsubsection{UK biobank simulations}\label{sec:org0fa2c7f}
+
+\begin{table}
+  \begin{tabular}{l|l|r}
+\begin{tabular}{l|l|r|r}
+\hline
+Method & LD & $\text{Bias}(h^2,\hat{h}^2)$ & $\text{MSE}(h^2,\hat{h}^2)$\\
+\hline
+GCTA & N/A & -0.0027508 & 0.0015073\\
+\hline
+RSSP\_NOSHRINK & In-sample & 0.0122161 & 0.0023406\\
+\hline
+RSSP\_NOSHRINK & Out-of-sample & 0.0161776 & 0.0025623\\
+\hline
+RSSP\_LDSHRINK & In-sample & 0.0240149 & 0.0030679\\
+\hline
+RSSP\_LDSHRINK & Out-of-sample & 0.0259495 & 0.0032210\\
+\hline
+LDSC\_NOINT & In-sample & -0.1280450 & 0.0213703\\
+\hline
+LDSC\_NOINT & Out-of-sample & -0.1280562 & 0.0213719\\
+\hline
+LDSC\_INT & In-sample & -0.1413375 & 0.0252106\\
+\hline
+LDSC\_INT & Out-of-sample & -0.1416675 & 0.0253203\\
+\hline
+\end{tabular}\label{tab:gwas_sim_ave_error}
+\caption{Comparison of methods for heritability estimation on 8M variant simulation.  Bias was calculated over all simulated values of $h^2$ $\text{Bias}(h^2,\hat{h}^2)=\frac{1}{80}\sum_{i=1}^{10}\sum_{j=1}^{8}(\hat{h^2}_{i,j}-{h^2}_j)$.   Mean squared error (MSE) was calculated similarly: $\text{Bias}(h^2,\hat{h}^2)=\frac{1}{80}\sum_{i=1}^{10}\sum_{j=1}^{8}{(\hat{h^2}_{i,j}-{h^2}_j)}^2$.}
+\end{table}
 
 
-\subsection{Application to large-scale GWAS}
+\subsubsection{Hapmap 3}\label{sec:org0fa2c7f}
+
+We hypothesized that the relatively poor performance of LD score regression was due to the very large number of causal variants relative to the sample size.  We repeated the simulation using a 1,163,080 variant subset of our original 8,446,407 dataset.  The approximately 1 million variants were chosen  $\sim$ 1 million variants in the Hapmap 3 cohort.  It is recommended that users of LD score regression subset their GWAS summary statistics to the Hapmap 3 variants.
+
+\subsubsection{Sparsity}
+
+To asses the robustness of RSSp to model misspecification, we performed simulations which relaxed the infinitesimal assumption.  Using the 8 million variant, 10,000 sample UK biobank dataset, we repeated our infinitesimal simulation scheme ($h^2$ from $0.1$ to $0.8$ in increments of $0.1$ with $10$ replicates per $h^2$ for a total of 80 simulations), with 4 million and 1 million causal variants.  
+
+
+\subsection{Application to GWAS}
 
 
 \section{Discussion}\label{sec:orge95691e}
@@ -222,10 +259,12 @@ In this study we show how SNP-heritability can be estimated using GWAS summary s
 
 Unlike previously described methods for estimation of LD from GWAS summary statistics, RSSp performs well under the block-diagonal approximation to the genome-wide LD matrix which allows for scalable estimate of SNP heritability on large numbers of variants. We further demonstrated the by partitioning the genome into approximately independent
 
-
 While whe have shown that accurate estimation of SNP-heritability from GWAS summary statistics using an out-of-sample reference LD panel, there are some important caveats and future directions.  First, though there was no sample overlap between the GWAS cohort and the LD reference panel, both the cohort and the panel were randomly sampled from the same set of individuals.  The set of variants used to simulate the GWAS were selected so that they were above 1 percent frequency in both the GWAS sample and in the LD reference panel.  If, for example, the 503 individuals in the \textttt{EUR} subset of the 1000 genomes dataset were used as a reference LD panel, the match between the datasets would have likely been poorer.
 
-Previously studies had found that chunking the genome into chunks can introduce upward bias in heritability estimates, even when using in-sample LD estimates\cite{Hou_2019}.  The sub-chromosome block-wise approximation to the full LD matrix did not introduce significant upward bias in RSSp's heritability estimates in simulation.   In Hou et al, significant upward bias of heritability estimates were observed with block sizes as large as 4.3 megabases (when analyzing simulations based on a single 34 megabase chromosome).  The median block size of the ldetect LD blocks is much smaller, at approximately 1.5 megabases, and yet RSSp did not show appreciable inflation.
+We investigated the effect of a shrinkage estimator on heritability estimates and found that it had little to no effect on estimates of heritability.  When the reference LD panel was the same size as the GWAS dataset
+
+Previously studies had found that chunking the genome into chunks can introduce upward bias in heritability estimates, even when using in-sample LD estimates\cite{Hou_2019}.  The sub-chromosome block-wise approximation to the full
+LD matrix did not introduce significant upward bias in RSSp's heritability estimates in simulation, though .   In Hou et al, significant upward bias of heritability estimates were observed with block sizes as large as 4.3 megabases (when analyzing simulations based on a single 34 megabase chromosome).  The median block size of the ldetect LD blocks is much smaller, at approximately 1.5 megabases, and yet RSSp did not show appreciable inflation.
 
 
 
