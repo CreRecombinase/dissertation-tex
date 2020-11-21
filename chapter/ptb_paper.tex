@@ -149,5 +149,43 @@ In the above equation $H_g$ is the set of variants in HiC contact with gene $g$,
 
 
 
+
+
+
+\subsection{Functionally informed gene-level fine mapping of gestational duration genes}
+
+\begin{figure}
+  \centering
+  \begin{subfigure}[t]{\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{img/null-gene-gene-comp.png}
+    \caption{Gene-level PIPs under the functionally informed model as compared to the uniform model.  The same variant-gene assignment was used for both models.  Genes above the black diagonal line have a higher gene-level PIP under the functionally-informed model compared to the uniform model.  }\label{fig:univ_assoc}
+  \end{subfigure}
+    \begin{subfigure}[t]{\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{img/de-gwas-comp.png}
+    \caption{Overlap of Gene-level PIP with differential expression results.  }\label{fig:multiv_assoc}
+    \end{subfigure}
+\end{figure}
+
+
+
+
+
 \section{Discussion}\label{sec:org53f1196}
 
+
+
+\subsubsection{A comment on distance to the nearest gene}
+
+
+``Nearest gene'' is a an important benchmark when considering alternative methods for associating a variant with a gene\cite{fine2019benchmarker}.  In measuring the distance between a particular variant and surrounding genes, uncertainty may arise as as consequence of the ambiguity around the term ''gene''.
+
+
+
+Without attempting to define what a ge  to which gene is Without diverting iThere are several scenarios where the gene that is closest to a given variant depends on the definition of ``clo  distance from a variant to a gene can be calculated in One common approach for measuring the distance between variants to genes is to take the distance between        for evaluating the effectiveness of a snp-gene mapping distance to TSS is relevant for enhancer promoter looping conditioned on transcription initiation, what's the relevance of distance to TSS?
+Introns are worthy of special consideration, as they constitute approximately 25 percent of the human genome, and as they are, by definition, close to while distinct from the coding regions of the genome.    
+
+There are many possible mechanisms by which an intronic variant might act through a (protein-coding) gene to drive GWAS signal.
+Disrupting an enhancer is one such mechanism, but there are many additional mechanisms that involve altering transcription downstream of initiation.   (e.g APA, erroneous splice site, promoting RNA degradation, stalling elongation) and none of those really relate to distance to TSS.    For "early" introns/small genes the distance to TSS won't be much different from distance to nearest exon so it won't really matter, and for "late" exons in big genes the distance to the next downstream gene's TSS could be much closer to the variant.   Even if enhancers are very likely to target the nearest TSS (rather than nearest gene), you are more or less discounting all other causal mechanisms when you define "distance to gene" to be distance to TSS.
+1:23 by "most of the mechanisms" I don't mean they're collectively more likely, I just mean there are many ways to disrupt a gene after transcription. lastly, the SNPs we're trying to assign to genes based on distance are going to (hopefully) be depleted for enhancers because of the HiC mapping step. Even if the non-enhancer mechanisms are relatively rare, they're more likely in our case.
