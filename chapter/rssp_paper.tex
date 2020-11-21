@@ -204,7 +204,12 @@ Estimates of $h^2$ from the individual-level data method GCTA were on average th
   \begin{subfigure}[t]{\textwidth}
     \centering
     \includegraphics[width=.9\linewidth]{img/rssp_v_ldsc_v_gcta.png}
-    \caption{$\hat{h^2}$ across 10 replicates across 8 values of $h^2$ for 5 methods of heritability estimation. The black line along the diagional represents a perfect 1 to 1 relationship between $\hat{h^2}$ and $h^2$.    The heritability estimation methods are as follows: \texttt{GCTA} is the individual-level data single-component GREML, with 10 principal components used as continuous covariates (As GCTA requires individual level data, there can be no Out-of-sample result); \texttt{LDSC_INT} is LD score regression \cite{ldsc} run with the default setting where the intercept term is allowed to vary;  \texttt{LDSC_NOINT} is LD score regression run with a fixed intercept of 1; \texttt{RSSP_LDSHRINK} is RSSp with the Wen and Stephens\cite{Wen_2010} shrinkage estimator; \texttt{RSSP_NOSHRINK} is RSSp fit without a shrinkage estimator.}\label{fig:rssp_method_comparison}
+    \caption{$\hat{h^2}$ across 10 replicates across 8 values of $h^2$ for 5 methods of heritability estimation. The black line along the diagonal represents a perfect 1 to 1 relationship between $\hat{h^2}$ and $h^2$.    The heritability estimation methods are as follows: 
+    \texttt{GCTA} is the individual-level data single-component GREML, with 10 principal components used as continuous covariates (As GCTA requires individual level data, there can be no Out-of-sample result);
+    \texttt{LDSC_INT} is LD score regression \cite{ldsc} run with the default setting where the intercept term is allowed to vary; 
+    \texttt{LDSC\_NOINT} is LD score regression run with a fixed intercept of 1;
+    \texttt{RSSP\_LDSHRINK} is RSSp with the Wen and Stephens\cite{Wen_2010} shrinkage estimator; 
+    \texttt{RSSP\_NOSHRINK} is RSSp fit without a shrinkage estimator}\label{fig:rssp_method_comparison}
   \end{subfigure}
 \end{figure}
 
