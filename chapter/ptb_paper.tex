@@ -26,6 +26,9 @@ of this functional variation is regulatory in nature.  Rather than modifying the
 by modulating the abundance of the product through regulatory mechanisms: increasing or decreasing the baseline rate of transcription of DNA to RNA or degradation of mRNA back into individual nucleotides.  
 
 
+\subsection{rewrite me}
+This integrated analysis revealed a significant enrichment of heritability estimates for gestational duration in decidua-derived stromal cell genomic regions marked by open chromatin or histone marks. Leveraging those functional annotations in a Bayesian statistical framework, we discovered additional loci associated with gestational duration and improved fine mapping in regions associated with gestational duration. Finally, using promoter capture Hi-C (pcHi-C), we linked functionally-annotated gestational age-associated variants to their putative target genes. More generally, these functional annotations should prove a valuable resource for studying other pregnancy-related conditions, such as preeclampsia and recurrent miscarriage, as well as conditions associated with endometrial dysfunction, such as endometriosis and infertility. 
+
 \section{Materials and Methods}\label{sec:org39326e2}
 
 \subsection{Functional Genomic Data}\label{sec:org702e301}
@@ -48,12 +51,27 @@ and histone modification (ChIP-seq) maps for H3K27ac, H3K4me1 and H3K4me3 marks 
 Chromatin interaction was measured using promoter capture Hi-C in cultured primary decidua-derived mesenchymal stromal/stem cells (MSCs)
 and in vitro differentiated decidual stromal cells (DSCs) as well as in TCM treated cells.
 
+
+
+\subsection{GWAS}
+
+The GWAS results used in this study were an extension of previously published results. As in the previous study, we included summary results from 23andMe
+for a GWAS of gestational duration in 42,121 mothers of European ancestry who reported gestational duration of their first 8 live singleton birth.
+Meta-analyzed those data with results of GWASs of gestational during in 14,263 European mothers from six additional studies.
+To identify candidate genes that may play a role in gestational duration and PTB, we used summary data from a GWAS of gestational duration based on a meta-analysis of a 23andMe
+GWAS (N=42,121)(5) and the results from six European data sets (N=14,263). 
+
+Data selectionFor the GWAS, we included only singleton pregnancies with spontaneous live birth deliveries with or without premature rupture of membranes (PROM). C-sections after spontaneous onset of 12 labor were retained. Medically indicated induced deliveries or C-sections were excluded. Pregnancies with known gestational or fetal complications (e.g. placental abnormities, chorioamnionitis, preeclampsia, and congenital anomalies) and pregnancies involving pre-existing medical conditions (i.e. hypertension or diabetes) or maternal risk exposure (e.g. drug use during pregnancy) known be associated with preterm birth were also excluded.GenotypingGenotyping of these data sets was conducted on DNA extracted from blood using the various SNP arrays. Specifically: the ALSPAC genotype data were generated using the Illumina HumanHap550 quad (children) and Illumina human660W quad (mothers). The cleaned genotypecalls of 465,740 SNPs of 17,842 subjects were obtained from ALSPAC. The DNBC samples were genotyped using Human660W-Quad bead arrays from Illumina. The raw genotype intensitydata (.idat) files were obtained from dbGaP and genotype calls were performed using the CRLMM algorithm (76, 77). The samples from the MoBa dataset were genotyped using the Illumina Human660W-Quadv1_A bead chip (Illumina Inc.) and the genotype calls were determined using the CRLMM algorithm. For the FIN dataset, genotyping was conducted using Affymetrix 6.0 (Affymetrix, California, United States) and various other Illumina arrays (Illumina, California, United States). For the Affymetrix SNP Array 6.0, genotype calls were determined using the CRLMM algorithm in chips that passed the vendor-suggested QC (ContrastQC > 0.4). For the Illumina chips, the genotype calling was conducted using Illumina’s genotyping module v1.94 in GenomeStudio v2011.1. The HAPO samples of European descent were genotyped using Human610-Quad array. We obtained the raw genotype intensity data (.idat) files and performed genotype calls using the CRLMM algorithm. The processed genotype calls in plink format of the GPN data set were obtained from dbGaP (phs000714.v1.p1). Data 13
+from participants of apparent duplications with others (IBD>0.8), with sex discrepancies (between known sex and genetically inferred sex), and children with high Mendelian errors (>10\%) were removed. Genotyping QCWe performed similar genotype QC across all the dataset. We first performed sample-level QC based on call rate, overall heterogeneity and sex discrepancies. We checked the pedigree relationship based on IBD analysis. Genetic ancestry was assessed by principal components analysis (PCA) anchored by 1000 Genomes reference samples. Individuals with non-European ancestry were excluded. We then performed marker level QC: SNPs with low call rate (<98\%), low minor allele frequency (<0.01) or significant deviation from Hardy-Weinberg Equilibrium (P< 5×10-6) were excluded.ImputationWe conducted genome wide imputation following a standard two-step imputation procedure: the genotype data was first pre-phased together using the Shapeit2 software (78) and then the estimated haplotypes were used to impute non-genotyped SNPs using the reference haplotypes extracted from the Phase III 1000 Genomes Project (79) using Minimac4 (80) (FIN and MoBa).Association analysisSingle-marker genetic association tests were conducted in individual data sets separately, using regression methods and imputed genotype data. Fetal sex was included as covariate. The test results from the 7 data sets were then combined by fixed effect meta-analysis using the inverse-variance method.
+
+
+
+
+
 \subsection{Methods}\label{sec:org53944c4}
 
 
 \subsubsection{Modeling Gene Expression Data}\label{sec:orgc908098}
-
-
 
 The following sources of variation in expression data were known in addition to the primary and interaction effects: the passage number of the cell line when RNA was gathered,
 the within-individual effect on gene expression, and the growth rate of the cell line.  We chose to account for the individual-level effect rather than the growth rate effect, and hoped that the estimate of the individual level effect accounts for the differences in growth rate. 
@@ -72,7 +90,7 @@ Like passage number, individual-level effects are important to incorporate in th
 
 We used the the pseudo-alignment tool \texttt{salmon}\cite{salmon} to obtain transcript-level abundance estimates (using gencode 19 as a source of transcripts). The abundance estimates were loaded into R 
 using the \texttt{tximeta} package,\cite{tximeta} which was also used to summarize the transcript-level abundance estimates into gene-level abundance estimates.  Genes with counts lower than 10 were excluded from consideration
-for differential expression, as were genes for which the gene level abundance estimate was above zero in less than 5 samples.  We then used the R package \texttt{DESeq2}\cite{DESeq2} to identifiy differentially expressed genes.  For the main effect tests (i.e term vs preterm, control vs decidualized, and TCM vs decidualized)  we used the Wald test functionality for null hypothesis significance testing.  \texttt{DESeq2} includes composite null hypothesis testing functionality when using the Wald test; instead of testing against the null hypothesis  that \(\beta =  0\), one can test against the hypothesis that \(\lvert \beta \rvert \leq \theta\) where \(\theta\) is some threshold value.  Rather than adding a fold-change cutoff on top of a test against an effect size of 0,  with the composite test the FDR results remain interpretable: \$p\$-values and adjusted \$p\$-values correspond to the specific null hypothesis of interest.  This composite null-hypothesis testing was used with a log fold-change threshold of 0.2.
+for differential expression, as were genes for which the gene level abundance estimate was above zero in less than 5 samples.  We then used the R package \texttt{DESeq2}\cite{DESeq2} to identifiy differentially expressed genes.  For the main effect tests (i.e term vs preterm, control vs decidualized, and TCM vs decidualized)  we used the Wald test functionality for null hypothesis significance testing.  \texttt{DESeq2} includes composite null hypothesis testing functionality when using the Wald test; instead of testing against the null hypothesis  that \(\beta =  0\), one can test against the hypothesis that \(\lvert \beta \rvert \leq \theta\) where \(\theta\) is some threshold value.  Rather than adding a fold-change cutoff on top of a test against an effect size of 0,  with the composite test the FDR results remain interpretable: $p$-values and adjusted $p$-values correspond to the specific null hypothesis of interest.  This composite null-hypothesis testing was used with a log fold-change threshold of 0.2.
 
 \subsubsection{A pipeline for fine-mapping GWAS summary statistics using functional annotations}\label{sec:org24e3fbe}
 
@@ -130,7 +148,6 @@ In the above equation $H_g$ is the set of variants in HiC contact with gene $g$,
 
 \section{Results}\label{sec:orgb8d6bf0}
 
-
 \subsection{Enrichment for Gestational Duration GWAS signal in Decidual Derived Functional Annotations}
 
 \begin{figure}
@@ -149,10 +166,38 @@ In the above equation $H_g$ is the set of variants in HiC contact with gene $g$,
 
 
 
-
-
-
 \subsection{Functionally informed gene-level fine mapping of gestational duration genes}
+
+
+We next developed a computational procedure to integrate the decidua stromal cell functional maps with genetic maps of reproductive traits (Figure 4a). We posited that integrating functional maps in these pregnancy-relevant cells and leveraging statistical methods to fine-map associations would result in 1) identifying candidate causal variants in each associated locus, 2) linking those variants to their target genes, and 3) discovering additional loci and genes associated with gestational duration. 
+
+We first leveraged the enrichments of DSC annotations to create Bayesian prior probabilities for a variant being causal. Using prior probabilities informed by functional annotations of SNPs could increase the accuracy of fine-mapping, as shown in recent studies(8, 41). Based on the results of S-LDSC, we chose H3K27ac, H3K4me1 and pcHi-C interactions from the decidualized cells, and H3K4me3 from untreated cells, as functional genomic annotations to create informative priors using TORUS(42). To assign a prior to each SNP, TORUS uses genome-wide summary statistics of GWAS and the functional annotations to assess how informative each annotation is in predicting causal variants (Supplementary Table S3). SNPs associated with functional annotations are generally assigned higher prior probabilities. Additionally, TORUS computes statistical evidence at the level of genomic blocks, defined as the probability that a block (determined by LD) contains at least one causal SNP. Without including any histone marks or chromatin accessibility annotations, TORUS implicated six autosomal blocks in the genome at FDR < 0.05, including five of the six genome-wide significant autosomal loci identified in the GWAS (p < 5x10-8). One locus on chromosome 3 had an FDR = 0.11, and was therefore not identified by TORUS and one locus on chromosome 9 that was not identified in the GWAS was implicated by TORUS (Supplementary File S4). By including the functional genomic annotations from endometrial stromal cells, the number of high confidence blocks increased to ten, including all six that were significant in the gestational duration GWAS and four that were not significant in the GWAS (Supplementary File S4).  
+
+We next performed computational fine mapping on these ten blocks, with the informative priors learned by TORUS, using SuSiE(43). Conceptually, SuSiE is a Bayesian version of the stepwise regression analysis commonly used in GWAS (i.e. conditioning on one variant, and testing if there is any remaining signal in a region). SuSiE accounts for the uncertainty of causal variants in each step, and reports the results in the form of posterior including probabilities (PIPs). The PIP of a variant ranges from 0 to 1, with 1 indicating full confidence that the SNP is a causal variant. If a region contains a single causal variant, the PIPs of all SNPs in the region should approximately sum to 1.  
+
+Including the priors defined by TORUS using DSC functional annotations significantly improved fine-mapping (Figure 5A, Supplementary Table S3 and Supplementary File S5. For example, only one SNP reached PIP > 0.3 across all 10 blocks using the default setting under SuSiE (uniform prior, treating all SNPs in a block equally). This reflects the general uncertainty of pinpointing causal variants due to LD: e.g., a strong GWAS SNP in close LD with 9 other SNPs would have PIP about 0.1. By using the annotation-informed priors, 8 SNPs in six different blocks reached PIP > 0.3 (Figure 5A). In some blocks, we were able to fine-map a single high-confidence SNP, e.g. the FOXL2 locus on chromosome 3, while in other blocks, we had considerable uncertainty of the causal variants, as shown by large credible sets, i.e. the minimum set of SNPs to include the causal SNP with 95\% probability (Figure 5B). Table 1 summarizes the most probable causal variants in eight blocks (fine-mapping in the remaining two blocks produced large credible sets with no high-PIP SNPs) as well as their likely target genes based on promoter assignment or chromatin interactions from pcHi-C. We note that our results of the WNT4 locus identified rs3820282 as the likely causal variant. This is consistent with our previous results demonstrating experimentally that the T allele of this SNP disrupts the binding of estrogen receptor 1 (ESR1)(5). This SNP was among the 3 most likely SNPs in our fine-mapping study, with a PIP of 0.27 (Table 1). 
+
+
+
+We highlight the results from two regions. In the first, two adjacent SNPs (311 bp apart), rs13141656 and rs7663453, on chromosome 4q34 did not reach genome-wide significance in the GWAS (p = 3.9 ×10-7 and 4.5 ×10-7, respectively). After using functional annotations in decidua-derived stromal cells, the block containing these SNPs was highly significant (TORUS q-value = 0.02), suggesting the presence of at least one causal variant in this block. The two SNPs together explained most of the PIP signal in the block (PIP 0.38 and 0.33, respectively, Table 1). The two SNPs are located in a region of open chromatin in endometrial stromal cells, with enhancer activity marked by both H3K27ac and H3K4me1 (Figure 5C). Only 9 of the 129 tissues from the Epigenome Roadmap(11) also had H3K27ac, H3K4me1 or H3K4me3 peaks spanning the rs13141656 locus and only 2 spanning the rs7663453 locus. In addition, this putative enhancer is bound by multiple transcription factors, including GATA2, FOXO1, NR2F2 and PGR, based on ChIP-seq data. The only physical interaction of this enhancer in the pcHi-C data in decidualized stromal cells is with the promoter of the HAND2 gene, located 277 kb away (Figure 5C). Summing over the PIPs of all SNPs whose nearby sequences interact with HAND2 via chromatin looping gives an even higher probability, 0.89, suggesting that HAND2 is very likely to be the causal gene in this region (Supplementary Table S4). HAND2 is an important transcription factor that mediates the effect of progesterone on uterine epithelium(45). Thus, in this example we identified a novel locus, the likely causal variant(s), the enhancers they act on, and an outstanding candidate gene for gestational duration and PTB.  
+
+The second example focuses on the locus showing a strong GWAS association with gestational duration on chromosome 3q21. The lead SNP, rs144609957 (GWAS p = 4 ×10-13), is located upstream of the EEFSEC (Eukaryotic Elongation factor, Selenocysteine-TRNA Specific) gene. There is considerable uncertainty of the causal variants in this region, with 50 SNPs in the credible set and the lead SNP explaining only a small fraction of signal (PIP = 0.02). Among all 12 SNPs with PIP > 0.01, 11 have functional annotations, most commonly H3K4me1 and pcHi-C interactions. Interestingly, for nine SNPs (first 3 shown in Table 1), the sequences in which they are located physically interact with the promoter of GATA2 in the pcHi-C data, but not with any other promoters in the region (Supplementary Figure S3). The PIPs of all SNPs in the genomic regions that likely target GATA2 through chromatin looping sum to 0.68 (Supplementary Table S5). Thus, despite uncertainty of causal variants in this region, our results implicate GATA2 as a candidate causal gene in endometrial stromal cells. GATA2 is a master regulator of embryonic development and differentiation of tissue-forming stem cells(46). As support for the possible role of GATA2 in pregnancy, GATA2 deficient mice show defects in embryo implantation and endometrial decidualization(34), making this another excellent candidate causal gene for gestational duration and PTB. 
+
+
+\begin{figure}
+  \centering
+    \begin{subfigure}[t]{\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{img/FigureS_Manhattan_plot.png}
+    \caption{Manhattan plot of a GWAS for gestational duration GWAS. The horizontal black line denotes the threshold for genome-wide significance ($p < 5 \times 10^{-8}$). For the 6 independent genome-wide significant loci, the most significant p-value is highlighted in black, and labeled with the nearest gene(s).}\label{fig:manhattan}
+  \end{subfigure}
+  \begin{subfigure}[t]{\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{img/FigureS_qq_plot.png}
+    \caption{QQ plot of p-values from the GWAS of gestational duration.}\label{fig:qqplot}
+  \end{subfigure}
+\end{figure}
+
 
 \begin{figure}
   \centering
@@ -164,7 +209,7 @@ In the above equation $H_g$ is the set of variants in HiC contact with gene $g$,
     \begin{subfigure}[t]{\textwidth}
     \centering
     \includegraphics[width=\linewidth]{img/de-gwas-comp.png}
-    \caption{Overlap of Gene-level PIP with differential expression results.  }\label{fig:multiv_assoc}
+    \caption{Differential expression adjusted $p$-value for each of three differential expression tests: control vs decidualized, decidualized vs TCM-treated, and term vs preterm, along with the gene-level PIP for the corresponding gene for the 686 genes in the 33 genomic regions most likely to contain a gestational duration GWAS variant.  The vertical and horizontal lines indicated thresholds that were used to test for the enrichment of high PIP genes for differentially expressed genes. High PIP genes were significantly enriched for both differential control vs decidualized genes ($p=0.0264$), and for differential decidualized vs TCM-treated genes ($p=0.0344$), by fisher's exact test.}\label{fig:multiv_assoc}
     \end{subfigure}
 \end{figure}
 
@@ -173,6 +218,15 @@ In the above equation $H_g$ is the set of variants in HiC contact with gene $g$,
 
 
 \section{Discussion}\label{sec:org53f1196}
+
+ The lack of complete independence between these marks makes it difficult to delineate their individual effects but nonetheless highlights the importance of enhancers and of gene regulation in endometrial stromal cells in modulating the effects of GWAS variants on gestational duration. This is consistent with both the known tissue-specific roles of enhancers and the observation that over 90\% of GWAS loci reside outside of the coding portion of the genome and are enriched in regions of open chromatin and enhancers(12, 40). 
+
+    Integrating transcriptional and chromatin annotations of gene regulation from MSCs and DSCs improved our ability to discover novel GWAS loci and identify likely causal SNPs and genes associated with gestational duration. We illustrate how our integrated platform identified a novel causal locus and candidate gene (HAND2) associated with gestational duration, as well as refined the annotation of loci that had been previously identified. Our data suggest that in endometrial stromal cells GATA2 is likely the target gene of enhancers harboring SNPs associated with gestational duration. This does not exclude the possibility that the nearest gene to the associated SNPs, EEFSEC, may be a target gene in other cell types.  
+
+    Both of these examples highlight transcription factors that are essential for endometrial development or decidualization. The fact that neither GATA2 nor HAND2 were identified as potential candidate genes in previous GWASs of gestational duration or PTB supports our approach and the importance of using functional annotations from cell types relevant to pregnancy to fine map and identify candidate genes for the pregnancy-related traits. Overall, the integrated analyses performed in this study resulted in the identification of both novel GWAS loci and novel candidate genes for gestational duration, as well as maps of the regulatory architecture of these cells and their response to decidualization. 
+
+    However, there are some limitations. Our results are based on only 3 individuals, which may not be enough to fully capture the regulatory landscape of endometrial stromal cells. In addition, the 3 individuals were African American and the GWAS results were obtained from Caucasians individuals and therefore, it is possible that the GWAS results do not match functional annotations in a different population, which could lead to erroneous conclusions. Another limitation is the fact that we focused on only one cell type, albeit one that plays a central role in pregnancy, and only one exposure (hormonal induction of decidualization) and only for 48 h. Different exposures could lead to different results. Future studies that include fetal cells from the placenta and uterine or cervical myometrial cells could reveal additional processes that contribute to gestational duration and PTB, such as those related to fetal signaling and the regulation of labor, respectively. Inclusion of additional exposures, such as trophoblast conditioned media(49), may further reveal processes that are pregnancy-specific. Second, to maximize power we focused on a GWAS of gestational duration and not PTB per se. While previous GWAS have shown that all PTB loci were among the gestational age loci(5), we realize that some of the loci that we identified could be related to normal variation in gestational duration and not specifically to PTB. Nonetheless, our findings contribute to our understanding of potential mechanisms underlying the timing of human gestation, about which we still know little. Lastly, although our ChIP-seq results revealed an association between GATA2 binding and decidualization, confirming the role of this transcription factor in decidual cell biology(50, 51), and studies in murines support its role in endometrial processes(34), we do not yet have direct evidence showing that perturbations in the expression of GATA2, or any of the other target genes identified, influence the timing of parturition in humans. Future studies will be needed to directly implicate the expression of these genes in gestational duration or PTB. Our study highlights the importance of generating functional annotations in pregnancy-relevant cell types to inform GWASs of pregnancy-associated conditions. Our results suggest that the expression of two transcription factors, GATA2 and HAND2, in endometrial stromal cells may regulate transcriptional programs that influence the timing of parturition in humans, which could lead to the identification of biomarkers of or therapeutic targets for PTB
+
 
 
 
