@@ -4,18 +4,23 @@
 
 \section{Introduction}\label{sec:org3c6cf58}
 
-There is no concept more central to the study of genetics than that of heritability.  Large-scale Genome-wide association studies have identified tens of thousands of loci where variation at the locus correlates with a particular trait.  In the case of most complex traits, the most strongly associated genetic variants collectively explain a relatively small fraction of the total trait variation that is thought to be attributable to genetics.    A consistent frustration of the human geneticist is the inability  the total explanatory power of these variants is often small compared to  geneticists have widely available the Genome-wide association study (GWAS), GWAS summary statistics have become the most common method for summarizing estimated relationships between genotype and phenotype.  As such, they have become an invaluable resource for a large number of biomedical research applications\cite{Lyon_2020}.  GWAS summary statistics enable the comparison of genetic-association signal across traits at a locus\cite{phewas}, across loci for a trait\cite{firstGWAS}, and the comparison of patterns of genotype-phenotype associations across populations\cite{Rosenberg_2010}.
+There is no concept more central to the study of genetics than that of heritability.
+Large-scale Genome-wide association studies have identified tens of thousands of loci where variation at the locus correlates with a particular trait.
+In the case of most complex traits, the most strongly associated genetic variants collectively explain a relatively small fraction of the total trait variation that is thought to be attributable to genetics.
+A consistent frustration of the human geneticist is that the total explanatory power of strongly associated variants is often small compared to what heritability estimates from twin studies.
+GWAS summary statistics have become the most common method for summarizing estimated relationships between genotype and phenotype.
+As such, they have become an invaluable resource for a large number of biomedical research applications\cite{Lyon_2020}.  GWAS summary statistics enable the comparison of genetic-association signal across traits at a locus\cite{phewas}, across loci for a trait\cite{firstGWAS}, and the comparison of patterns of genotype-phenotype associations across populations\cite{Rosenberg_2010}.
 A common component of  applications of GWAS summary statistics is a statistical model relating the marginal,variant-level associations between genotype and phenotype to the distribution of true effect sizes.  In the Bayesian setting this stat and among the most important.  Among the most important applications of GWAS sumamry statistics is in the estimation of heritability. LD score regression is the most widely used method for estimating heritability from GWAS data without individual level data.  LD score regression uses GWAS summary statistics and an estimate of the linkage disequilibrium (LD) between those variants to estimate the heritability of the trait as well as the extent of confounding in the GWAS\cite{ldsc}.
 
-An important recent development in modeling the relationship between multiple regression coefficients estimates to their univariate counterparts, by means of a reference LD matrix is known as Regression with Summary Statistics (RSS)\cite{Zhu_2017}.
+
 
 The question of how heritable a trait is a foundational one in the field of genetics. In the simplest definition, a trait is heritable if offspring are more similar to their parents (in regards to the trait) than they are to random members of the same population.  
 
 Among the state of the art methods for the estimation of heritability from unrelated individuals is the method based on Genome-based restricted maximum likelihood (GREML)\cite{GCTA}.  While GREML and methods based on GREML have been used to great effect to explain a large proportion of heritability found by more precise methods (e.g twin studies)\cite{GCTA}, GCTA requires individual-level data, as well as the construction of an $n \times n$ relatedness matrix (with $n$ being the number of individuals for which genotype and phenotype data is available).  The size of this matrix increases quadratically as sample size increases.
 
-Here we present a simple modification of the RSS method called polygenic RSS, or RSSp.  Using simulation, we show how under truly polygenic genetic architectures, RSSp is better able to estimate heritability than LD score regression.
+An important recent development in modeling the relationship between multiple regression coefficients estimates to their univariate counterparts, by means of a reference LD matrix is known as Regression with Summary Statistics (RSS)\cite{Zhu_2017}.  Here we present a simple modification of the RSS method called polygenic RSS, or RSSp.  Using simulation, we show how under truly polygenic genetic architectures, RSSp is better able to estimate heritability than LD score regression.
 
-In addition, we explore the consequences of the demonstrate the importance of accurate estimation of linkage disequilibrium, and explore how shrinkage estimators of LD can improve estimates of heritability, especially when relying on an external reference panel for LD information.  
+In addition, we explore the consequences of using an out-of-sample reference LD the demonstrate the importance of accurate estimation of linkage disequilibrium, and explore how shrinkage estimators of LD can improve estimates of heritability, especially when relying on an external reference panel for LD information.  
 
 \section{Background}
 
@@ -127,7 +132,7 @@ univariate normal variables where:
 
 \[ v_j \sim N(0,\sigma^2_u\lambda_j^2+\lambda_j) \]
 
-Computing the marginalized-likelihood estimate of $\sigma^2_u$ in terms of $\textbf{v}$ and $\textbf{D}$ can be done without the costly covariance inverse or determinant calculations required in the original multivariate probability density function.
+Computing the marginalized-likelihood estimate of $\sigma^2_u$ in terms of $\textbf{v}$ and $\textbf{D}$ can be done without the costly covariance inverse or determinant calculations required in the original multivariate probability density function.  We estimate $\sigma^2_u$ by the ``Brent'' 1D optimization routine in R\cite{brent1972algorithms}. 
 
 
 
@@ -175,47 +180,58 @@ compression) brings down the hypothetical storage requirements significantly: be
 
 \section{Results}\label{sec:org26555b8}
 
-\subsection{GWAS Simulations}
-To estimate the effectiveness of RSSp at estimating heritability we simulated phenotypes and estimated GWAS summary statistics using a large employed a large-scale simulation of polygenic traits and GWAS summary statistics using real genotypes from the UK biobank.  We then employed state of the art individual-level data-based (\texttt{GCTA}\cite{GCTA}) and GWAS summary statistics-based (\texttt{ldsc}\cite{ldsc}) heritability estimation methods and measured  using   relative to the state of the art summary-statistics-based methods and  other summary  in contrast to ldsc and GCTA, a large sample-size simulation was used.  To make the simulations as realistic as possible, real individual-level genotypes were used.
-
-Individuals from the UK biobank were used to simulate a GWAS. Two random non-overlapping subsets of 10,000 unlrelated individauls were randomly drawn (without replacement) from the 487,409 total individuals in the UK biobank dataset.  Both datasets were subset to include only the variants above 1 percent allele frequency in both subsets, resulting in 8,446,407 variants.
-
-Traits were simulated using a modified version the \texttt{simu} software\cite{simu}, a tool for simulating GWAS phenotypes based on real genotype data.  \texttt{simu} simulates causal effects from a normal distribution at the according to the GCTA model of scaled genotypes For the polygenic simulation setting, 80 traits were simulated at heritabilities between 0.1 and 0.8 in increments of 0.1, with 10 trait replicates
-being simulated at each level of  heritability.  After simulating the phenotype, GWAS summary statistics were generated using GCTA's implementation of the \texttt{fastGWA} mixed linear model-based GWAS method, with the first 10 principle components used as covariates.  These GWAS summary statistics were then passed to \texttt{ldsc} or \texttt{RSSp}.
-
-
-Estimates of $h^2$ from the individual-level data method GCTA were on average the closest to the true value of $h^2$ across every simulated value of $h^2$. 
-
-% \subsection{RSSp outperforms LD score regression for in-sample and Simulation result}s\label{sec:orgdb752e7}
-
 \begin{figure}
   \centering
   \begin{subfigure}[t]{\textwidth}
     \centering
     \includegraphics[width=\linewidth]{img/rssp_01.png}
-    \caption{Simulated GWAS on 10,000 for a trait with infinitesimal genetic architecture and $h^2=0.1$.  }\label{fig:gwas_01}
+    \caption{Manhattan plot for a simulated GWAS on 10,000 real genotypes for a trait with infinitesimal genetic architecture and $h^2=0.1$.  }\label{fig:gwas_01}
   \end{subfigure}
     \begin{subfigure}[t]{\textwidth}
     \centering
     \includegraphics[width=\linewidth]{img/Allele_freq_match.png}
     \caption{Two dimensional histogram of non-reference allele frequency for variants in the GWAS cohort and LD reference panel.}\label{fig:gwas_01}
   \end{subfigure}
-  \end{figure}
+\end{figure}
+
+
+
+\subsection{GWAS Simulations}
+To estimate the effectiveness of RSSp at estimating heritability we simulated phenotypes and estimated GWAS summary statistics using a large employed a large-scale simulation of polygenic traits and GWAS summary statistics using real genotypes from the UK biobank.  We then employed state of the art individual-level data-based (\texttt{GCTA}\cite{GCTA}) and GWAS summary statistics-based (\texttt{ldsc}\cite{ldsc}) heritability estimation methods.  To make the simulations as realistic as possible, real individual-level genotypes were used.
+
+Genotype data from individuals from the UK biobank were used as the basis of simulations. Two random non-overlapping subsets of 10,000 unlrelated individauls were randomly drawn (without replacement) from the 487,409 total individuals in the UK biobank dataset.  Both datasets were subset to include only the variants above 1 percent allele frequency in both subsets, resulting in 8,327,757 variants in total.
+
+Causal variant effects and phenotypes traits were simulated using a modified version the \texttt{simu} software, a tool for simulating GWAS phenotypes based on real genotype data.  \texttt{simu} simulates causal effects from a normal distribution and uses the GCTA model of scaled genotypes.   For the infinitesimal simulation, 80 traits were simulated for 8 $h^2$ values from  0.1 to 0.8 in increments of 0.1, with 10 trait replicates
+being simulated at each level of heritability.
+
+After simulating the phenotype, heritability was estimated using GCTA's GCTA-GREML analysis, using a GRM constructed using the 8,327,757 variants and using 10 principal components as quantitative covariates. GWAS summary statistics for each simulated phenotype were then generated using GCTA's implementation of the \texttt{fastGWA} mixed linear model-based GWAS method, with the first 10 principle components used as quantiative covariates.
+
+To estimate heritability using LD score regression, LD scores were generated on the 8,327,757 variants.  LD scores were generated from the genotypes used for the GWAS simulation (``in-sample''), and another set of LD scores were generated using the using the LD reference panel.  LD scores were estimated using \texttt{ldsc}, using a 1 centimorgan sliding window, as per the \texttt{ldsc} tutorial \cite{ldsctutorial} on the \texttt{ldsc} website.  The \texttt{pyrho} method applied to the British in England and Scotland (GBR) invdividuals from the 1000 genomes project\cite{1kg} was used in the estimation of the local recombination rate.  As we also wished to LD score regression was run four times on 
+
+Finally, 
+
+
+
+The  one in-sample, set and  of using These GWAS summary statistics were then passed to \texttt{ldsc} or \texttt{RSSp}.
+
+
+Estimates of $h^2$ from the individual-level data method GCTA were on average the closest to the true value of $h^2$ across every simulated value of $h^2$. 
+
+% \subsection{RSSp outperforms LD score regression for in-sample and Simulation result}s\label{sec:orgdb752e7}
+
+
   \begin{figure}
       \centering
   \begin{subfigure}[t]{\textwidth}
     \centering
-    \includegraphics[width=.9\linewidth]{img/rssp_v_ldsc_v_gcta.png}
-    \caption{$\hat{h^2}$ across 10 replicates across 8 values of $h^2$ for 5 methods of heritability estimation. The black line along the diagonal represents a perfect 1 to 1 relationship between $\hat{h^2}$ and $h^2$.    The heritability estimation methods are as follows: 
+    \includegraphics[width=.9\linewidth]{img/rsspnld_v_ldsc_v_gcta.png}
+    \caption{$\hat{h^2}$ across 10 replicates across 8 values of $h^2$ for 4 methods of heritability estimation, estimated using either in-sample information, or an external reference LD panel. The black line along the diagonal represents a perfect 1 to 1 relationship between $\hat{h^2}$ and $h^2$.    The heritability estimation methods are as follows: 
     \texttt{GCTA} is the individual-level data single-component GREML, with 10 principal components used as continuous covariates (As GCTA requires individual level data, there can be no Out-of-sample result);
     \texttt{LDSC\_INT} is LD score regression \cite{ldsc} run with the default setting where the intercept term is allowed to vary; 
     \texttt{LDSC\_NOINT} is LD score regression run with a fixed intercept of 1;
-    \texttt{RSSP\_LDSHRINK} is RSSp with the Wen and Stephens\cite{Wen_2010} shrinkage estimator; 
-    \texttt{RSSP\_NOSHRINK} is RSSp fit without a shrinkage estimator}\label{fig:rssp_method_comparison}
+    \texttt{RSSP} is RSSp (fit without a shrinkage estimator of LD)}\label{fig:rssp_method_comparison}
   \end{subfigure}
 \end{figure}
-
-
 
 
 \begin{table}
@@ -245,13 +261,15 @@ LDSC\_INT & Out-of-sample & -0.1416675 & 0.0253203\\
 \caption{Comparison of methods for heritability estimation on 8M variant simulation.  Bias was calculated over all simulated values of $h^2$ $\text{Bias}(h^2,\hat{h}^2)=\frac{1}{80}\sum_{i=1}^{10}\sum_{j=1}^{8}(\hat{h^2}_{i,j}-{h^2}_j)$.   Mean squared error (MSE) was calculated similarly: $\text{Bias}(h^2,\hat{h}^2)=\frac{1}{80}\sum_{i=1}^{10}\sum_{j=1}^{8}{(\hat{h^2}_{i,j}-{h^2}_j)}^2$.}
 \end{table}
 
-\subsubsection{Hapmap 3}\label{sec:org0fa2c7f}
-
-We hypothesized that the relatively poor performance of LD score regression was due to the very large number of causal variants relative to the sample size.  We repeated the simulation using a 1,163,080 variant subset of our original 8,446,407 dataset.  The approximately 1 million variants were chosen  $\sim$ 1 million variants in the Hapmap 3 cohort.  It is recommended that users of LD score regression subset their GWAS summary statistics to the Hapmap 3 variants.
-
 \subsubsection{Sparsity}
 
-To asses the robustness of RSSp to model misspecification, we performed simulations which relaxed the infinitesimal assumption.  Using the 8 million variant, 10,000 sample UK biobank dataset, we repeated our infinitesimal simulation scheme ($h^2$ from $0.1$ to $0.8$ in increments of $0.1$ with $10$ replicates per $h^2$ for a total of 80 simulations), with 4 million and 1 million causal variants.  
+To asses the robustness of RSSp to model misspecification, we performed simulations which relaxed the infinitesimal assumption.  Using the 8,327,757 variant, 10,000 sample UK biobank dataset, we expanded our simulations to include sparse genetic architectures.  Starting with the original 8,327,757 variants, we created two randomly selected causal variant subsets, containing  4,163,878  and 1,040,970 variants.  Using these causal variant subsets, we simulated phenotypes under values of  $h^2$ from $0.1$ to $0.8$ in increments of $0.1$, from which we generated GWAS summary statistics on the original 8,327,757 variants.  For each value of $h^2$, and each of the two causal variant subsets we ran 10 simulations.  We then estimated heritability with each of the methods 
+
+
+
+\subsubsection{Hapmap 3}\label{sec:org0fa2c7f}
+
+We hypothesized that the relatively poor performance of LD score regression was due to the very large number of causal variants relative to the sample size.  To test this hypothesis  We repeated the simulation using a 1,163,080 variant subset of our original 8,327,757 dataset.  These variants were drawn from the HapMap 3 reference panel\cite{hapmap3}.  It is recommended that users of LD score regression subset their GWAS summary statistics to the variants in the HapMap 3 reference panel\cite{ldsc}.  
 
 
 \subsection{Application to GWAS}
@@ -269,8 +287,15 @@ variants used to simulate the GWAS were selected so that they were above 1 perce
 
 We investigated the effect of a shrinkage estimator on heritability estimates and found that it had little to no effect on estimates of heritability.  When the reference LD panel was the same size as the GWAS dataset
 
-Previously studies had found that chunking the genome into chunks can introduce upward bias in heritability estimates, even when using in-sample LD estimates\cite{Hou_2019}.  The sub-chromosome block-wise approximation to the full
-LD matrix did not introduce significant upward bias in RSSp's heritability estimates in simulation, though .   In Hou et al, significant upward bias of heritability estimates were observed with block sizes as large as 4.3 megabases (when analyzing simulations based on a single 34 megabase chromosome).  The median block size of the ldetect LD blocks is much smaller, at approximately 1.5 megabases, and yet RSSp did not show appreciable inflation.
+Previously studies had found that chunking the genome into chunks can introduce upward bias in heritability estimates, even when using in-sample LD estimates\cite{Hou_2019}.  While   The sub-chromosome block-wise approximation to the full LD matrix did not introduce significant upward bias in RSSp's heritability estimates in simulation, though.   In Hou et al, significant upward bias of heritability estimates were observed with block sizes as large as 4.3 megabases (when analyzing simulations based on a single 34 megabase chromosome).  The median block size of the ldetect LD blocks is much smaller, at approximately 1.5 megabases, and yet RSSp did not show appreciable inflation.
+
+We have demonstrated that LD score regression is biased under truly infinitesimal genetic architectures.  Even with the intercept fixed at zero, we found in our simulations
+that LD score regression consistently underestimates $h^2$, and the amount LD score regression underestimates $h^2$ increases as $h^2$ increases.
+and this is understimate is
+heritability is not biased.
+We find that in the absence of population structure, LD score regression 
+Our simulations did not explore the In the absence of 
+
 
 
 
