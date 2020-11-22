@@ -76,13 +76,14 @@ from participants of apparent duplications with others (IBD>0.8), with sex discr
 The following sources of variation in expression data were known in addition to the primary and interaction effects: the passage number of the cell line when RNA was gathered,
 the within-individual effect on gene expression, and the growth rate of the cell line.  We chose to account for the individual-level effect rather than the growth rate effect, and hoped that the estimate of the individual level effect accounts for the differences in growth rate. 
 
-With the exception of passage number, all of the covariates of the model are categorical. There are several ways of encoding categorical variables in a generalized linear model, and different encodings can change how the coefficient
+With the exception of passage number, all of the covariates of the model are
+categorical. There are several ways of encoding categorical variables in a generalized linear model, and different encodings can change how the coefficient
 estimates are interpreted. We here briefly describe the coding of our model, with particular emphasis on the consequence of coding on the interpretation of the coefficients.  For testing which genes are differentially expressed
 between control-media treated and decidualizing-media treated cells, and similarly for testing what genes are differentially expressed between decidualizing-media treated cells and trophoblast-conditioned media cells, a standard
 ``treatment'' coding was used wherein decidualizing-media (\texttt{dec}) was the reference level.
-One can interepret the estimates for the \texttt{ctr} and \texttt{TCM} coefficients as the change in average expression in each of those condtions relative to the \texttt{dec} condition.
+One can interpret the estimates for the \texttt{ctr} and \texttt{TCM} coefficients as the change in average expression in each of those conditions relative to the \texttt{dec} condition.
 The effect of term vs preterm effects were estimated using a ``sum'' coding. Instead of setting either term or preterm to be a reference level, which would carry on in our interpretation of other coefficients (i.e the \texttt{ctr} and \texttt{TCM} effects would also be interpreted as relative to either \texttt{dec}-term or \texttt{dec}-preterm), the term-preterm coefficient can be interpreted as differences in the mean expression relative to one-another.
-The choice of sum coding for the term vs preterm covariate is especilly important when considering how response to treatment differs between term and preterm individuals.
+The choice of sum coding for the term vs preterm covariate is especially important when considering how response to treatment differs between term and preterm individuals.
 To formally test this hypothesis (that individuals with term births respond differently to either \texttt{dec} or \texttt{TCM} as compared to individuals with preterm births), we test for an interaction between the preterm effect
 and each of the two treatment effects.  A nonzero estimate of either of these interaction terms indicates that the reponse to treatment (i.e the change in gene expression) differs between term and preterm samples.
 To capture the individual level effects, instead of comparing to a particular individual, we again used a sum coding, meaning for each term and preterm,  1 covariate captures the difference between the individual 1 and individual three,and another captures the difference betweeen individual 2 and individual three.
@@ -194,7 +195,6 @@ The second example focuses on the locus showing a strong GWAS association with g
 \end{figure}
 
 \begin{figure}
-\begin{subfigure}
   \centering
   \begin{subfigure}[t]{\textwidth}
     \centering
