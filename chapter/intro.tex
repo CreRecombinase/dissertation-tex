@@ -1,91 +1,105 @@
 \chapter{Introduction}
 \label{introduction}
 
-For any particular trait, sequence-level variation at the vast majority of genetic loci is of infinitesimal consequence to that trait.  The causal
-effect that a variant has on a trait induces a statistical association bewteen the presence of the variant and the trait of interest.
-For a variant to have a causal effect on an organism-level trait, there must be a chain of causal events starting with the DNA-sequence,
-level change, proceeding through one (or more often many) molecular intermediates, before it is observable at the organismal level.
-The goal of a genome-wide association study (GWAS) is to identify a subset of variants with high statistical association with a trait of interest,
-with the implicit assumption that the high degree of statistical association is the consquence of a causal relationship.
-One of the major obstacles in any GWAS (or any association based statistical inference) is that the causality is but one of the means by which
-a genotype may be associated with a phenotype.
+Decades of population genetics theory and statistical genetics evidence have demonstrated that for any complex human trait, observed sequence-level variation at the vast majority of genetic loci is of infinitesimal consequence to that trait.  As a consequence, the statistical association signal at the vast majority of these loci, taken individually, is often indistinguishable from random noise.
+At the same time, countless loci have been identified, through rigorous statistical genetics and increasingly, through functional validation, as containg variants causally-linked to hundreds if not thousands of traits.
+
+This dissertation presents three statistical models for relating genotype to phenotype.  In the first chapter I outline the method FGEM, which combines Bayes factors from gene-based association tests with gene-level annotation data to both estimate the enrichment of the annotations and reprioritize genes based on those enrichment estimates.  I then employ FGEM in the task of identifying mutational cancer driver genes, using gene-level Bayes factors from the recently published \texttt{driverMAPS} method\cite{drivermaps} combined with gene-level annotation from the Gene Ontology\cite{GO}.  Taken together, the recurrently enriched biological processes identified by FGEM recapitulate the hallmarks of cancer\cite{Hanahan_2011}.  FGEM  further implicates several biological processes as being relevant in a subtype-specific manner.  Using these enrichment estimates, FGEM identifies cancer genes that are either known cancer genes from the literature,but missed by \texttt{driverMAPS}, known cancer genes in other cancer types but implicated in a new cancer type, and a few genes not previously known to be cancer genes in any cancer type.
+
+In the next chapter I describe my method for heritability estimation from summary statistics, RSSp.
+RSSp uses GWAS summary statistics and an estimate of pairwise Linkage Disequilibrium (LD) to estimate narrow-sense heritability ($h^2$).  RSSp is based on the previously published Regression with Summary Statistics (RSS) likelihood\cite{Zhu_2017} --- by using a infinitesmial prior and by modeling $z$-scores rather than regression coefficients, a form of the marginalized likelihood is revealed that is very fast to compute, and thus to optimize.  To evaluate the performance of RSSp compared to existing methods for heritability estimation I employ a large-scale GWAS simulation.  In both sparse and infinitesimal simulations based on real genotypes from the uk biobank, I show that RSSp outperforms the widely used LD score regression\cite{ldsc} in terms of both bias and variance, and show how RSSp performs comparably to a method for heritability estimation based on individual-level data (i.e \texttt{GCTA}).  I additionally discuss considerations in matching a reference LD panel to a gwas cohort, and the effect of shrinkage estimators on LD. Finally, I apply RSSp to a small subset of the GWAS summary-statistics data available large-scale GWAS 
+
+In the next chapter I describe a general framework for incorporating functional annotations with GWAS data to identify causal genes.  Starting with a GWAS for a trait of interest, genomic regions marked by open chromatin or histone marks in a relevant cell type are assessed for enrichment for GWAS signal using \texttt{TORUS}\cite{torus}.  This enrichment is used to construct a variant-level prior that is used to perform statistical fine-mapping using susie\cite{susie}.  The fine-mapped causal variants are then linked to genes using a combination of promoter-capture HiC from the cell type(s) of interest and a probabilistic, distance-based approach.  Finally, I
+
+% Starting with a set of decidua-derived stromal cell genomic regions marked by open chromatin or histone marks, I used the method \texttt{TORUS} to estimate multivariate enrichmint of these regions for  gestational duration GWAS signal.  I t
+
+% In this analysis I sought to identify genes 
+
+% related to sequence-level variation at countless loci  been experimentally validated as    in the human genome we know that This is true Despite
+% The causal effect that a variant has on a trait induces a statistical association bewteen the presence of the variant and the trait of interest.
+% For a variant to have a causal effect on an organism-level trait, there must be a chain of causal events starting with the DNA-sequence,
+% level change, proceeding through one (or more often many) molecular intermediates, before it is observable at the organismal level.
+% The goal of a genome-wide association study (GWAS) is to identify a subset of variants with high statistical association with a trait of interest,
+% with the implicit assumption that the high degree of statistical association is the consquence of a causal relationship.
+% One of the major obstacles in any GWAS (or any association based statistical inference) is that the causality is but one of the means by which
+% a genotype may be associated with a phenotype.
 
 
-Natural questions one might want to ask of this data include: what differences in gene expression between individuals who had term labors as opposed to preterm labors do we observe after accounting for other known sources of variation?;
-What genes are differentially expressed between \texttt{ctr} and \texttt{dec} treated cell lines?; What genes are differentially expressed between \texttt{dec} and \texttt{TCM} cell lines?
-How does the \textbf{response to treatment} (\texttt{ctr} vs \texttt{dec} and \texttt{dec} vs \texttt{TCM}) \textbf{differ} between individuals who had \textbf{term labors} and individuals who had \textbf{preterm labors}?
+% Natural questions one might want to ask of this data include: what differences in gene expression between individuals who had term labors as opposed to preterm labors do we observe after accounting for other known sources of variation?;
+% What genes are differentially expressed between \texttt{ctr} and \texttt{dec} treated cell lines?; What genes are differentially expressed between \texttt{dec} and \texttt{TCM} cell lines?
+% How does the \textbf{response to treatment} (\texttt{ctr} vs \texttt{dec} and \texttt{dec} vs \texttt{TCM}) \textbf{differ} between individuals who had \textbf{term labors} and individuals who had \textbf{preterm labors}?
 
-The key question we are asking in this project is to what extent does the genetic signal for gestational duration overlap with the observed molecular differences between placentas gathered from women who gave birth at term and preterm.
+% The key question we are asking in this project is to what extent does the genetic signal for gestational duration overlap with the observed molecular differences between placentas gathered from women who gave birth at term and preterm.
 
-\subsection{ptb}
+% \subsection{ptb}
 
-The job of the biologist is to characterize the diversity of living organisms, the physical, chemical and the molecular basis of that activity, and the ways
-those parts relate to one-another.
+% The job of the biologist is to characterize the diversity of living organisms, the physical, chemical and the molecular basis of that activity, and the ways
+% those parts relate to one-another.
 
-I think it is useful at this point to make a brief digression to discuss the distinction between a "variant" and a "gene". The gene is a key player in the paradigm of causality in biological systems. To have a meaningful "causal variant"
+% I think it is useful at this point to make a brief digression to discuss the distinction between a "variant" and a "gene". The gene is a key player in the paradigm of causality in biological systems. To have a meaningful "causal variant"
 
-The classical definition of a gene is a "unit of heredity" cite\textsubscript{gene}\textsubscript{book} .  Inherent then to the idea of the gene is that it is functionional.  Historically,
-the gene was defined as that which gave rise to (i.e caused) that which was heritable.
-According to the classical definition, the notion of a "functional gene" is purely redundant.  
+% The classical definition of a gene is a "unit of heredity" cite\textsubscript{gene}\textsubscript{book} .  Inherent then to the idea of the gene is that it is functionional.  Historically,
+% the gene was defined as that which gave rise to (i.e caused) that which was heritable.
+% According to the classical definition, the notion of a "functional gene" is purely redundant.  
 
-If the definition of a genetic variant is physical, while the concept of a "causal", genetic factor, that of a gene, is conceptual, 
-it is not clear whether one can arrive at a meaningful definition of a "causal variant".  
+% If the definition of a genetic variant is physical, while the concept of a "causal", genetic factor, that of a gene, is conceptual, 
+% it is not clear whether one can arrive at a meaningful definition of a "causal variant".  
 
-To sidestep this philosophical issue, I will use a definition of a causal variant based on a hypothetical experiment.  Imagine two organisms that are
-genetically identical everywhere but the locus of interest.  If there is a consistent, detectable difference between pairs of individuals in regards to our trait
- of interest, despite being raised in identical environments, we will deem this variant to have a causal relationship on our trait of interest.
+% To sidestep this philosophical issue, I will use a definition of a causal variant based on a hypothetical experiment.  Imagine two organisms that are
+% genetically identical everywhere but the locus of interest.  If there is a consistent, detectable difference between pairs of individuals in regards to our trait
+%  of interest, despite being raised in identical environments, we will deem this variant to have a causal relationship on our trait of interest.
 
- Unfortunately in the case of humans such experiments are impossible, and so we must rely on another operational definition of causality.
+%  Unfortunately in the case of humans such experiments are impossible, and so we must rely on another operational definition of causality.
 
  
-Fine mapping can be considered on several levels.
-On a statistical level, we reintroduce the multivariate regression concept.
-In a Bayesian approach, we model the observed univariate effect sizes as coming from some unobserved distribution of true effects,
-that are then obscured by noise and LD.
-On a biological level, a locus has been fine mapped if consequences of genetic modification with respect to the trait of
-interest can be accurately predicted the mechanism underlying the statistical association at the locus can be explained.
+% Fine mapping can be considered on several levels.
+% On a statistical level, we reintroduce the multivariate regression concept.
+% In a Bayesian approach, we model the observed univariate effect sizes as coming from some unobserved distribution of true effects,
+% that are then obscured by noise and LD.
+% On a biological level, a locus has been fine mapped if consequences of genetic modification with respect to the trait of
+% interest can be accurately predicted the mechanism underlying the statistical association at the locus can be explained.
 
 
-Rather than a single link between variant and trait, we can construct a chain of causality from variant to molecular intermediate, and then from molecular intermediate to trait
-of interest.  In the case of molecular intermediates, there are two broad categories of variant to molecular-intermediate causal relationships that are especially tractable for 
-validation.  By virtue of the mapping of the human genome and our knowledge of the central dogma of molecular biology cite\textsubscript{crick1958protein} , by knowing the position and sequence
-of a variant one can immediately know with the variant lies within an exon (or splice-site boudary) of a characterized gene.  If so, it is a simple bioinformatic exercise to 
-ascertain the consequence of the change in DNA sequence on primary (and increasingly secondary and tertiary) amino acid structure.  Characterizing how changes in protein
-structure contribute to changes in protein function is a sub-discipline of biology all its own; but this is a question of "how" a variant-gene pair interact, and not a question of 
-"if" they interact.  The functional consequence of the majority of human genetic variation falls into the second category of variant to molecular-intermediate causal relationships.  
-This second category consists of all other mechanisms of causality, perhaps the best understood of which are the "regulatory variants".
+% Rather than a single link between variant and trait, we can construct a chain of causality from variant to molecular intermediate, and then from molecular intermediate to trait
+% of interest.  In the case of molecular intermediates, there are two broad categories of variant to molecular-intermediate causal relationships that are especially tractable for 
+% validation.  By virtue of the mapping of the human genome and our knowledge of the central dogma of molecular biology cite\textsubscript{crick1958protein} , by knowing the position and sequence
+% of a variant one can immediately know with the variant lies within an exon (or splice-site boudary) of a characterized gene.  If so, it is a simple bioinformatic exercise to 
+% ascertain the consequence of the change in DNA sequence on primary (and increasingly secondary and tertiary) amino acid structure.  Characterizing how changes in protein
+% structure contribute to changes in protein function is a sub-discipline of biology all its own; but this is a question of "how" a variant-gene pair interact, and not a question of 
+% "if" they interact.  The functional consequence of the majority of human genetic variation falls into the second category of variant to molecular-intermediate causal relationships.  
+% This second category consists of all other mechanisms of causality, perhaps the best understood of which are the "regulatory variants".
 
-What has come to be known as the "GWAS algorithm", wherein univariate associations are estimated rather than multivariate associations.
-In the case where predictors are uncorrelated, the univarite and multivariate associations will be equal.  Because the correlation between variants is 
-spatially structured, with physically proximal variants being more likely to be correlated (in linkage disequilibrium) than physically distal variants, 
-the GWAS algorithm identifies regions of high association
-
-
-
-\subsection{FGEM}
-
-
-In evaluating the hypothesis that a gene is a driver gene, in addition to considering the experimental evidence (i.e the likelihood of the somatic mutation data under this hypotheses as compared to the null hypothesis that it is not a driver gene), it can be very useful to consider the \emph{a priori} probability that the gene is a driver gene, condtional on the information that is known about that gene.  By combining \emph{a priori} information with the information from the statistical model,in the form of the likelihood (ratio), genes that have high statistical evidence of being driver genes but low prior probability of being driver genes can be down-weighted, while genes that have low or intermediate statistical evidence but high prior probability can be up-weighted.  Similarly, one can have higher certainty that genes with  both high statistical evidence and prior are driver genes and that genes with low statistical evidence and low prior probability are not driver genes.
-
-Under the Bayesian paradigm, \emph{a posteriori} knowledge is reflected as \emph{a prioi} probability for future experiment.  A set of Bayes factors from a study of cancer driver genes identified using the \texttt{driverMAPS} method\cite{drivermaps}.  From 734,754 single nucleotide somatic mutations from 20 tumor types in TCGA, data from approximately 20,000 genes were analyzed with the goal of identifying driver genes. For each gene analyzed in each cancer type, \texttt{driverMAPs} outputs the evidence that it is a driver gene as a Bayes factor.
-
-The pathways through which causal variants influence a trait is a subset of all pathways involved in the trait.
+% What has come to be known as the "GWAS algorithm", wherein univariate associations are estimated rather than multivariate associations.
+% In the case where predictors are uncorrelated, the univarite and multivariate associations will be equal.  Because the correlation between variants is 
+% spatially structured, with physically proximal variants being more likely to be correlated (in linkage disequilibrium) than physically distal variants, 
+% the GWAS algorithm identifies regions of high association
 
 
 
-\subsubsection{TCGA}
+% \subsection{FGEM}
 
-By comparing the whole-exome sequencing in the tumor vs adjacent normal tissue, it is possible to identify a subset of somatic mutations corresponding to that patient's cancer.
 
-\subsection{The unreasonable effectiveness of linear models}\label{sec:orgd56a398}
+% In evaluating the hypothesis that a gene is a driver gene, in addition to considering the experimental evidence (i.e the likelihood of the somatic mutation data under this hypotheses as compared to the null hypothesis that it is not a driver gene), it can be very useful to consider the \emph{a priori} probability that the gene is a driver gene, condtional on the information that is known about that gene.  By combining \emph{a priori} information with the information from the statistical model,in the form of the likelihood (ratio), genes that have high statistical evidence of being driver genes but low prior probability of being driver genes can be down-weighted, while genes that have low or intermediate statistical evidence but high prior probability can be up-weighted.  Similarly, one can have higher certainty that genes with  both high statistical evidence and prior are driver genes and that genes with low statistical evidence and low prior probability are not driver genes.
 
-There is a tension in statistical molecular genetics between the generic linear nature of the statistical models used to predict phenotype from genotype, and the fundamentally non-linear nature of the molecular traits themselves.  Indeed, there is a 
-rich tradition of mathematical biology outside of genetics for which linear systems are the exception rather than the rule.  When discussing the application of linear methods to non-linear systems, there is a common quotation by physicist Stanislaw Ulam \cite{Campbell_2004} :
+% Under the Bayesian paradigm, \emph{a posteriori} knowledge is reflected as \emph{a prioi} probability for future experiment.  A set of Bayes factors from a study of cancer driver genes identified using the \texttt{driverMAPS} method\cite{drivermaps}.  From 734,754 single nucleotide somatic mutations from 20 tumor types in TCGA, data from approximately 20,000 genes were analyzed with the goal of identifying driver genes. For each gene analyzed in each cancer type, \texttt{driverMAPs} outputs the evidence that it is a driver gene as a Bayes factor.
 
-\begin{quote}
-Using a term like nonlinear science is like referring to the bulk of zoology as the study of non-elephant animals. --Stanislaw Ulam
-\end{quote}
+% The pathways through which causal variants influence a trait is a subset of all pathways involved in the trait.
 
-For geneticists, and statistical geneticists in particular, there is a powerful tendency towards linear models.  The central limit theorem being a commonly cited justification.
+
+
+% \subsubsection{TCGA}
+
+% By comparing the whole-exome sequencing in the tumor vs adjacent normal tissue, it is possible to identify a subset of somatic mutations corresponding to that patient's cancer.
+
+% \subsection{The unreasonable effectiveness of linear models}\label{sec:orgd56a398}
+
+% There is a tension in statistical molecular genetics between the generic linear nature of the statistical models used to predict phenotype from genotype, and the fundamentally non-linear nature of the molecular traits themselves.  Indeed, there is a 
+% rich tradition of mathematical biology outside of genetics for which linear systems are the exception rather than the rule.  When discussing the application of linear methods to non-linear systems, there is a common quotation by physicist Stanislaw Ulam \cite{Campbell_2004} :
+
+% \begin{quote}
+% Using a term like nonlinear science is like referring to the bulk of zoology as the study of non-elephant animals. --Stanislaw Ulam
+% \end{quote}
+
+% For geneticists, and statistical geneticists in particular, there is a powerful tendency towards linear models.  The central limit theorem being a commonly cited justification.
 
 

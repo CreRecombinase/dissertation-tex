@@ -4,9 +4,17 @@
 
 \section{Introduction}\label{sec:org3c6cf58}
 
-There is no concept more central to the study of genetics than that of heritability.
-Large-scale Genome-wide association studies have identified tens of thousands of loci where variation at the locus correlates with a particular trait.
+
+
+
+There is no concept more central to the study of genetics than that of heritability.  Narrow-sense heritability, or $h^2$ is the proportion of a trait's variance that can be attributable to additive genetic variance.  $h^2$ has traditionally been measured by studying twins or pedigress, but can be biased when assumptions about the sources of phenotypic covariance are violated\cite{keller2005quantifying}.
+Over the last several years, SNP-based methods have been developed\cite{gcta} and widely applied to the problem of $h^2$ estimation.  
+As methods for estimating $h^2$ using whole-genome data
 In the case of most complex traits, the most strongly associated genetic variants collectively explain a relatively small fraction of the total trait variation that is thought to be attributable to genetics.
+
+
+Large-scale Genome-wide association studies have identified tens of thousands of loci where variation at the locus correlates with a particular trait.
+
 A consistent frustration of the human geneticist is that the total explanatory power of strongly associated variants is often small compared to what heritability estimates from twin studies.
 GWAS summary statistics have become the most common method for summarizing estimated relationships between genotype and phenotype.
 As such, they have become an invaluable resource for a large number of biomedical research applications\cite{Lyon_2020}.  GWAS summary statistics enable the comparison of genetic-association signal across traits at a locus\cite{phewas}, across loci for a trait\cite{firstGWAS}, and the comparison of patterns of genotype-phenotype associations across populations\cite{Rosenberg_2010}.
@@ -18,7 +26,7 @@ The question of how heritable a trait is a foundational one in the field of gene
 
 Among the state of the art methods for the estimation of heritability from unrelated individuals is the method based on Genome-based restricted maximum likelihood (GREML)\cite{GCTA}.  While GREML and methods based on GREML have been used to great effect to explain a large proportion of heritability found by more precise methods (e.g twin studies)\cite{GCTA}, GCTA requires individual-level data, as well as the construction of an $n \times n$ relatedness matrix (with $n$ being the number of individuals for which genotype and phenotype data is available).  The size of this matrix increases quadratically as sample size increases.
 
-An important recent development in modeling the relationship between multiple regression coefficients estimates to their univariate counterparts, by means of a reference LD matrix is known as Regression with Summary Statistics (RSS)\cite{Zhu_2017}.  Here we present a simple modification of the RSS method called polygenic RSS, or RSSp.  Using simulation, we show how under truly polygenic genetic architectures, RSSp is better able to estimate heritability than LD score regression.
+An important recent development in modeling the relationship between multiple regression coefficients estimates to their univariate counterparts, by means of a reference LD matrix is known as Regression with Summary Statistics (RSS)\cite{Zhu_2017}.  While RSS Here we present a simple modification of the RSS method called polygenic RSS, or RSSp.  Using simulation, we show how under truly polygenic genetic architectures, RSSp is better able to estimate heritability than LD score regression.
 
 In addition, we explore the consequences of using an out-of-sample reference LD the demonstrate the importance of accurate estimation of linkage disequilibrium, and explore how shrinkage estimators of LD can improve estimates of heritability, especially when relying on an external reference panel for LD information.  
 
