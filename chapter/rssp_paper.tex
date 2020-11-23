@@ -5,8 +5,6 @@
 \section{Introduction}\label{sec:org3c6cf58}
 
 
-
-
 There is no concept more central to the study of genetics than that of heritability.  Narrow-sense heritability, or $h^2$ is the proportion of a trait's variance that can be attributable to additive genetic variance.  $h^2$ has traditionally been measured by studying twins or pedigress, but can be biased when assumptions about the sources of phenotypic covariance are violated\cite{keller2005quantifying}.
 Over the last several years, SNP-based methods have been developed\cite{gcta} and widely applied to the problem of $h^2$ estimation.  
 As methods for estimating $h^2$ using whole-genome data
@@ -19,7 +17,6 @@ A consistent frustration of the human geneticist is that the total explanatory p
 GWAS summary statistics have become the most common method for summarizing estimated relationships between genotype and phenotype.
 As such, they have become an invaluable resource for a large number of biomedical research applications\cite{Lyon_2020}.  GWAS summary statistics enable the comparison of genetic-association signal across traits at a locus\cite{phewas}, across loci for a trait\cite{firstGWAS}, and the comparison of patterns of genotype-phenotype associations across populations\cite{Rosenberg_2010}.
 A common component of  applications of GWAS summary statistics is a statistical model relating the marginal,variant-level associations between genotype and phenotype to the distribution of true effect sizes.  In the Bayesian setting this stat and among the most important.  Among the most important applications of GWAS sumamry statistics is in the estimation of heritability. LD score regression is the most widely used method for estimating heritability from GWAS data without individual level data.  LD score regression uses GWAS summary statistics and an estimate of the linkage disequilibrium (LD) between those variants to estimate the heritability of the trait as well as the extent of confounding in the GWAS\cite{ldsc}.
-
 
 
 The question of how heritable a trait is a foundational one in the field of genetics. In the simplest definition, a trait is heritable if offspring are more similar to their parents (in regards to the trait) than they are to random members of the same population.  
@@ -143,8 +140,6 @@ univariate normal variables where:
 Computing the marginalized-likelihood estimate of $\sigma^2_u$ in terms of $\textbf{v}$ and $\textbf{D}$ can be done without the costly covariance inverse or determinant calculations required in the original multivariate probability density function.  We estimate $\sigma^2_u$ by the ``Brent'' 1D optimization routine in R\cite{brent1972algorithms}. 
 
 
-
-\subsection{Background}\label{sec:org13cff0e}
 
 \section{Materials and Methods}\label{sec:org762fc74}
 
