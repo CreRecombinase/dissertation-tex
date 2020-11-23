@@ -5,27 +5,27 @@
 \section{Introduction}\label{sec:org3c6cf58}
 
 
-There is no concept more central to the study of genetics than that of heritability.  Narrow-sense heritability, or $h^2$ is the proportion of a trait's variance that can be attributable to additive genetic variance.  $h^2$ has traditionally been measured by studying twins or pedigress, but can be biased when assumptions about the sources of phenotypic covariance are violated\cite{keller2005quantifying}.
-Over the last several years, SNP-based methods have been developed\cite{gcta} and widely applied to the problem of $h^2$ estimation.  
-As methods for estimating $h^2$ using whole-genome data
-In the case of most complex traits, the most strongly associated genetic variants collectively explain a relatively small fraction of the total trait variation that is thought to be attributable to genetics.
+There is no concept more central to the study of genetics than that of heritability. In the simplest definition, a trait is heritable if offspring are more similar to their parents (in regards to the trait) than they are to random members of the same population. Narrow-sense heritability, or $h^2$ is the proportion of a trait's variance that can be attributable to additive genetic variance. 
+$h^2$ has traditionally been measured by studying twins or pedigress, but can be biased when assumptions about the sources of phenotypic covariance are violated\cite{keller2005quantifying}.
+Over the last decade or so, SNP-based methods have been developed\cite{gcta} and widely applied to the problem of $h^2$ estimation, based on large scale genome-wide association studies (GWAS). 
+%As methods for estimating $h^2$ using whole-genome data
+%In the case of most complex traits, the most strongly associated genetic variants collectively explain a relatively small fraction of the total trait variation that is thought to be attributable to genetics.
+These methods leverage information of variants across the genome, rather than only strongly associated variants, which explain only a small fraction of heritability estimated from twin studies.  
+%A consistent frustration of the human geneticist is that the total explanatory power of strongly associated variants is often small compared to what heritability estimates from twin studies.
+The state of art method for estimating heritability using genotype and phenotype data of unrelated individuals is Genome-based restricted maximum likelihood (GREML)\cite{GCTA}. GREML has been used to great effect to explain a large proportion of heritability found by family studies \cite{GCTA}. These methods, however, requires individual-level data, which can be difficult to access, as well as the construction of an $n \times n$ relatedness matrix (with $n$ being the number of individuals).  The size of this matrix increases quadratically as sample size increases, raising substantial computational burden.
+The latest methods for heritability estimation often use GWAS summary statistics, in the form of the estimated effect sizes and standard errors, and p-values, of marginal association of each variant. Summary statistics have become the most common method for summarizing and storing estimated relationships between genotype and phenotype \cite{Lyon_2020}.
+%As such, they have become an invaluable resource for a large number of biomedical research applications\cite{Lyon_2020}.  
+There are many advantages of working with summary statistics, comparing with individual level data, including: easier comparison of genetic-association signal across traits at a locus\cite{phewas}, across loci for a trait\cite{firstGWAS}, and the comparison of patterns of genotype-phenotype associations across populations\cite{Rosenberg_2010}.
+%In the Bayesian setting this stat and among the most important.  
+%Among the most important applications of GWAS sumamry statistics is in the estimation of heritability. 
+LD score regression is the most widely used method for estimating heritability from GWAS summary statistics.  LD score regression uses GWAS summary statistics and an estimate of the linkage disequilibrium (LD) between those variants to estimate the heritability of the trait as well as the extent of confounding in the GWAS\cite{ldsc}. Other summary statistics based methods, e.g. LDAK-SumHer, allows more complex relationship of the effect sizes of variants and their minor allele frequencies (MAF) and LD structure. 
 
+%A key component of heritability estimation methods using GWAS summary statistics is a statistical model relating the marginal, variant-level associations between genotype and phenotype to the distribution of true effect sizes. 
+%Among the state of the art methods for the estimation of heritability from 
 
-Large-scale Genome-wide association studies have identified tens of thousands of loci where variation at the locus correlates with a particular trait.
-
-A consistent frustration of the human geneticist is that the total explanatory power of strongly associated variants is often small compared to what heritability estimates from twin studies.
-GWAS summary statistics have become the most common method for summarizing estimated relationships between genotype and phenotype.
-As such, they have become an invaluable resource for a large number of biomedical research applications\cite{Lyon_2020}.  GWAS summary statistics enable the comparison of genetic-association signal across traits at a locus\cite{phewas}, across loci for a trait\cite{firstGWAS}, and the comparison of patterns of genotype-phenotype associations across populations\cite{Rosenberg_2010}.
-A common component of  applications of GWAS summary statistics is a statistical model relating the marginal,variant-level associations between genotype and phenotype to the distribution of true effect sizes.  In the Bayesian setting this stat and among the most important.  Among the most important applications of GWAS sumamry statistics is in the estimation of heritability. LD score regression is the most widely used method for estimating heritability from GWAS data without individual level data.  LD score regression uses GWAS summary statistics and an estimate of the linkage disequilibrium (LD) between those variants to estimate the heritability of the trait as well as the extent of confounding in the GWAS\cite{ldsc}.
-
-
-The question of how heritable a trait is a foundational one in the field of genetics. In the simplest definition, a trait is heritable if offspring are more similar to their parents (in regards to the trait) than they are to random members of the same population.  
-
-Among the state of the art methods for the estimation of heritability from unrelated individuals is the method based on Genome-based restricted maximum likelihood (GREML)\cite{GCTA}.  While GREML and methods based on GREML have been used to great effect to explain a large proportion of heritability found by more precise methods (e.g twin studies)\cite{GCTA}, GCTA requires individual-level data, as well as the construction of an $n \times n$ relatedness matrix (with $n$ being the number of individuals for which genotype and phenotype data is available).  The size of this matrix increases quadratically as sample size increases.
-
-An important recent development in modeling the relationship between multiple regression coefficients estimates to their univariate counterparts, by means of a reference LD matrix is known as Regression with Summary Statistics (RSS)\cite{Zhu_2017}.  While RSS Here we present a simple modification of the RSS method called polygenic RSS, or RSSp.  Using simulation, we show how under truly polygenic genetic architectures, RSSp is better able to estimate heritability than LD score regression.
-
-In addition, we explore the consequences of using an out-of-sample reference LD the demonstrate the importance of accurate estimation of linkage disequilibrium, and explore how shrinkage estimators of LD can improve estimates of heritability, especially when relying on an external reference panel for LD information.  
+All the summary statistics based methods for heritability estimation, however, are essentially method-of-moment estimators. These methods often use ad-hoc procedures to deal with dependency of nearby variants due to LD. A full likelihood based model for parameter estimation, while accounting for LD among variants, would be statistically optimal. Our work takes advantages of the likelihood model developed by our collaborators, known as Regression with Summary Statistics (RSS)\cite{Zhu_2017}, in modeling the relationship between marginal associations of single variants and the true effect sizes of all variants. Here we present a model with RSS likelihood with a normal prior distribution of effect sizes, which we call polygenic RSS, or RSSp. We come up with a computationally efficient technique to make inference under RSSp. Additionally, we estimate heritability, not as a single unknown parameter, but using the sum of Percent of Variance Explained (PVE) of all individual SNPs, a strategy that makes the results less sensitive to the prior assumption. 
+Using simulation, we show under truly polygenic genetic architectures, RSSp is able to better estimate heritability than LD score regression.
+We also explore the consequences of using an out-of-sample reference LD from external data to demonstrate the importance of accurate estimation of linkage disequilibrium and explore how shrinkage estimators of LD can improve estimates of heritability.  
 
 \section{Background}
 
@@ -33,23 +33,26 @@ The most common method for associating genotype with phenotype is through  an ad
 
 $$ \textbf{y}= \textbf{X} \boldsymbol{\beta} + \boldsymbol{\epsilon}$$
 
-where $\textbf{y}$ is the length $n$ vector of phenotypes, \(X\) is an (\(n\) by \(p\)) matrix representing genotype, (which we will assume is centered for mathematical convenience, and without loss of generality), \(\boldsymbol{\beta}\) is a vector (length \(p\)) of variant-level effects and \(\epsilon\) is noise/error. In this model, the narrow sense heritability is defined as $h^2=\frac{\text{Var}(\textbf{X}\boldsymbol{\beta})}{\text{Var}(\boldsymbol{\epsilon})}$. Under a bayesian paradigm, $\boldsymbol{\beta}$ is treated as a random variable, leading to  $\boldsymbol{\epsilon} = \textbf{y}-\textbf{X}\boldsymbol{\beta} \rightarrow \text{Var}(\boldsymbol{\epsilon})= \text{Var}(\textbf{y})-\text{Var}(\textbf{X}\boldsymbol{\beta})$.  In a GWAS context $\textbf{X}$ and $\textbf{y}$ are fixed, which means that estimating $h^2$, \emph{for the population from which the sample is drawn} can be reduced to estimating $\text{Var}(\boldsymbol{\beta})$.
+where $\textbf{y}$ is the length $n$ vector of phenotypes, \(X\) is an (\(n\) by \(p\)) matrix representing genotype, (which we will assume is centered for mathematical convenience, and without loss of generality), \(\boldsymbol{\beta}\) is a vector (length \(p\)) of variant-level effects and \(\epsilon\) is noise/error. In this model, the narrow sense heritability is defined as $h^2=\frac{\text{Var}(\textbf{X}\boldsymbol{\beta})}{\text{Var}(\boldsymbol{\epsilon})}$. With current GWAS sample sizes the number of variants is much larger than the number of samples \(i.e. p >>n\), so it is difficult or even impossible to estimate $\beta_j$ for each variant $j$, so $\boldsymbol{\beta}$ is often treated as a random variable, following some prior distribution. %leading to  $\boldsymbol{\epsilon} = \textbf{y}-\textbf{X}\boldsymbol{\beta} \rightarrow \text{Var}(\boldsymbol{\epsilon})= \text{Var}(\textbf{y})-\text{Var}(\textbf{X}\boldsymbol{\beta})$.  
+In a GWAS context $\textbf{X}$ and $\textbf{y}$ are fixed, which means that estimating $h^2$, \emph{for the population from which the sample is drawn} can be reduced to estimating the distribution parameter(s) of $\beta$. %$\text{Var}(\boldsymbol{\beta})$.
 
-With current GWAS sample sizes the number of variants is much larger than the number of samples \(i.e p >>n\).  Under such a regime we can't directly estimate the distribution of \(\beta_i\). The most common means of summarizing the results of a GWAS is to use GWAS summary statistics.  GWAS summary statistics describe the relationship between 
-The summary statistics we will be interested in are the marginal effect size at a particlular variant (\(j\)), which we will denote as
-\(\hat{\beta_j}\), and the standard error of that estimate, which we will denote as \(\hat{\sigma_j^2}\)
+The most common means of summarizing the results of a GWAS is to use GWAS summary statistics.
+The summary statistics we will be interested in are the marginal effect size at a particular variant (\(j\)), which we will denote as
+\(\hat{\beta_j}\), and the standard error of that estimate, which we will denote as \(\hat{\sigma_j^2}\). The estimates and standard errors are usually from simple regression of $Y$ against $X_j$, genotype of variant $j$: 
 
 $$ \hat{\beta_j} := {({X_j}^{T}X_j)}^{-1}{X_j}^{T}y $$
 
 $$ \hat{\sigma_j^2} := (nX_j^TX_j)^{-1}(y-X_j\hat{\beta_j})^T(y-X_j\hat{\beta_j}) $$
 
+%Under such a regime we cannot directly estimate the distribution of \(\beta_i\).
+
 \subsection{Regression with Summary Statistics RSS}\label{sec:orgb0b15e2}
 
-RSS relates univariate statistics to their multivariate counterparts by using the LD matrix:
+RSS relates marginal association statistics to effect sizes $\boldsymbol{\beta}$ by using the LD matrix:
 
 $$ \hat{\boldsymbol{\beta}} | \boldsymbol{\beta} \sim N(\hat{S}\hat{R}\hat{S}^{-1},\hat{S}\hat{R}\hat{S}) $$
 
-where \(\hat{\boldsymbol{\beta}}\) is the length $p$ vector of GWAS effect size estimates, and $\hat{\textbf{S}}$ is a diagonal matrix where $\hat{S_{j,j}}=\hat{\sigma_j^2}$.
+where \(\hat{\boldsymbol{\beta}}\) is the length $p$ vector of GWAS effect size estimates,  $\hat{\textbf{S}}$ is a diagonal matrix where $\hat{S_{j,j}}=\hat{\sigma_j^2}$, and $\hat{R}$ is the LD matrix between variants, assuming variants are normalized (i.e. mean 0, variance 1). 
 
 In the original RSS paper there were two priors on \(\beta\) that were discussed.  The first is based on the Bayesian Sparse Linear Mixed Model (BSLMM)\cite{bslmm} where true effects ($\boldsymbol{\beta}$)
 come from a mixture of sparse and polygenic components:
