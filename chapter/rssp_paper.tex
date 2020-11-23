@@ -27,7 +27,9 @@ All the summary statistics based methods for heritability estimation, however, a
 Using simulation, we show under truly polygenic genetic architectures, RSSp is able to better estimate heritability than LD score regression.
 We also explore the consequences of using an out-of-sample reference LD from external data to demonstrate the importance of accurate estimation of linkage disequilibrium and explore how shrinkage estimators of LD can improve estimates of heritability.  
 
-\section{Background}
+\section{Methods}
+
+\subsection{Background}
 
 The most common method for associating genotype with phenotype is through  an additive model:
 
@@ -66,7 +68,6 @@ i.e that there is no polygenic component, one arrives at the BVSR model:
 $$ \beta_j \sim \pi N(0,\sigma^2_B)+(1-\pi) \delta_0 $$
 
 The posterior for the BVSR model can be efficiently approximated using variational inference. 
-
 If instead of assuming that \(\sigma^2_P=0\), one instead assumes that \(\sigma_B=0\) (or equivalently that \(\pi=0\)) we arrive at the following model: 
 $$ \beta_j \sim N(0,\sigma^2_P)$$
 
@@ -76,7 +77,7 @@ In general,if we know that the marginal Gaussian distribution for some variable 
 $$p(\textbf{x}) = N(\textbf{x}|\boldsymbol{\mu},\Lambda^{-1})$$
 
 $$p(\textbf{y}|\textbf{x}) = N(\textbf{y}|A\textbf{x}+\textbf{b},L^{-1})$$
-then the marginal distribution of \(\textbf{y}\) and the conditional distribution of \(\textbf{x}\) given \(\textbf{y}\) arge given by \cite{patternrecognition}: 
+then the marginal distribution of \(\textbf{y}\) and the conditional distribution of \(\textbf{x}\) given \(\textbf{y}\) are given by \cite{patternrecognition}: 
 
 $$ p(\textbf{y}) = N(\textbf{y}|A\boldsymbol{\mu}+\textbf{b},L^{-1}+A\Lambda^{-1}A^{T})$$
 $$p(\textbf{x}|\textbf{y}) = N(\textbf{x}| \Sigma \left\{ A^{T} L ( \textbf{y} - \textbf{b} ) + \Lambda \boldsymbol{\mu} \right\} , \Sigma)$$
@@ -84,10 +85,8 @@ $$p(\textbf{x}|\textbf{y}) = N(\textbf{x}| \Sigma \left\{ A^{T} L ( \textbf{y} -
 where :
 $$\Sigma = (\Lambda + A^{T}LA)^{-1}$$
 
-Given this result, we can derive the posterior for \(\boldsymbol{\beta}\).
-
-Remember that the prior for \(\boldsymbol{\beta}\) is \(\boldsymbol{\beta} \sim N(0,I_p\sigma^2_\beta)\), and that the RSS likelihood is \(\hat{\boldsymbol{\beta}} | \boldsymbol{\beta} \sim N(\hat{S}\hat{R}\hat{S}^{-1}\boldsymbol{\beta},\hat{S}\hat{R}\hat{S})\).  
-We can replace \(\boldsymbol{\beta}\) with \(\textbf{x}\) and \(\hat{\boldsymbol{\beta}}\) with \(\textbf{y}\) by making the following substitutions:
+Given this result, we can derive the marginal distribution of $\hat{\boldsymbol{\beta}}$ and the posterior of \(\boldsymbol{\beta}\). Given the prior for \(\boldsymbol{\beta}\) as \(\boldsymbol{\beta} \sim N(0,I_p\sigma^2_\beta)\), and that the RSS likelihood is \(\hat{\boldsymbol{\beta}} | \boldsymbol{\beta} \sim N(\hat{S}\hat{R}\hat{S}^{-1}\boldsymbol{\beta},\hat{S}\hat{R}\hat{S})\),  
+we can replace \(\boldsymbol{\beta}\) with \(\textbf{x}\) and \(\hat{\boldsymbol{\beta}}\) with \(\textbf{y}\) by making the following substitutions:
 
 \begin{center}
 \begin{tabular}{ll}
@@ -114,9 +113,9 @@ the recomputation of the determinant and inverse of \(\sigma_\beta^2\hat{\textbf
 \(\sigma_\beta^2\).  A common computational trick for recomputing a multivariate normal density is to precompute a cholesky decomposition of the covariance matrix, as the computationally expenensive aspects of computing the multivariate normal density (in particular computing the determinant and inverse of the covariance matrix) have efficient implementations when the covariance matrix has been cholesky-decomposed.  This trick is unforunately not applicable in this situation.  Even if both $\hat{\textbf{S}}\hat{\textbf{R}}\hat{\textbf{S}}^{-2}\hat{\textbf{R}}\hat{\textbf{S}}$ and $\hat{\textbf{S}}\hat{\textbf{R}}\hat{\textbf{S}}^{-2}\hat{\textbf{R}}\hat{\textbf{S}}$ were factored separately, there is no way to add the two matrices to maintain the cholesky form.
 
 
-\subsubsection{Polygenic RSS (\texttt{RSSp})}\label{sec:org040cb73}
+\subsection{Polygenic RSS (\texttt{RSSp})}\label{sec:org040cb73}
 
-If instead of modeling \(\hat{\boldsymbol{\beta}}\) and \(\boldsymbol{\beta}\), we can instead model $\hat{\textbf{u}}$ and $\textbf{u}$, where $\hat{u}_j=\frac{\hat{\beta_j}}{\hat{\sigma_j^2}}$, and  \(u_j=\frac{\beta_j}{\hat{\sigma_j^2}}\).  This is effectively the same as effect-size in terms of standardized genotypes, and leads to the same (implicit) prior as LD score regression\cite{ldsc} and GCTA\cite{GCTA}.  With the prior $\textbf{u} \sim \mathcal{N}(0,\sigma_u^2)$, the likelihood in terms of $\textbf{u}$ becomes:
+If instead of modeling \(\hat{\boldsymbol{\beta}}\) and \(\boldsymbol{\beta}\), we model $\hat{\textbf{u}}$ and $\textbf{u}$, where $\hat{u}_j=\frac{\hat{\beta_j}}{\hat{\sigma_j^2}}$, and  \(u_j=\frac{\beta_j}{\hat{\sigma_j^2}}\).  This is effectively the same as effect-size in terms of standardized genotypes, and leads to the same (implicit) prior as LD score regression\cite{ldsc} and GCTA\cite{GCTA}.  With the prior $\textbf{u} \sim \mathcal{N}(0,\sigma_u^2)$, the likelihood in terms of $\textbf{u}$ becomes:
 
 $$\hat{\textbf{u}} | \textbf{u} \sim \mathcal{N}(\textbf{R} \textbf{u},\textbf{R})$$
 
@@ -128,10 +127,10 @@ Unlike the marginalized likelihood without the normalized-genotype assumption,
 precomputing a matrix decomposition for the covariance matrix will greatly
 accelerate efficient computation of the likelihood
 and as a consequence, parameter estimation.
-If we take the eigenvalue decomposition of $\textbf{R}$ $\textbf{R}=\textbf{Q}\textbf{D}\textbf{Q}^T$, with $\textbf{Q}$ 
+If we take the eigenvalue decomposition of $\textbf{R}$, $\textbf{R}=\textbf{Q}\textbf{D}\textbf{Q}^T$, with $\textbf{Q}$ 
 being the $p$ by $p$ matrix of
 eigenvectors, and $\textbf{D}$ being the diagonal matrix of eigenvalues, we can rewrite the marginalized likelihood as
-$\hat{\boldsymbol{\beta}} \sim N(0,\sigma_u^2\textbf{QD}^2\textbf{Q}+\textbf{QDQ})$.  Letting
+$\hat{\boldsymbol{\beta}} \sim N(0,\sigma_u^2\textbf{QD}^2\textbf{Q}+\textbf{QDQ})$.  Letting $\textbf{v} = Q^T \textbf{u}$, and 
 $\hat{\textbf{v}} = Q^{T}\hat{u}$, and exploiting the property of
 the multivariate normal distribution that an affine transformation of a multivariate normal random variable has a multivariate normal distribution, the
 likelihood for $\hat{\textbf{v}}$ is $\hat{\textbf{v}}|\sigma_u^2 \sim \mathcal{N}(0,\sigma_u^2\textbf{D}^{2}+\textbf{D})$.  As all the off-diagonal terms of
@@ -140,12 +139,13 @@ univariate normal variables where:
 
 \[ v_j \sim N(0,\sigma^2_u\lambda_j^2+\lambda_j) \]
 
-Computing the marginalized-likelihood estimate of $\sigma^2_u$ in terms of $\textbf{v}$ and $\textbf{D}$ can be done without the costly covariance inverse or determinant calculations required in the original multivariate probability density function.  We estimate $\sigma^2_u$ by the ``Brent'' 1D optimization routine in R\cite{brent1972algorithms}. 
+Computing the marginalized-likelihood estimate of $\sigma^2_u$ in terms of $\textbf{v}$ and $\textbf{D}$ can be done without the costly covariance inverse or determinant calculations required in the original multivariate probability density function.  We estimate $\sigma^2_u$ by the ``Brent'' 1D optimization routine in R\cite{brent1972algorithms}. While this procedure requires a costly eigendecomposition of $R$, it only needs to be done once, without the need of updating it during optimization. Furthermore, $R$ would be the same across all complex traits, so the eigendecomposition can be pre-computed and stored, further saving computational time. 
 
 
 \subsection{Linkage disequilibrium}\label{sec:org828aaeb}
 
-Two genome-wide Linkage Disequilibrium (LD) estimates were generated.  The first, which we will refer to as ``in-sample'', was generated from same samples used to simulate phenotypes and subsequently generated GWAS summary statistics.  The second set we will refer to as ``reference-panel'', which is the equally sized set of individuals not used in generating GWAS summary statistics.  Rather than computing and storing 8 million by 8 million genome-wide LD matrix, a blockwise diagonal approximation to the LD matrix was made.  LD between variants was only estimated for variants within 1,703 approximately independent LD blocks.  The boundaries of independent LD blocks were previously identified in the 1000 genomes EUR population using the method ldetect\cite{ldetect}.  
+%Two genome-wide Linkage Disequilibrium (LD) estimates were generated.  The first, 
+RSSp requires the LD matrix of variants. When individual level data is available, we can compute the ``in-sample'' LD using individual genotype data. When this is not available, it is common to compute the out-of-sample LD from the ``reference-panel'', which is the set of individuals not used in generating GWAS summary statistics, but from the same population as the samples where GWaS summary statistics were derived. Rather than computing and storing 8 million by 8 million genome-wide LD matrix, a blockwise diagonal approximation to the LD matrix was made.  LD between variants was only estimated for variants within 1,703 approximately independent LD blocks.  The boundaries of independent LD blocks were previously identified in the 1000 genomes EUR population using the method ldetect\cite{ldetect}.  
 
 \section{Results}\label{sec:org26555b8}
 
@@ -164,16 +164,13 @@ Two genome-wide Linkage Disequilibrium (LD) estimates were generated.  The first
 \end{figure}
 
 \subsection{GWAS Simulations}
-To estimate the effectiveness of RSSp at estimating heritability we simulated phenotypes and estimated GWAS summary statistics using a large employed a large-scale simulation of polygenic traits and GWAS summary statistics using real genotypes from the UK biobank.  We then employed state of the art individual-level data-based (\texttt{GCTA}\cite{GCTA}) and GWAS summary statistics-based (\texttt{ldsc}\cite{ldsc}) heritability estimation methods.  To make the simulations as realistic as possible, real individual-level genotypes were used.
+To estimate the effectiveness of RSSp at estimating heritability, we simulated phenotypes and estimated GWAS summary statistics. We then employed state of the art individual-level data-based (\texttt{GCTA}\cite{GCTA}) and GWAS summary statistics-based (\texttt{ldsc}\cite{ldsc}) heritability estimation methods.  To make the simulations as realistic as possible, real individual-level genotypes were used.
 
-Genotype data from individuals from the UK biobank were used as the basis of simulations. Two random non-overlapping subsets of 10,000 unlrelated individauls were randomly drawn (without replacement) from the 487,409 total individuals in the UK biobank dataset.  Both datasets were subset to include only the variants above 1 percent allele frequency in both subsets, resulting in 8,327,757 variants in total.
+Genotype data from individuals from the UK biobank were used as the basis of simulations. Two random non-overlapping subsets of 10,000 unrelated individuals were randomly drawn (without replacement) from the 487,409 total individuals in the UK biobank dataset.  Both datasets were subset to include only the variants above 1 percent allele frequency in both subsets, resulting in 8,327,757 variants in total.
+Causal variant effects and phenotypes traits were simulated using a modified version of the \texttt{simu} software, a tool for simulating GWAS phenotypes based on real genotype data.  \texttt{simu} simulates causal effects from a normal distribution and uses the GCTA model of scaled genotypes. For the infinitesimal simulation, 80 traits were simulated for 8 $h^2$ values from  0.1 to 0.8 in increments of 0.1, with 10 trait replicates being simulated at each level of heritability. After simulating the phenotype, GWAS summary statistics for each simulated phenotype were then generated using GCTA's implementation of the \texttt{fastGWA} mixed linear model-based GWAS method, with the first 10 principle components used as quantitative covariates. 
 
-Causal variant effects and phenotypes traits were simulated using a modified version the \texttt{simu} software, a tool for simulating GWAS phenotypes based on real genotype data.  \texttt{simu} simulates causal effects from a normal distribution and uses the GCTA model of scaled genotypes.   For the infinitesimal simulation, 80 traits were simulated for 8 $h^2$ values from  0.1 to 0.8 in increments of 0.1, with 10 trait replicates
-being simulated at each level of heritability.
-
-After simulating the phenotype, heritability was estimated using GCTA's GCTA-GREML analysis, using a GRM constructed using the 8,327,757 variants and using 10 principal components as quantitative covariates. GWAS summary statistics for each simulated phenotype were then generated using GCTA's implementation of the \texttt{fastGWA} mixed linear model-based GWAS method, with the first 10 principle components used as quantiative covariates.
-
-To estimate heritability using LD score regression, LD scores were generated on the 8,327,757 variants.  LD scores were generated from the genotypes used for the GWAS simulation (``in-sample''), and another set of LD scores were generated using the using the LD reference panel.  LD scores were estimated using \texttt{ldsc}, using a 1 centimorgan sliding window, as per the \texttt{ldsc} tutorial \cite{ldsctutorial} on the \texttt{ldsc} website.  The \texttt{pyrho} method applied to the British in England and Scotland (GBR) invdividuals from the 1000 genomes project\cite{1kg} was used in the estimation of the local recombination rate.  As we also wished to LD score regression was run four times on 
+Heritability was estimated using GCTA's GCTA-GREML analysis, using a GRM constructed using the 8,327,757 variants and using 10 principal components as quantitative covariates. 
+To estimate heritability using LD score regression, LD scores were generated on the 8,327,757 variants.  This step either uses the genotypes of individuals used for the GWAS simulation (``in-sample''), or the second, equally-sized, samples (the LD reference panel) not used in simulations.  LD scores were estimated using \texttt{ldsc}, using a 1 centimorgan sliding window, as per the \texttt{ldsc} tutorial \cite{ldsctutorial} on the \texttt{ldsc} website.  The \texttt{pyrho} method applied to the British in England and Scotland (GBR) individuals from the 1000 genomes project\cite{1kg} was used in the estimation of the local recombination rate.  As we also wished to LD score regression was run four times on 
 
 Finally, RSSp was 
 
