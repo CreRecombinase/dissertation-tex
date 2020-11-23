@@ -140,46 +140,9 @@ univariate normal variables where:
 Computing the marginalized-likelihood estimate of $\sigma^2_u$ in terms of $\textbf{v}$ and $\textbf{D}$ can be done without the costly covariance inverse or determinant calculations required in the original multivariate probability density function.  We estimate $\sigma^2_u$ by the ``Brent'' 1D optimization routine in R\cite{brent1972algorithms}. 
 
 
-
-\section{Materials and Methods}\label{sec:org762fc74}
-
-\subsection{Data}\label{sec:org079c51d}
-
-
-\subsubsection{UK Biobank Data}\label{sec:org642e65e}
-
-
 \subsection{Linkage disequilibrium}\label{sec:org828aaeb}
 
 Two genome-wide Linkage Disequilibrium (LD) estimates were generated.  The first, which we will refer to as ``in-sample'', was generated from same samples used to simulate phenotypes and subsequently generated GWAS summary statistics.  The second set we will refer to as ``reference-panel'', which is the equally sized set of individuals not used in generating GWAS summary statistics.  Rather than computing and storing 8 million by 8 million genome-wide LD matrix, a blockwise diagonal approximation to the LD matrix was made.  LD between variants was only estimated for variants within 1,703 approximately independent LD blocks.  The boundaries of independent LD blocks were previously identified in the 1000 genomes EUR population using the method ldetect\cite{ldetect}.  
-
-To improve the estimate of LD, I used the LD shrinkage estimator developed by Wen and Stephens\cite{Wen_2010}, which uses an estimate of 
-the recombination rate, as well an estiamte of the effective population size to improve the estimate of correlation between variants.
-I implemented a standalone version of this shrinkage estimator in as R package called \texttt{LDshrink}.
-
-If \(\boldsymbol{X}\) is a \(n \times p\) matrix of genotype dosages, such that \(X_{i,j}\) represents the number of effect alleles at the \$j\$th variant in the \$i\$th individual, and \(\hat{\boldsymbol{\Sigma}}\) is the \(p \times p\)  the estimate of covariance between
-variants, where:
-
-\[\boldsymbol{\hat{\Sigma}} = (1-\theta)^2 \textbf{S}+\frac{\theta}{2} \left(1-\frac{\theta}{2}\right)\textbf{I}\],
-where 
-$$ S_{jk} = \begin{cases}
-\text{Cov}(\boldsymbol{X}_{.j},\boldsymbol{X}_{.k}), \text{if } j=k \\
-e^{-\frac{\rho_{jk}}{2n}}\text{Cov}(\boldsymbol{X}_{.j},\boldsymbol{X}_{.k}), \text{otherwise}\\
-\end{cases} $$
-and \(\rho_{jk}\) is an estimate of the population-scaled recombination rate between variants \(j\) and \(k\). After shrinkage, the covariance matrix is converted to a correlation matrix, and values below a given threshold (by default 0.001), are rounded down to 0 to induce sparsity in the resulting LD matrix.
-
-Populating the \(\rho\) parameter requires an estimate of the population-scaled recombination rate at the the sites in the simulation.  The method \texttt{pyrho} is a fast, demography-aware method for inferance of fine-scale recombination rates, and is based on
-the fused-LASSO\cite{Spence_2019}. The \texttt{pyrho} method applied to the British in England and Scotland (GBR) invdividuals from the 1000 genomes project\cite{1kg} were used in the estimation of the local recombination rate for the UK biobank simulations.
-
-
-Considering only singlue nucleotide polymorphisms, the human genome likely has hundreds of millions single nucleotide loci at which there is standing variation in the extant human population\cite{1kg}.  Indeed, the
-number of distinct single nucleotide polymorphisms cataloged to date is in the hundreds of millions\cite{1kg}.  While the number of known variants is only set to increase, it is hihgly unlikely to exceed 400 million by an order
-of magnitude (The 3 billion odd base pairs in the human genome provides a hard upper bound).  If one were to try to store the pairwise LD between the 400 million most common variants using a simple double-precision floating point
-representation, the storage requirement would be approximately 1.28 exabytes.  Storing the pairwise LD estimate among the only the 6,065,189 variants with a sample allele frequency above 0.05 in the sample of 10,000 UK biobank
-individuals would require approximately 295 terabytes.  While not technically impossible, it would not be practical to store, and even more impractical to use as for downstream computation.  If one assumes that LD is only between
-variants on the samne chromosome, one can bring down the storage requirements rather dramatically.  In the UK biobank subset Chromosome 2 contains 501,035 variants, the most of any chromosome.  While
-$500,000^2 \times 8 \text{bytes} \approx 2\text{terabytes}$ per chromosomeis a much more manageable size, it is still quite impractical.  The \texttt{LDshrink} approximation, along with an appropriate sparse matrix storage (or data
-compression) brings down the hypothetical storage requirements significantly: beyond moderate genetic distances all LD estimates are shrunk to 0.  
 
 \section{Results}\label{sec:org26555b8}
 
@@ -197,8 +160,6 @@ compression) brings down the hypothetical storage requirements significantly: be
   \end{subfigure}
 \end{figure}
 
-
-
 \subsection{GWAS Simulations}
 To estimate the effectiveness of RSSp at estimating heritability we simulated phenotypes and estimated GWAS summary statistics using a large employed a large-scale simulation of polygenic traits and GWAS summary statistics using real genotypes from the UK biobank.  We then employed state of the art individual-level data-based (\texttt{GCTA}\cite{GCTA}) and GWAS summary statistics-based (\texttt{ldsc}\cite{ldsc}) heritability estimation methods.  To make the simulations as realistic as possible, real individual-level genotypes were used.
 
@@ -211,7 +172,7 @@ After simulating the phenotype, heritability was estimated using GCTA's GCTA-GRE
 
 To estimate heritability using LD score regression, LD scores were generated on the 8,327,757 variants.  LD scores were generated from the genotypes used for the GWAS simulation (``in-sample''), and another set of LD scores were generated using the using the LD reference panel.  LD scores were estimated using \texttt{ldsc}, using a 1 centimorgan sliding window, as per the \texttt{ldsc} tutorial \cite{ldsctutorial} on the \texttt{ldsc} website.  The \texttt{pyrho} method applied to the British in England and Scotland (GBR) invdividuals from the 1000 genomes project\cite{1kg} was used in the estimation of the local recombination rate.  As we also wished to LD score regression was run four times on 
 
-Finally, 
+Finally, RSSp was 
 
 
 
@@ -266,8 +227,19 @@ LDSC\_INT & Out-of-sample & -0.1416675 & 0.0253203\\
 
 \subsubsection{Sparsity}
 
-To asses the robustness of RSSp to model misspecification, we performed simulations which relaxed the infinitesimal assumption.  Using the 8,327,757 variant, 10,000 sample UK biobank dataset, we expanded our simulations to include sparse genetic architectures.  Starting with the original 8,327,757 variants, we created two randomly selected causal variant subsets, containing  4,163,878  and 1,040,970 variants.  Using these causal variant subsets, we simulated phenotypes under values of  $h^2$ from $0.1$ to $0.8$ in increments of $0.1$, from which we generated GWAS summary statistics on the original 8,327,757 variants.  For each value of $h^2$, and each of the two causal variant subsets we ran 10 simulations.  We then estimated heritability with each of the methods 
+  \begin{figure}
+      \centering
+  \begin{subfigure}[t]{\textwidth}
+    \centering
+    \includegraphics[width=.9\linewidth]{img/rssp_sparsity.png}
+    \caption{$\hat{h^2}$ across 8 values of $h^2$ with 10 replicates each for for methods of heritability estimation. $\hat{h^2}$ was estimated using either in-sample information (top panels), or an external reference LD panel (bottom panels). Two sparse genetic architectures are represented along side the original infinitesimal model.  From left to right, causal variants contributing to $h^2$ numbered 1 million --- for a sparsity of 87.5\%, 4 million --- for a sparsity of 50\%, or 8 million, for a sparsity of 0\%.}\label{fig:rssp_sp_method_comparison}
+  \end{subfigure}
+\end{figure}
 
+
+To asses the robustness of RSSp to model misspecification, we performed simulations which relaxed the infinitesimal assumption.  Using the 8,327,757 variant, 10,000 sample UK biobank dataset, we expanded our simulations to include sparse genetic architectures.  Starting with the original 8,327,757 variants, we created two randomly selected causal variant subsets, containing  4,163,878  and 1,040,970 variants.  Using these causal variant subsets, we simulated phenotypes under values of  $h^2$ from $0.1$ to $0.8$ in increments of $0.1$, from which we generated GWAS summary statistics on the original 8,327,757 variants.  For each value of $h^2$, and each of the two causal variant subsets we ran 10 simulations.  We then estimated heritability with each of the methods described previously.  The 
+
+We found RSSp to be quite robust to sparsity at the three levels of sparsity simulated.  
 
 
 \subsubsection{Hapmap 3}\label{sec:org0fa2c7f}
@@ -275,7 +247,38 @@ To asses the robustness of RSSp to model misspecification, we performed simulati
 We hypothesized that the relatively poor performance of LD score regression was due to the very large number of causal variants relative to the sample size.  To test this hypothesis  We repeated the simulation using a 1,163,080 variant subset of our original 8,327,757 dataset.  These variants were drawn from the HapMap 3 reference panel\cite{hapmap3}.  It is recommended that users of LD score regression subset their GWAS summary statistics to the variants in the HapMap 3 reference panel\cite{ldsc}.  
 
 
-\subsection{Application to GWAS}
+\subsection{LD shrinkage estimators} 
+To attempt to improve the estimate of LD, I used the LD shrinkage estimator developed by Wen and Stephens\cite{Wen_2010}, which uses an estimate of 
+the recombination rate, as well an estiamte of the effective population size to improve the estimate of correlation between variants.
+I implemented a standalone version of this shrinkage estimator in as R package called \texttt{LDshrink}. 
+
+If \(\boldsymbol{X}\) is a \(n \times p\) matrix of genotype dosages, such that \(X_{i,j}\) represents the number of effect alleles at the \$j\$th variant in the \$i\$th individual, and \(\hat{\boldsymbol{\Sigma}}\) is the \(p \times p\)  the estimate of covariance between
+variants, where:
+
+\[\boldsymbol{\hat{\Sigma}} = (1-\theta)^2 \textbf{S}+\frac{\theta}{2} \left(1-\frac{\theta}{2}\right)\textbf{I}\],
+where 
+$$ S_{jk} = \begin{cases}
+\text{Cov}(\boldsymbol{X}_{.j},\boldsymbol{X}_{.k}), \text{if } j=k \\
+e^{-\frac{\rho_{jk}}{2n}}\text{Cov}(\boldsymbol{X}_{.j},\boldsymbol{X}_{.k}), \text{otherwise}\\
+\end{cases} $$
+and \(\rho_{jk}\) is an estimate of the population-scaled recombination rate between variants \(j\) and \(k\). After shrinkage, the covariance matrix is converted to a correlation matrix, and values below a given threshold (by default 0.001), are rounded down to 0 to induce sparsity in the resulting LD matrix.
+
+Populating the \(\rho\) parameter requires an estimate of the population-scaled recombination rate at the the sites in the simulation.  The method \texttt{pyrho} is a fast, demography-aware method for inferance of fine-scale recombination rates, and is based on
+the fused-LASSO\cite{Spence_2019}. The \texttt{pyrho} method applied to the British in England and Scotland (GBR) invdividuals from the 1000 genomes project\cite{1kg} were used in the estimation of the local recombination rate for the UK biobank simulations.
+
+
+
+  \begin{figure}
+      \centering
+  \begin{subfigure}[t]{\textwidth}
+    \centering
+    \includegraphics[width=.9\linewidth]{img/rssp_sparsity.png}
+    \caption{Comparison of RSSp with and without an LD shrinkage estimator.  The original infinitesimal model was }\label{fig:rssp_sp_method_comparison}
+  \end{subfigure}
+\end{figure}
+
+
+
 
 
 \section{Discussion}\label{sec:orge95691e}

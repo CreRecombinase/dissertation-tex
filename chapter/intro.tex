@@ -102,4 +102,13 @@ In the next chapter I describe a general framework for incorporating functional 
 
 % For geneticists, and statistical geneticists in particular, there is a powerful tendency towards linear models.  The central limit theorem being a commonly cited justification.
 
+% \section{RSSp}
 
+% Considering only singlue nucleotide polymorphisms, the human genome likely has hundreds of millions single nucleotide loci at which there is standing variation in the extant human population\cite{1kg}.  Indeed, the
+% number of distinct single nucleotide polymorphisms cataloged to date is in the hundreds of millions\cite{1kg}.  While the number of known variants is only set to increase, it is hihgly unlikely to exceed 400 million by an order
+% of magnitude (The 3 billion odd base pairs in the human genome provides a hard upper bound).  If one were to try to store the pairwise LD between the 400 million most common variants using a simple double-precision floating point
+% representation, the storage requirement would be approximately 1.28 exabytes.  Storing the pairwise LD estimate among the only the 6,065,189 variants with a sample allele frequency above 0.05 in the sample of 10,000 UK biobank
+% individuals would require approximately 295 terabytes.  While not technically impossible, it would not be practical to store, and even more impractical to use as for downstream computation.  If one assumes that LD is only between
+% variants on the samne chromosome, one can bring down the storage requirements rather dramatically.  In the UK biobank subset Chromosome 2 contains 501,035 variants, the most of any chromosome.  While
+% $500,000^2 \times 8 \text{bytes} \approx 2\text{terabytes}$ per chromosomeis a much more manageable size, it is still quite impractical.  The \texttt{LDshrink} approximation, along with an appropriate sparse matrix storage (or data
+% compression) brings down the hypothetical storage requirements significantly: beyond moderate genetic distances all LD estimates are shrunk to 0.  
