@@ -70,13 +70,13 @@ The posterior for the BVSR model can be efficiently approximated using variation
 If instead of assuming that \(\sigma^2_P=0\), one instead assumes that \(\sigma_B=0\) (or equivalently that \(\pi=0\)) we arrive at the following model: 
 $$ \beta_j \sim N(0,\sigma^2_P)$$
 
-With a normal prior (rather than a mixture of two normal distributions) and multivariate normal likelihood, we can write down the analytic form of the marginalized likelihood\cite{patternrecognition}.
+With a normal prior (rather than a mixture of two normal distributions) and multivariate normal likelihood, we can write down the analytic form of the marginalized likelihood as shown below.
 
 In general,if we know that the marginal Gaussian distribution for some variable \(\textbf{x}\) and a conditional Gaussian distribution for some \(\textbf{y}|\textbf{x}\) of the forms:
 $$p(\textbf{x}) = N(\textbf{x}|\boldsymbol{\mu},\Lambda^{-1})$$
 
 $$p(\textbf{y}|\textbf{x}) = N(\textbf{y}|A\textbf{x}+\textbf{b},L^{-1})$$
-then the marginal distribution of \(\textbf{y}\) and the conditional distribution of \(\textbf{x}\) given \(\textbf{y}\) arge given by: 
+then the marginal distribution of \(\textbf{y}\) and the conditional distribution of \(\textbf{x}\) given \(\textbf{y}\) arge given by \cite{patternrecognition}: 
 
 $$ p(\textbf{y}) = N(\textbf{y}|A\boldsymbol{\mu}+\textbf{b},L^{-1}+A\Lambda^{-1}A^{T})$$
 $$p(\textbf{x}|\textbf{y}) = N(\textbf{x}| \Sigma \left\{ A^{T} L ( \textbf{y} - \textbf{b} ) + \Lambda \boldsymbol{\mu} \right\} , \Sigma)$$
