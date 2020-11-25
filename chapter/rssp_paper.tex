@@ -130,22 +130,32 @@ and as a consequence, parameter estimation.
 If we take the eigenvalue decomposition of $\textbf{R}$, $\textbf{R}=\textbf{Q}\textbf{D}\textbf{Q}^T$, with $\textbf{Q}$ 
 being the $p$ by $p$ matrix of
 eigenvectors, and $\textbf{D}$ being the diagonal matrix of eigenvalues, we can rewrite the marginalized likelihood as
-$\hat{\boldsymbol{\beta}} \sim N(0,\sigma_u^2\textbf{QD}^2\textbf{Q}+\textbf{QDQ})$.  Letting $\textbf{v} = Q^T \textbf{u}$, and 
+$\hat{\textbf{u}} \sim N(0,\sigma_u^2\textbf{QD}^2\textbf{Q}+\textbf{QDQ})$.  Letting $\textbf{v} = Q^T \textbf{u}$, and 
 $\hat{\textbf{v}} = Q^{T}\hat{u}$, and exploiting the property of
 the multivariate normal distribution that an affine transformation of a multivariate normal random variable has a multivariate normal distribution, the
 likelihood for $\hat{\textbf{v}}$ is $\hat{\textbf{v}}|\sigma_u^2 \sim \mathcal{N}(0,\sigma_u^2\textbf{D}^{2}+\textbf{D})$.  As all the off-diagonal terms of
 the covariance matrix for ${\textbf{v}}$ are $0$, we can equivalently write the likelihood for ${\textbf{v}}$ as the joint probability of $p$ independent
 univariate normal variables where:
 
-\[ v_j \sim N(0,\sigma^2_u\lambda_j^2+\lambda_j) \]
+\[ \hat{v}_j \sim N(0,\sigma^2_u\lambda_j^2+\lambda_j) \]
 
-Computing the marginalized-likelihood estimate of $\sigma^2_u$ in terms of $\textbf{v}$ and $\textbf{D}$ can be done without the costly covariance inverse or determinant calculations required in the original multivariate probability density function.  We estimate $\sigma^2_u$ by the ``Brent'' 1D optimization routine in R\cite{brent1972algorithms}. While this procedure requires a costly eigendecomposition of $R$, it only needs to be done once, without the need of updating it during optimization. Furthermore, $R$ would be the same across all complex traits, so the eigendecomposition can be pre-computed and stored, further saving computational time. 
+Computing the marginalized-likelihood estimate of $\sigma^2_u$ in terms of $\textbf{v}$ and $\textbf{D}$ can be done without the costly covariance inverse or determinant calculations required in the original multivariate probability density function.  We estimate $\sigma^2_u$ by the ``Brent'' 1D optimization routine in R\cite{brent1972algorithms}. While this procedure requires a costly eigendecomposition of $R$, it only needs to be done once, without the need of updating it during optimization. Furthermore, $R$ would be the same across all complex traits, so the eigendecomposition can be pre-computed and stored, further saving computational time.
+
+Finally, $h^2$ is estimated by taking the posterior mean of the ``Summary PVE''
+
+\[\frac{1}{n} \left{ \sum_j=1^p \frac{1}{1+\frac{1}{\sigma^2_u\lambda_j}} + \sum_j=1^p \frac{\hat{v}_j^2}{1+\frac{1}{\sigma^2_u\lambda_j}} \right} \]
 
 
 \subsection{Linkage disequilibrium}\label{sec:org828aaeb}
 
 %Two genome-wide Linkage Disequilibrium (LD) estimates were generated.  The first, 
-RSSp requires the LD matrix of variants. When individual level data is available, we can compute the ``in-sample'' LD using individual genotype data. When this is not available, it is common to compute the out-of-sample LD from the ``reference-panel'', which is the set of individuals not used in generating GWAS summary statistics, but from the same population as the samples where GWAS summary statistics were derived. Rather than computing and storing 8 million by 8 million genome-wide LD matrix, a blockwise diagonal approximation to the LD matrix was made.  LD between variants was only estimated for variants within 1,703 approximately independent LD blocks.  The boundaries of independent LD blocks were previously identified in the 1000 genomes EUR population using the method ldetect\cite{ldetect}.  
+
+RSSp requires the LD matrix of variants. When individual level data is available, we can compute the ``in-sample'' LD using individual genotype data. When this is not 
+available, it is common to compute the out-of-sample LD from the ``reference-panel'', which is the set of individuals not used in generating GWAS summary statistics, 
+but from the same population as the samples where GWAS summary statistics were derived. Rather than computing and storing 8 million by 8 million genome-wide LD matrix,
+a blockwise diagonal approximation to the LD matrix was made.  LD between variants was only estimated for variants within 1,703 approximately independent LD blocks.  
+The boundaries of independent LD blocks were previously identified in the 1000 genomes EUR population using the method ldetect\cite{ldetect}.  The diagonalization of 
+each block can be computed independently
 
 \section{Results}\label{sec:org26555b8}
 
@@ -159,7 +169,7 @@ RSSp requires the LD matrix of variants. When individual level data is available
     \begin{subfigure}[t]{\textwidth}
     \centering
     \includegraphics[width=\linewidth]{img/Allele_freq_match.png}
-    \caption{Two dimensional histogram of non-reference allele frequency for variants in the GWAS cohort and LD reference panel.}\label{fig:gwas_01}
+    \caption{Two dimensional histogram of non-reference allele frequency for variants in the GWAS cohort and LD reference panel.}\label{fig:gwas_af_match}
   \end{subfigure}
 \end{figure}
 
@@ -170,13 +180,7 @@ Genotype data from individuals from the UK biobank were used as the basis of sim
 Causal variant effects and phenotypes traits were simulated using a modified version of the \texttt{simu} software, a tool for simulating GWAS phenotypes based on real genotype data.  \texttt{simu} simulates causal effects from a normal distribution and uses the GCTA model of scaled genotypes. For the infinitesimal simulation, 80 traits were simulated for 8 $h^2$ values from  0.1 to 0.8 in increments of 0.1, with 10 trait replicates being simulated at each level of heritability. After simulating the phenotype, GWAS summary statistics for each simulated phenotype were then generated using GCTA's implementation of the \texttt{fastGWA} mixed linear model-based GWAS method, with the first 10 principle components used as quantitative covariates. 
 
 Heritability was estimated using GCTA's GCTA-GREML analysis, using a GRM constructed using the 8,327,757 variants and using 10 principal components as quantitative covariates. 
-To estimate heritability using LD score regression, LD scores were generated on the 8,327,757 variants.  This step either uses the genotypes of individuals used for the GWAS simulation (``in-sample''), or the second, equally-sized, samples (the LD reference panel) not used in simulations.  LD scores were estimated using \texttt{ldsc}, using a 1 centimorgan sliding window, as per the \texttt{ldsc} tutorial \cite{ldsctutorial} on the \texttt{ldsc} website.  The \texttt{pyrho} method applied to the British in England and Scotland (GBR) individuals from the 1000 genomes project\cite{1kg} was used in the estimation of the local recombination rate.  As we also wished to LD score regression was run four times on 
-
-Finally, RSSp was 
-
-
-
-The  one in-sample, set and  of using These GWAS summary statistics were then passed to \texttt{ldsc} or \texttt{RSSp}.
+To estimate heritability using LD score regression, LD scores were generated on the 8,327,757 variants.  This step either uses the genotypes of individuals used for the GWAS simulation (``in-sample''), or the second, equally-sized, samples (the LD reference panel) not used in simulations.  LD scores were estimated using \texttt{ldsc}, using a 1 centimorgan sliding window, as per the \texttt{ldsc} tutorial \cite{ldsctutorial} on the \texttt{ldsc} website.  The \texttt{pyrho} method applied to the British in England and Scotland (GBR) individuals from the 1000 genomes project\cite{1kg} was used in the estimation of the local recombination rate.  As we also wished to test for the effect of out-of-sample LD vs in-sample LD, and test LD score regression with a varying intercept and without a varying intercept, we reran LD score regression with and without a varying intercept, and with in-sample LD scores and with reference panel LD scores.  Finally, RSSp was fit on the data. One LD matrix per independent block of the genome was estimated and diagonalized as per \ref{sec:org828aaeb}.  
 
 
 Estimates of $h^2$ from the individual-level data method GCTA were on average the closest to the true value of $h^2$ across every simulated value of $h^2$. 
@@ -196,6 +200,18 @@ Estimates of $h^2$ from the individual-level data method GCTA were on average th
     \texttt{RSSP} is RSSp (fit without a shrinkage estimator of LD)}\label{fig:rssp_method_comparison}
   \end{subfigure}
 \end{figure}
+
+
+
+  \begin{figure}
+      \centering
+  \begin{subfigure}[t]{\textwidth}
+    \centering
+    \includegraphics[width=.9\linewidth]{img/intercept_bias.png}
+    \caption{Relationship between LD score regression heritability estimate and intercept across 8 values of $h^2$.  LD scores were calculated in-sample, using the GWAS cohort genotypes.}\label{fig:ldsc_neg_bias}
+  \end{subfigure}
+\end{figure}
+
 
 
 \begin{table}
@@ -239,12 +255,23 @@ LDSC\_INT & Out-of-sample & -0.1416675 & 0.0253203\\
 
 To asses the robustness of RSSp to model misspecification, we performed simulations which relaxed the infinitesimal assumption.  Using the 8,327,757 variant, 10,000 sample UK biobank dataset, we expanded our simulations to include sparse genetic architectures.  Starting with the original 8,327,757 variants, we created two randomly selected causal variant subsets, containing  4,163,878  and 1,040,970 variants.  Using these causal variant subsets, we simulated phenotypes under values of  $h^2$ from $0.1$ to $0.8$ in increments of $0.1$, from which we generated GWAS summary statistics on the original 8,327,757 variants.  For each value of $h^2$, and each of the two causal variant subsets we ran 10 simulations.  We then estimated heritability with each of the methods described previously.  The 
 
-We found RSSp to be quite robust to sparsity at the three levels of sparsity simulated.  
+We found all methods tested to be quite robust to sparsity at the three levels of sparsity simulated \ref{fig:rssp_sp_method_comparison}.  
 
 
 \subsubsection{Hapmap 3}\label{sec:org0fa2c7f}
 
-We hypothesized that the relatively poor performance of LD score regression was due to the very large number of causal variants relative to the sample size.  To test this hypothesis  We repeated the simulation using a 1,163,080 variant subset of our original 8,327,757 dataset.  These variants were drawn from the HapMap 3 reference panel\cite{hapmap3}.  It is recommended that users of LD score regression subset their GWAS summary statistics to the variants in the HapMap 3 reference panel\cite{ldsc}.  
+\begin{figure}
+  \centering
+  \begin{subfigure}[t]{\textwidth}
+    \centering
+    \includegraphics[width=.9\linewidth]{img/rssp_hm3.png}
+    \caption{Replicate of original simulation scheme using the approximately 1 million HapMap 3  variants.  From left to right, simulations with decreasing levels of sparsity with the proportion of variants contributing to $h^2$ at a sparsity of 87.5\%, 50\% and 0\%.  Note that for this simulation GCTA results are only shown for 0\% sparsity. }\label{fig:rssp_hm3}
+  \end{subfigure}
+\end{figure}
+
+
+
+We hypothesized that the relatively poor performance of LD score regression was due to the very large number of causal variants relative to the sample size.  To test this hypothesis  We repeated the simulation using a 1,163,080 variant subset of our original 8,327,757 dataset.  These variants were drawn from the HapMap 3 reference panel\cite{hapmap3}.  It is recommended that users of LD score regression subset their GWAS summary statistics to the variants in the HapMap 3 reference panel\cite{ldsc}.  We found that when the total number of variants in the simulation was reduced to 1 million, the performance of LD score regression improved.  
 
 
 \subsection{LD shrinkage estimators} 
@@ -273,9 +300,11 @@ the fused-LASSO\cite{Spence_2019}. The \texttt{pyrho} method applied to the Brit
   \begin{subfigure}[t]{\textwidth}
     \centering
     \includegraphics[width=.9\linewidth]{img/rssp_sparsity.png}
-    \caption{Comparison of RSSp with and without an LD shrinkage estimator.  The original infinitesimal model was }\label{fig:rssp_sp_method_comparison}
+    \caption{Comparison of RSSp with and without an LD shrinkage estimator.}\label{fig:rssp_sp_method_comparison}
   \end{subfigure}
 \end{figure}
+
+
 
 
 
@@ -286,21 +315,21 @@ the fused-LASSO\cite{Spence_2019}. The \texttt{pyrho} method applied to the Brit
 
 In this study we show how SNP-heritability can be estimated using GWAS summary statistics and an out-of-sample reference LD panel with accuracy comparable to individual-level data methods, even when the number of variants exceeds the number of samples by several orders of magnitude.
 
-Unlike previously described methods for estimation of LD from GWAS summary statistics, RSSp performs well under the block-diagonal approximation to the genome-wide LD matrix which allows for scalable estimate of SNP heritability on large numbers of variants. We further demonstrated the by partitioning the genome into approximately independent
+Unlike previously described methods for estimation of LD from GWAS summary statistics, RSSp performs well under the block-diagonal approximation to the genome-wide LD matrix which allows for scalable estimate of SNP heritability on large numbers of variants. We further demonstrated that by partitioning the genome into approximately independent LD chunks 
 
-While whe have shown that accurate estimation of SNP-heritability from GWAS summary statistics using an out-of-sample reference LD panel, there are some important caveats and future directions.  First, though there was no sample overlap between the GWAS cohort and the LD reference panel, both the cohort and the panel were randomly sampled from the same set of individuals.  The set of
-variants used to simulate the GWAS were selected so that they were above 1 percent frequency in both the GWAS sample and in the LD reference panel.  If, for example, the 503 individuals in the \texttt{EUR} subset of the 1000 genomes dataset were used as a reference LD panel, the match between the datasets would have likely been poorer.
+We find that when LD reference panels are of comparable size to the GWAS genotype dataset they are standing in for, that LD shrinkage estimators do not improve heritability estimation.  It is possible that when the sample size of the reference LD panel is smaller that shrinkage estimators can improve the performance of shrinkage estimators, and while we did observe slightly lower error in $h^2$ estimation without the shrinkage estimator, the difference was quite small.  
 
-We investigated the effect of a shrinkage estimator on heritability estimates and found that it had little to no effect on estimates of heritability.  When the reference LD panel was the same size as the GWAS dataset
+While whe have shown that accurate estimation of SNP-heritability from GWAS summary statistics using an out-of-sample reference LD panel, there are some important caveats and future directions.  First, though there was no sample overlap between the GWAS cohort and the LD reference panel, both the cohort and the panel were randomly sampled from the same set of individuals from the same population, so there were no systematic differences between the GWAS cohort and the reference panel. 
+variants used to simulate the GWAS were selected so that they were above 1 percent frequency in both the GWAS sample and in the LD reference panel. While this is obviously not possible for real data analysis, a check of the allele frequency distribution of the two datasets like the one in \ref{fig:gwas_af_match} (which is often possible, as AF is often reported with GWAS summary statistics) is advisible.  If, for example, the 503 individuals in the \texttt{EUR} subset of the 1000 genomes dataset were used as a reference LD panel, the match between the datasets would have likely been poorer.
 
-Previously studies had found that chunking the genome into chunks can introduce upward bias in heritability estimates, even when using in-sample LD estimates\cite{Hou_2019}.  While   The sub-chromosome block-wise approximation to the full LD matrix did not introduce significant upward bias in RSSp's heritability estimates in simulation, though.   In Hou et al, significant upward bias of heritability estimates were observed with block sizes as large as 4.3 megabases (when analyzing simulations based on a single 34 megabase chromosome).  The median block size of the ldetect LD blocks is much smaller, at approximately 1.5 megabases, and yet RSSp did not show appreciable inflation.
+Given the promising results of RSSp in simulation, there are several avenues of research that are worth pursuing
 
-We have demonstrated that LD score regression is biased under truly infinitesimal genetic architectures.  Even with the intercept fixed at zero, we found in our simulations
-that LD score regression consistently underestimates $h^2$, and the amount LD score regression underestimates $h^2$ increases as $h^2$ increases.
-and this is understimate is
-heritability is not biased.
-We find that in the absence of population structure, LD score regression 
-Our simulations did not explore the In the absence of 
+Previously studies had found that chunking the genome into chunks can introduce upward bias in heritability estimates, even when using in-sample LD estimates\cite{Hou_2019}.  The sub-chromosome block-wise approximation to the full LD matrix did not introduce significant upward bias in RSSp's heritability estimates in simulation.  In Hou et al, significant upward bias of heritability estimates were observed with block sizes as large as 4.3 megabases (when analyzing simulations based on a single 34 megabase chromosome).  The median block size of the ldetect LD blocks is much smaller, at approximately 1.5 megabases, and yet RSSp did not show appreciable inflation.  The fact that results of RSSp with a shrinkage estimator are on average slightly higher than those without a shrinkage estimator do imply that some long-range LD is being missed, which is upwardly biasing RSSp.  That \textt{ldsc} --- with it's default 1cM window --- does better when the set of variants is smaller, and does so poorly in simulations with a large number of causal variants, also points to the importance of capturing long-range LD.  
+
+We have demonstrated that LD score regression is biased under truly infinitesimal genetic architectures.   We found in our simulations that LD score regression consistently underestimates $h^2$, and the amount LD score regression underestimates $h^2$ increases as $h^2$ increases.  Our simulations did not include population stratification or confounding of any kind, which LD score regression is designed to account for, but we found that even with the intercept fixed at zero, LD score regression was still downwardly biased. We also found that  
+Our simulations did not explore the In the absence of
+
+
 
 
 
