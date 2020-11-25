@@ -149,7 +149,13 @@ Finally, $h^2$ is estimated by taking the posterior mean of the ``Summary PVE''
 \subsection{Linkage disequilibrium}\label{sec:org828aaeb}
 
 %Two genome-wide Linkage Disequilibrium (LD) estimates were generated.  The first, 
-RSSp requires the LD matrix of variants. When individual level data is available, we can compute the ``in-sample'' LD using individual genotype data. When this is not available, it is common to compute the out-of-sample LD from the ``reference-panel'', which is the set of individuals not used in generating GWAS summary statistics, but from the same population as the samples where GWAS summary statistics were derived. Rather than computing and storing 8 million by 8 million genome-wide LD matrix, a blockwise diagonal approximation to the LD matrix was made.  LD between variants was only estimated for variants within 1,703 approximately independent LD blocks.  The boundaries of independent LD blocks were previously identified in the 1000 genomes EUR population using the method ldetect\cite{ldetect}.  The diagonalization of each block can be computed independently
+
+RSSp requires the LD matrix of variants. When individual level data is available, we can compute the ``in-sample'' LD using individual genotype data. When this is not 
+available, it is common to compute the out-of-sample LD from the ``reference-panel'', which is the set of individuals not used in generating GWAS summary statistics, 
+but from the same population as the samples where GWAS summary statistics were derived. Rather than computing and storing 8 million by 8 million genome-wide LD matrix,
+a blockwise diagonal approximation to the LD matrix was made.  LD between variants was only estimated for variants within 1,703 approximately independent LD blocks.  
+The boundaries of independent LD blocks were previously identified in the 1000 genomes EUR population using the method ldetect\cite{ldetect}.  The diagonalization of 
+each block can be computed independently
 
 \section{Results}\label{sec:org26555b8}
 
