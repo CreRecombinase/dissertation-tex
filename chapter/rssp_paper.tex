@@ -130,22 +130,26 @@ and as a consequence, parameter estimation.
 If we take the eigenvalue decomposition of $\textbf{R}$, $\textbf{R}=\textbf{Q}\textbf{D}\textbf{Q}^T$, with $\textbf{Q}$ 
 being the $p$ by $p$ matrix of
 eigenvectors, and $\textbf{D}$ being the diagonal matrix of eigenvalues, we can rewrite the marginalized likelihood as
-$\hat{\boldsymbol{\beta}} \sim N(0,\sigma_u^2\textbf{QD}^2\textbf{Q}+\textbf{QDQ})$.  Letting $\textbf{v} = Q^T \textbf{u}$, and 
+$\hat{\textbf{u}} \sim N(0,\sigma_u^2\textbf{QD}^2\textbf{Q}+\textbf{QDQ})$.  Letting $\textbf{v} = Q^T \textbf{u}$, and 
 $\hat{\textbf{v}} = Q^{T}\hat{u}$, and exploiting the property of
 the multivariate normal distribution that an affine transformation of a multivariate normal random variable has a multivariate normal distribution, the
 likelihood for $\hat{\textbf{v}}$ is $\hat{\textbf{v}}|\sigma_u^2 \sim \mathcal{N}(0,\sigma_u^2\textbf{D}^{2}+\textbf{D})$.  As all the off-diagonal terms of
 the covariance matrix for ${\textbf{v}}$ are $0$, we can equivalently write the likelihood for ${\textbf{v}}$ as the joint probability of $p$ independent
 univariate normal variables where:
 
-\[ v_j \sim N(0,\sigma^2_u\lambda_j^2+\lambda_j) \]
+\[ \hat{v}_j \sim N(0,\sigma^2_u\lambda_j^2+\lambda_j) \]
 
-Computing the marginalized-likelihood estimate of $\sigma^2_u$ in terms of $\textbf{v}$ and $\textbf{D}$ can be done without the costly covariance inverse or determinant calculations required in the original multivariate probability density function.  We estimate $\sigma^2_u$ by the ``Brent'' 1D optimization routine in R\cite{brent1972algorithms}. While this procedure requires a costly eigendecomposition of $R$, it only needs to be done once, without the need of updating it during optimization. Furthermore, $R$ would be the same across all complex traits, so the eigendecomposition can be pre-computed and stored, further saving computational time. 
+Computing the marginalized-likelihood estimate of $\sigma^2_u$ in terms of $\textbf{v}$ and $\textbf{D}$ can be done without the costly covariance inverse or determinant calculations required in the original multivariate probability density function.  We estimate $\sigma^2_u$ by the ``Brent'' 1D optimization routine in R\cite{brent1972algorithms}. While this procedure requires a costly eigendecomposition of $R$, it only needs to be done once, without the need of updating it during optimization. Furthermore, $R$ would be the same across all complex traits, so the eigendecomposition can be pre-computed and stored, further saving computational time.
+
+Finally, $h^2$ is estimated by taking the posterior mean of the ``Summary PVE''
+
+\[\frac{1}{n} \left{ \sum_j=1^p \frac{1}{1+\frac{1}{\sigma^2_u\lambda_j}} + \sum_j=1^p \frac{\hat{v}_j^2}{1+\frac{1}{\sigma^2_u\lambda_j}} \right} \]
 
 
 \subsection{Linkage disequilibrium}\label{sec:org828aaeb}
 
 %Two genome-wide Linkage Disequilibrium (LD) estimates were generated.  The first, 
-RSSp requires the LD matrix of variants. When individual level data is available, we can compute the ``in-sample'' LD using individual genotype data. When this is not available, it is common to compute the out-of-sample LD from the ``reference-panel'', which is the set of individuals not used in generating GWAS summary statistics, but from the same population as the samples where GWaS summary statistics were derived. Rather than computing and storing 8 million by 8 million genome-wide LD matrix, a blockwise diagonal approximation to the LD matrix was made.  LD between variants was only estimated for variants within 1,703 approximately independent LD blocks.  The boundaries of independent LD blocks were previously identified in the 1000 genomes EUR population using the method ldetect\cite{ldetect}.  
+RSSp requires the LD matrix of variants. When individual level data is available, we can compute the ``in-sample'' LD using individual genotype data. When this is not available, it is common to compute the out-of-sample LD from the ``reference-panel'', which is the set of individuals not used in generating GWAS summary statistics, but from the same population as the samples where GWAS summary statistics were derived. Rather than computing and storing 8 million by 8 million genome-wide LD matrix, a blockwise diagonal approximation to the LD matrix was made.  LD between variants was only estimated for variants within 1,703 approximately independent LD blocks.  The boundaries of independent LD blocks were previously identified in the 1000 genomes EUR population using the method ldetect\cite{ldetect}.  The diagonalization of each block can be computed independently
 
 \section{Results}\label{sec:org26555b8}
 
@@ -170,9 +174,7 @@ Genotype data from individuals from the UK biobank were used as the basis of sim
 Causal variant effects and phenotypes traits were simulated using a modified version of the \texttt{simu} software, a tool for simulating GWAS phenotypes based on real genotype data.  \texttt{simu} simulates causal effects from a normal distribution and uses the GCTA model of scaled genotypes. For the infinitesimal simulation, 80 traits were simulated for 8 $h^2$ values from  0.1 to 0.8 in increments of 0.1, with 10 trait replicates being simulated at each level of heritability. After simulating the phenotype, GWAS summary statistics for each simulated phenotype were then generated using GCTA's implementation of the \texttt{fastGWA} mixed linear model-based GWAS method, with the first 10 principle components used as quantitative covariates. 
 
 Heritability was estimated using GCTA's GCTA-GREML analysis, using a GRM constructed using the 8,327,757 variants and using 10 principal components as quantitative covariates. 
-To estimate heritability using LD score regression, LD scores were generated on the 8,327,757 variants.  This step either uses the genotypes of individuals used for the GWAS simulation (``in-sample''), or the second, equally-sized, samples (the LD reference panel) not used in simulations.  LD scores were estimated using \texttt{ldsc}, using a 1 centimorgan sliding window, as per the \texttt{ldsc} tutorial \cite{ldsctutorial} on the \texttt{ldsc} website.  The \texttt{pyrho} method applied to the British in England and Scotland (GBR) individuals from the 1000 genomes project\cite{1kg} was used in the estimation of the local recombination rate.  As we also wished to LD score regression was run four times on 
-
-Finally, RSSp was fit on the data.  
+To estimate heritability using LD score regression, LD scores were generated on the 8,327,757 variants.  This step either uses the genotypes of individuals used for the GWAS simulation (``in-sample''), or the second, equally-sized, samples (the LD reference panel) not used in simulations.  LD scores were estimated using \texttt{ldsc}, using a 1 centimorgan sliding window, as per the \texttt{ldsc} tutorial \cite{ldsctutorial} on the \texttt{ldsc} website.  The \texttt{pyrho} method applied to the British in England and Scotland (GBR) individuals from the 1000 genomes project\cite{1kg} was used in the estimation of the local recombination rate.  As we also wished to test for the effect of out-of-sample LD vs in-sample LD, and test LD score regression with a varying intercept and without a varying intercept, we reran LD score regression with and without a varying intercept, and with in-sample LD scores and with reference panel LD scores.  Finally, RSSp was fit on the data. One LD matrix per independent block of the genome was estimated and diagonalized as per \ref{sec:org828aaeb}.  
 
 
 Estimates of $h^2$ from the individual-level data method GCTA were on average the closest to the true value of $h^2$ across every simulated value of $h^2$. 
